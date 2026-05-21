@@ -1,0 +1,19 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+.env
+
+# Scan outputs (regenerate locally)
+reports/
+
+# Sample APKs (download or build separately)
+samples/*.apk
+
+# IDE / OS
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
