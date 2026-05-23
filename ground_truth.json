@@ -1,0 +1,22 @@
+{
+  "benchmark": "OWApp",
+  "apps": [
+    {
+      "app_id": "MASTG-TEST0007",
+      "category": "Platform",
+      "apk": "benchmarks/Platform/MASTG-TEST0007/MASTG-TEST0007.apk",
+      "readme": "benchmarks/Platform/MASTG-TEST0007/README.md",
+      "package": "com.example.mastg_test0007",
+      "ground_truth": [
+        {
+          "gt_id": "MASTG-TEST0007-001",
+          "type": "exported_provider",
+          "target": "com.example.mastg_test0007.MyContentProvider",
+          "severity": "critical",
+          "expected_pattern_id": "VULN_EXPORTED_PROVIDER_LEAK",
+          "description": "Sensitive stored data is exposed through an exported ContentProvider without strong read/write permission protection."
+        }
+      ]
+    }
+  ]
+}

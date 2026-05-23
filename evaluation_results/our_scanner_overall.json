@@ -1,0 +1,23 @@
+{
+  "scanner": "our_scanner",
+  "apps_evaluated": 1,
+  "total_tp": 1,
+  "total_fn": 0,
+  "total_ground_truth": 1,
+  "overall_benchmark_recall": 1.0,
+  "total_findings": 6,
+  "total_extra_findings": 5,
+  "note": "Extra findings are not counted as false positives by default, because benchmark labels may not be exhaustive.",
+  "apps": [
+    {
+      "app_id": "MASTG-TEST0007",
+      "category": "Platform",
+      "tp": 1,
+      "fn": 0,
+      "total_ground_truth": 1,
+      "benchmark_recall": 1.0,
+      "total_findings": 6,
+      "extra_findings_count": 5
+    }
+  ]
+}

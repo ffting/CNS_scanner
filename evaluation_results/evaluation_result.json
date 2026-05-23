@@ -1,0 +1,460 @@
+{
+  "summary": {
+    "ground_truth_count": 3,
+    "scanner_finding_count": 12,
+    "matched_count": 0,
+    "missed_count": 3,
+    "coverage": 0.0,
+    "precision_approx": 0.0,
+    "priority_score": 0.0,
+    "actionability_average_raw": 2.0,
+    "actionability_average_percent": 0.4
+  },
+  "matches": [
+    {
+      "gt_id": "gt_001",
+      "gt_type": "exported_activity",
+      "gt_name": "com.example.app.LoginActivity",
+      "expected_priority": "P1",
+      "finding_id": null,
+      "finding_type": null,
+      "finding_name": null,
+      "actual_priority": null,
+      "matched": false,
+      "priority_score": 0.0
+    },
+    {
+      "gt_id": "gt_002",
+      "gt_type": "deep_link",
+      "gt_name": "myapp://oauth/callback",
+      "expected_priority": "P0",
+      "finding_id": null,
+      "finding_type": null,
+      "finding_name": null,
+      "actual_priority": null,
+      "matched": false,
+      "priority_score": 0.0
+    },
+    {
+      "gt_id": "gt_003",
+      "gt_type": "exported_provider",
+      "gt_name": "com.example.app.provider",
+      "expected_priority": "P0",
+      "finding_id": null,
+      "finding_type": null,
+      "finding_name": null,
+      "actual_priority": null,
+      "matched": false,
+      "priority_score": 0.0
+    }
+  ],
+  "missed_ground_truth": [
+    {
+      "gt_id": "gt_001",
+      "gt_type": "exported_activity",
+      "gt_name": "com.example.app.LoginActivity",
+      "expected_priority": "P1",
+      "finding_id": null,
+      "finding_type": null,
+      "finding_name": null,
+      "actual_priority": null,
+      "matched": false,
+      "priority_score": 0.0
+    },
+    {
+      "gt_id": "gt_002",
+      "gt_type": "deep_link",
+      "gt_name": "myapp://oauth/callback",
+      "expected_priority": "P0",
+      "finding_id": null,
+      "finding_type": null,
+      "finding_name": null,
+      "actual_priority": null,
+      "matched": false,
+      "priority_score": 0.0
+    },
+    {
+      "gt_id": "gt_003",
+      "gt_type": "exported_provider",
+      "gt_name": "com.example.app.provider",
+      "expected_priority": "P0",
+      "finding_id": null,
+      "finding_type": null,
+      "finding_name": null,
+      "actual_priority": null,
+      "matched": false,
+      "priority_score": 0.0
+    }
+  ],
+  "unmatched_findings": [
+    {
+      "id": "finding_001",
+      "type": "exported_activity",
+      "name": "oversecured.ovaa.activities.DeeplinkActivity",
+      "priority": "P1",
+      "reason": ""
+    },
+    {
+      "id": "finding_002",
+      "type": "exported_activity",
+      "name": "oversecured.ovaa.activities.WebViewActivity",
+      "priority": "P3",
+      "reason": ""
+    },
+    {
+      "id": "finding_003",
+      "type": "exported_activity",
+      "name": "oversecured.ovaa.activities.LoginActivity",
+      "priority": "P1",
+      "reason": ""
+    },
+    {
+      "id": "finding_004",
+      "type": "exported_activity",
+      "name": "oversecured.ovaa.activities.EntranceActivity",
+      "priority": "P3",
+      "reason": ""
+    },
+    {
+      "id": "finding_005",
+      "type": "exported_activity",
+      "name": "oversecured.ovaa.activities.MainActivity",
+      "priority": "P1",
+      "reason": ""
+    },
+    {
+      "id": "finding_006",
+      "type": "exported_receiver",
+      "name": "oversecured.ovaa.receivers.UselessReceiver",
+      "priority": "P3",
+      "reason": ""
+    },
+    {
+      "id": "finding_007",
+      "type": "exported_service",
+      "name": "oversecured.ovaa.services.InsecureLoggerService",
+      "priority": "P1",
+      "reason": ""
+    },
+    {
+      "id": "finding_008",
+      "type": "exported_provider",
+      "name": "oversecured.ovaa.providers.TheftOverwriteProvider",
+      "priority": "P0",
+      "reason": ""
+    },
+    {
+      "id": "finding_009",
+      "type": "exported_provider",
+      "name": "oversecured.ovaa.providers.CredentialsProvider",
+      "priority": "P3",
+      "reason": ""
+    },
+    {
+      "id": "finding_010",
+      "type": "exported_provider",
+      "name": "androidx.core.content.FileProvider",
+      "priority": "P3",
+      "reason": ""
+    },
+    {
+      "id": "finding_011",
+      "type": "exported_provider",
+      "name": "androidx.startup.InitializationProvider",
+      "priority": "P3",
+      "reason": ""
+    },
+    {
+      "id": "finding_012",
+      "type": "exported_receiver",
+      "name": "androidx.profileinstaller.ProfileInstallReceiver",
+      "priority": "P1",
+      "reason": ""
+    }
+  ],
+  "actionability": {
+    "average_raw": 2.0,
+    "average_percent": 0.4,
+    "max_score": 5,
+    "details": [
+      {
+        "finding_id": "finding_001",
+        "type": "exported_activity",
+        "name": "oversecured.ovaa.activities.DeeplinkActivity",
+        "score": 2,
+        "max_score": 5,
+        "checklist": {
+          "has_name": 1,
+          "has_reason": 0,
+          "has_priority": 1,
+          "has_adb_command": 0,
+          "has_attack_chain": 0
+        }
+      },
+      {
+        "finding_id": "finding_002",
+        "type": "exported_activity",
+        "name": "oversecured.ovaa.activities.WebViewActivity",
+        "score": 2,
+        "max_score": 5,
+        "checklist": {
+          "has_name": 1,
+          "has_reason": 0,
+          "has_priority": 1,
+          "has_adb_command": 0,
+          "has_attack_chain": 0
+        }
+      },
+      {
+        "finding_id": "finding_003",
+        "type": "exported_activity",
+        "name": "oversecured.ovaa.activities.LoginActivity",
+        "score": 2,
+        "max_score": 5,
+        "checklist": {
+          "has_name": 1,
+          "has_reason": 0,
+          "has_priority": 1,
+          "has_adb_command": 0,
+          "has_attack_chain": 0
+        }
+      },
+      {
+        "finding_id": "finding_004",
+        "type": "exported_activity",
+        "name": "oversecured.ovaa.activities.EntranceActivity",
+        "score": 2,
+        "max_score": 5,
+        "checklist": {
+          "has_name": 1,
+          "has_reason": 0,
+          "has_priority": 1,
+          "has_adb_command": 0,
+          "has_attack_chain": 0
+        }
+      },
+      {
+        "finding_id": "finding_005",
+        "type": "exported_activity",
+        "name": "oversecured.ovaa.activities.MainActivity",
+        "score": 2,
+        "max_score": 5,
+        "checklist": {
+          "has_name": 1,
+          "has_reason": 0,
+          "has_priority": 1,
+          "has_adb_command": 0,
+          "has_attack_chain": 0
+        }
+      },
+      {
+        "finding_id": "finding_006",
+        "type": "exported_receiver",
+        "name": "oversecured.ovaa.receivers.UselessReceiver",
+        "score": 2,
+        "max_score": 5,
+        "checklist": {
+          "has_name": 1,
+          "has_reason": 0,
+          "has_priority": 1,
+          "has_adb_command": 0,
+          "has_attack_chain": 0
+        }
+      },
+      {
+        "finding_id": "finding_007",
+        "type": "exported_service",
+        "name": "oversecured.ovaa.services.InsecureLoggerService",
+        "score": 2,
+        "max_score": 5,
+        "checklist": {
+          "has_name": 1,
+          "has_reason": 0,
+          "has_priority": 1,
+          "has_adb_command": 0,
+          "has_attack_chain": 0
+        }
+      },
+      {
+        "finding_id": "finding_008",
+        "type": "exported_provider",
+        "name": "oversecured.ovaa.providers.TheftOverwriteProvider",
+        "score": 2,
+        "max_score": 5,
+        "checklist": {
+          "has_name": 1,
+          "has_reason": 0,
+          "has_priority": 1,
+          "has_adb_command": 0,
+          "has_attack_chain": 0
+        }
+      },
+      {
+        "finding_id": "finding_009",
+        "type": "exported_provider",
+        "name": "oversecured.ovaa.providers.CredentialsProvider",
+        "score": 2,
+        "max_score": 5,
+        "checklist": {
+          "has_name": 1,
+          "has_reason": 0,
+          "has_priority": 1,
+          "has_adb_command": 0,
+          "has_attack_chain": 0
+        }
+      },
+      {
+        "finding_id": "finding_010",
+        "type": "exported_provider",
+        "name": "androidx.core.content.FileProvider",
+        "score": 2,
+        "max_score": 5,
+        "checklist": {
+          "has_name": 1,
+          "has_reason": 0,
+          "has_priority": 1,
+          "has_adb_command": 0,
+          "has_attack_chain": 0
+        }
+      },
+      {
+        "finding_id": "finding_011",
+        "type": "exported_provider",
+        "name": "androidx.startup.InitializationProvider",
+        "score": 2,
+        "max_score": 5,
+        "checklist": {
+          "has_name": 1,
+          "has_reason": 0,
+          "has_priority": 1,
+          "has_adb_command": 0,
+          "has_attack_chain": 0
+        }
+      },
+      {
+        "finding_id": "finding_012",
+        "type": "exported_receiver",
+        "name": "androidx.profileinstaller.ProfileInstallReceiver",
+        "score": 2,
+        "max_score": 5,
+        "checklist": {
+          "has_name": 1,
+          "has_reason": 0,
+          "has_priority": 1,
+          "has_adb_command": 0,
+          "has_attack_chain": 0
+        }
+      }
+    ]
+  },
+  "parsed_findings": [
+    {
+      "id": "finding_001",
+      "type": "exported_activity",
+      "name": "oversecured.ovaa.activities.DeeplinkActivity",
+      "priority": "P1",
+      "reason": "",
+      "has_adb_command": false,
+      "has_attack_chain": false
+    },
+    {
+      "id": "finding_002",
+      "type": "exported_activity",
+      "name": "oversecured.ovaa.activities.WebViewActivity",
+      "priority": "P3",
+      "reason": "",
+      "has_adb_command": false,
+      "has_attack_chain": false
+    },
+    {
+      "id": "finding_003",
+      "type": "exported_activity",
+      "name": "oversecured.ovaa.activities.LoginActivity",
+      "priority": "P1",
+      "reason": "",
+      "has_adb_command": false,
+      "has_attack_chain": false
+    },
+    {
+      "id": "finding_004",
+      "type": "exported_activity",
+      "name": "oversecured.ovaa.activities.EntranceActivity",
+      "priority": "P3",
+      "reason": "",
+      "has_adb_command": false,
+      "has_attack_chain": false
+    },
+    {
+      "id": "finding_005",
+      "type": "exported_activity",
+      "name": "oversecured.ovaa.activities.MainActivity",
+      "priority": "P1",
+      "reason": "",
+      "has_adb_command": false,
+      "has_attack_chain": false
+    },
+    {
+      "id": "finding_006",
+      "type": "exported_receiver",
+      "name": "oversecured.ovaa.receivers.UselessReceiver",
+      "priority": "P3",
+      "reason": "",
+      "has_adb_command": false,
+      "has_attack_chain": false
+    },
+    {
+      "id": "finding_007",
+      "type": "exported_service",
+      "name": "oversecured.ovaa.services.InsecureLoggerService",
+      "priority": "P1",
+      "reason": "",
+      "has_adb_command": false,
+      "has_attack_chain": false
+    },
+    {
+      "id": "finding_008",
+      "type": "exported_provider",
+      "name": "oversecured.ovaa.providers.TheftOverwriteProvider",
+      "priority": "P0",
+      "reason": "",
+      "has_adb_command": false,
+      "has_attack_chain": false
+    },
+    {
+      "id": "finding_009",
+      "type": "exported_provider",
+      "name": "oversecured.ovaa.providers.CredentialsProvider",
+      "priority": "P3",
+      "reason": "",
+      "has_adb_command": false,
+      "has_attack_chain": false
+    },
+    {
+      "id": "finding_010",
+      "type": "exported_provider",
+      "name": "androidx.core.content.FileProvider",
+      "priority": "P3",
+      "reason": "",
+      "has_adb_command": false,
+      "has_attack_chain": false
+    },
+    {
+      "id": "finding_011",
+      "type": "exported_provider",
+      "name": "androidx.startup.InitializationProvider",
+      "priority": "P3",
+      "reason": "",
+      "has_adb_command": false,
+      "has_attack_chain": false
+    },
+    {
+      "id": "finding_012",
+      "type": "exported_receiver",
+      "name": "androidx.profileinstaller.ProfileInstallReceiver",
+      "priority": "P1",
+      "reason": "",
+      "has_adb_command": false,
+      "has_attack_chain": false
+    }
+  ]
+}

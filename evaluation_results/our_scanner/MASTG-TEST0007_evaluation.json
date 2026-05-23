@@ -1,0 +1,266 @@
+{
+  "scanner": "our_scanner",
+  "app_id": "MASTG-TEST0007",
+  "package": "com.example.mastg_test0007",
+  "category": "Platform",
+  "tp": 1,
+  "fn": 0,
+  "total_ground_truth": 1,
+  "benchmark_recall": 1.0,
+  "total_findings": 6,
+  "extra_findings_count": 5,
+  "matched": [
+    {
+      "gt_id": "MASTG-TEST0007-001",
+      "matched": true,
+      "matched_by": "expected_pattern_id",
+      "matched_finding": {
+        "scanner": "our_scanner",
+        "source": "reports\\our_scanner\\Platform\\MASTG-TEST0007\\com.example.json",
+        "finding_id": "VULN_EXPORTED_PROVIDER_LEAK",
+        "type": "exported_provider",
+        "title": "Exported ContentProvider with weak protection",
+        "severity": "Critical",
+        "target": "com.example.mastg_test0007.MyContentProvider",
+        "pattern_id": "VULN_EXPORTED_PROVIDER_LEAK",
+        "component_kind": null,
+        "component_name": "com.example.mastg_test0007.MyContentProvider",
+        "exported": null,
+        "permission": null,
+        "evidence": [
+          "Component: com.example.mastg_test0007.MyContentProvider (provider)",
+          "exported=true",
+          "tags=WEAK_PROVIDER_PROTECTION"
+        ],
+        "raw": {
+          "pattern_id": "VULN_EXPORTED_PROVIDER_LEAK",
+          "title": "Exported ContentProvider with weak protection",
+          "severity": "Critical",
+          "description": "A ContentProvider is reachable from other apps but lacks signature-level read/write protection. Attackers may read or tamper with app data via content:// URIs.",
+          "evidence": [
+            "Component: com.example.mastg_test0007.MyContentProvider (provider)",
+            "exported=true",
+            "tags=WEAK_PROVIDER_PROTECTION"
+          ],
+          "related_components": [
+            "com.example.mastg_test0007.MyContentProvider"
+          ],
+          "related_deep_links": [],
+          "cwe": "CWE-926",
+          "owasp_masvs": "MSTG-PLATFORM-2"
+        }
+      },
+      "reason": "Matched by pattern_id: VULN_EXPORTED_PROVIDER_LEAK"
+    }
+  ],
+  "missed": [],
+  "extra_findings": [
+    {
+      "scanner": "our_scanner",
+      "source": "reports\\our_scanner\\Platform\\MASTG-TEST0007\\com.example.json",
+      "finding_id": null,
+      "type": "exported_provider",
+      "title": "provider: com.example.mastg_test0007.MyContentProvider",
+      "severity": "critical",
+      "target": "com.example.mastg_test0007.MyContentProvider",
+      "pattern_id": null,
+      "component_kind": "provider",
+      "component_name": "com.example.mastg_test0007.MyContentProvider",
+      "exported": "true",
+      "permission": null,
+      "evidence": [
+        "PROVIDER_EXPLICIT_EXPORTED",
+        "WEAK_PROVIDER_PROTECTION"
+      ],
+      "raw": {
+        "kind": "provider",
+        "name": "com.example.mastg_test0007.MyContentProvider",
+        "exported": "true",
+        "permission": null,
+        "read_permission": null,
+        "write_permission": null,
+        "intent_filters": [],
+        "is_launcher": false,
+        "is_sync_adapter": false,
+        "risk_tags": [
+          "PROVIDER_EXPLICIT_EXPORTED",
+          "WEAK_PROVIDER_PROTECTION"
+        ],
+        "priority": "P0",
+        "notes": [
+          "Suggested test: adb shell content query --uri content://com.example.mastg_test0007/"
+        ]
+      }
+    },
+    {
+      "scanner": "our_scanner",
+      "source": "reports\\our_scanner\\Platform\\MASTG-TEST0007\\com.example.json",
+      "finding_id": null,
+      "type": "activity",
+      "title": "activity: com.example.mastg_test0007.MainActivity",
+      "severity": "low",
+      "target": "com.example.mastg_test0007.MainActivity",
+      "pattern_id": null,
+      "component_kind": "activity",
+      "component_name": "com.example.mastg_test0007.MainActivity",
+      "exported": "true",
+      "permission": null,
+      "evidence": [
+        "LAUNCHER_ENTRY"
+      ],
+      "raw": {
+        "kind": "activity",
+        "name": "com.example.mastg_test0007.MainActivity",
+        "exported": "true",
+        "permission": null,
+        "read_permission": null,
+        "write_permission": null,
+        "intent_filters": [
+          {
+            "actions": [
+              "android.intent.action.MAIN"
+            ],
+            "categories": [
+              "android.intent.category.LAUNCHER"
+            ],
+            "data_entries": [],
+            "auto_verify": false
+          }
+        ],
+        "is_launcher": true,
+        "is_sync_adapter": false,
+        "risk_tags": [
+          "LAUNCHER_ENTRY"
+        ],
+        "priority": "P3",
+        "notes": []
+      }
+    },
+    {
+      "scanner": "our_scanner",
+      "source": "reports\\our_scanner\\Platform\\MASTG-TEST0007\\com.example.json",
+      "finding_id": null,
+      "type": "service",
+      "title": "service: androidx.room.MultiInstanceInvalidationService",
+      "severity": "low",
+      "target": "androidx.room.MultiInstanceInvalidationService",
+      "pattern_id": null,
+      "component_kind": "service",
+      "component_name": "androidx.room.MultiInstanceInvalidationService",
+      "exported": "false",
+      "permission": null,
+      "evidence": [],
+      "raw": {
+        "kind": "service",
+        "name": "androidx.room.MultiInstanceInvalidationService",
+        "exported": "false",
+        "permission": null,
+        "read_permission": null,
+        "write_permission": null,
+        "intent_filters": [],
+        "is_launcher": false,
+        "is_sync_adapter": false,
+        "risk_tags": [],
+        "priority": "P3",
+        "notes": []
+      }
+    },
+    {
+      "scanner": "our_scanner",
+      "source": "reports\\our_scanner\\Platform\\MASTG-TEST0007\\com.example.json",
+      "finding_id": null,
+      "type": "provider",
+      "title": "provider: androidx.startup.InitializationProvider",
+      "severity": "low",
+      "target": "androidx.startup.InitializationProvider",
+      "pattern_id": null,
+      "component_kind": "provider",
+      "component_name": "androidx.startup.InitializationProvider",
+      "exported": "false",
+      "permission": null,
+      "evidence": [],
+      "raw": {
+        "kind": "provider",
+        "name": "androidx.startup.InitializationProvider",
+        "exported": "false",
+        "permission": null,
+        "read_permission": null,
+        "write_permission": null,
+        "intent_filters": [],
+        "is_launcher": false,
+        "is_sync_adapter": false,
+        "risk_tags": [],
+        "priority": "P3",
+        "notes": []
+      }
+    },
+    {
+      "scanner": "our_scanner",
+      "source": "reports\\our_scanner\\Platform\\MASTG-TEST0007\\com.example.json",
+      "finding_id": null,
+      "type": "exported_receiver",
+      "title": "receiver: androidx.profileinstaller.ProfileInstallReceiver",
+      "severity": "high",
+      "target": "androidx.profileinstaller.ProfileInstallReceiver",
+      "pattern_id": null,
+      "component_kind": "receiver",
+      "component_name": "androidx.profileinstaller.ProfileInstallReceiver",
+      "exported": "true",
+      "permission": "android.permission.DUMP",
+      "evidence": [
+        "EXPORTED_NO_STRONG_PERMISSION"
+      ],
+      "raw": {
+        "kind": "receiver",
+        "name": "androidx.profileinstaller.ProfileInstallReceiver",
+        "exported": "true",
+        "permission": "android.permission.DUMP",
+        "read_permission": null,
+        "write_permission": null,
+        "intent_filters": [
+          {
+            "actions": [
+              "androidx.profileinstaller.action.INSTALL_PROFILE"
+            ],
+            "categories": [],
+            "data_entries": [],
+            "auto_verify": false
+          },
+          {
+            "actions": [
+              "androidx.profileinstaller.action.SKIP_FILE"
+            ],
+            "categories": [],
+            "data_entries": [],
+            "auto_verify": false
+          },
+          {
+            "actions": [
+              "androidx.profileinstaller.action.SAVE_PROFILE"
+            ],
+            "categories": [],
+            "data_entries": [],
+            "auto_verify": false
+          },
+          {
+            "actions": [
+              "androidx.profileinstaller.action.BENCHMARK_OPERATION"
+            ],
+            "categories": [],
+            "data_entries": [],
+            "auto_verify": false
+          }
+        ],
+        "is_launcher": false,
+        "is_sync_adapter": false,
+        "risk_tags": [
+          "EXPORTED_NO_STRONG_PERMISSION"
+        ],
+        "priority": "P1",
+        "notes": [
+          "Suggested test: adb shell am broadcast -a androidx.profileinstaller.action.INSTALL_PROFILE -n com.example.mastg_test0007/.ProfileInstallReceiver"
+        ]
+      }
+    }
+  ]
+}
