@@ -58,3 +58,57 @@ See `vulnerability_patterns.py` for the full rule list.
 - Static analysis only; does not confirm exploitability
 - Does not replace dynamic tools (e.g. drozer) or full SAST (MobSF, AndroBugs)
 - Code-level taint analysis is not included in v1
+
+## Ground truth
+
+`ground_truth.json` stores the expected finding for each benchmark test.
+
+## Run benchmark scan
+
+Scan all APKs under one benchmark category:
+
+```bash
+./run_scanner.sh Platform
+```
+
+## Run evaluation
+
+Evaluate one APK report:
+
+```bash
+python evaluation.py \
+  --scanner our_scanner \
+  --result ./reports/our_scanner/Platform/MASTG-TEST0007/com.example.mastg_test0007.json \
+  --ground-truth ./ground_truth.json \
+  --app-id MASTG-TEST0007 \
+  --out ./evaluation_results
+```
+
+Evaluate a whole category:
+
+```bash
+python evaluation.py \
+  --scanner our_scanner \
+  --result-dir ./reports/our_scanner/Platform \
+  --ground-truth ./ground_truth.json \
+  --out ./evaluation_results
+```
+
+Evaluation outputs:
+
+| File | Content |
+|------|---------|
+| `evaluation_results/our_scanner/{app_id}_evaluation.json` | Per-test matching details |
+| `evaluation_results/our_scanner_summary.csv` | Per-test summary |
+| `evaluation_results/our_scanner_overall.json` | Overall benchmark result |
+
+## Current workflow
+
+```text
+1. Put OWApp APKs under benchmarks/
+2. Run ./run_scanner.sh <Category>
+3. Read each test README
+4. Add expected findings to ground_truth.json
+5. Run evaluation.py
+6. Use summary CSV / overall JSON for reporting
+```
