@@ -1,2 +1,0 @@
-scanner,app_id,package,category,tp,fn,total_ground_truth,benchmark_recall,total_findings,extra_findings_count
-our_scanner,MASTG-TEST0007,com.example.mastg_test0007,Platform,1,0,1,1.0000,6,5

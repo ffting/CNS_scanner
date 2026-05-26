@@ -1,0 +1,26 @@
+{
+  "mobsf": {
+    "cases": 10,
+    "expected": 25,
+    "raw_findings": 65,
+    "scoped_findings": 32,
+    "tp": 9,
+    "fp": 23,
+    "fn": 16,
+    "precision": 0.28125,
+    "recall": 0.36,
+    "f1": 0.3157894736842105
+  },
+  "our_scanner": {
+    "cases": 10,
+    "expected": 25,
+    "raw_findings": 0,
+    "scoped_findings": 0,
+    "tp": 0,
+    "fp": 0,
+    "fn": 25,
+    "precision": null,
+    "recall": 0.0,
+    "f1": null
+  }
+}

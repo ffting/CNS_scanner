@@ -1,0 +1,1679 @@
+{
+  "mobsf": [
+    {
+      "case_id": "Platform/MASTG-TEST0007",
+      "test_id": "MASTG-TEST-0007",
+      "title": "Determining Whether Sensitive Stored Data Has Been Exposed via IPC Mechanisms",
+      "expected_count": 2,
+      "raw_finding_count": 8,
+      "scoped_finding_count": 5,
+      "tp": 2,
+      "fp": 3,
+      "fn": 0,
+      "precision": 0.4,
+      "recall": 1.0,
+      "f1": 0.5714285714285715,
+      "top5_precision": 0.6,
+      "matches": [
+        {
+          "gt_category": "exported_provider",
+          "finding_category": "exported_provider",
+          "finding_title": "Content Provider (com.example.mastg_test0007.MyContentProvider) is not Protected. [android:exported=true]",
+          "finding_severity": "medium",
+          "finding_confidence": 8
+        },
+        {
+          "gt_category": "content_provider_sql_injection",
+          "finding_category": "content_provider_sql_injection",
+          "finding_title": "android_sql_raw_query",
+          "finding_severity": "medium",
+          "finding_confidence": 7
+        }
+      ],
+      "unmatched_expected": [],
+      "unmatched_findings": [
+        {
+          "category": "manifest_issue",
+          "title": "App can be installed on a vulnerable unpatched Android version 7.0, [minSdk=24]",
+          "severity": "high",
+          "confidence": 8,
+          "evidence": "This application can be installed on an older version of android that has multiple unfixed vulnerabilities. These devices won't receive reasonable security updates from Google. Support an Android version => 10, API 29 to receive reasonable security updates.",
+          "file": "AndroidManifest.xml",
+          "raw_rule": "vulnerable_os_version",
+          "source": "manifest_analysis.manifest_findings"
+        },
+        {
+          "category": "logging_sensitive_data",
+          "title": "android_logging",
+          "severity": "low",
+          "confidence": 7,
+          "evidence": "The App logs information. Sensitive information should never be logged. com/example/mastg_test0007/MainActivity.java:78",
+          "file": "com/example/mastg_test0007/MainActivity.java:78",
+          "raw_rule": "android_logging",
+          "source": "code_analysis.findings"
+        },
+        {
+          "category": "content_provider_usage",
+          "title": "api_content_provider",
+          "severity": "low",
+          "confidence": 4,
+          "evidence": "Content Provider com/example/mastg_test0007/MyContentProvider.java:3",
+          "file": "com/example/mastg_test0007/MyContentProvider.java:3",
+          "raw_rule": "api_content_provider",
+          "source": "android_api"
+        }
+      ]
+    },
+    {
+      "case_id": "Platform/MASTG-TEST0008",
+      "test_id": "MASTG-TEST-0008",
+      "title": "Checking for Sensitive Data Disclosure Through the User Interface",
+      "expected_count": 2,
+      "raw_finding_count": 3,
+      "scoped_finding_count": 0,
+      "tp": 0,
+      "fp": 0,
+      "fn": 2,
+      "precision": null,
+      "recall": 0.0,
+      "f1": null,
+      "top5_precision": null,
+      "matches": [],
+      "unmatched_expected": [
+        {
+          "id": "GT-0008-1",
+          "category": "unmasked_sensitive_input",
+          "must_detect": true,
+          "severity": "medium",
+          "description": "The app asks for sensitive values such as credit card number and PIN, but the input fields are not obscured during entry.",
+          "acceptable_scanner_categories": [
+            "unmasked_sensitive_input",
+            "sensitive_data_ui_exposure",
+            "plaintext_sensitive_input",
+            "missing_password_input_type",
+            "ui_sensitive_data_disclosure"
+          ],
+          "evidence_keywords": [
+            "edittext",
+            "inputtype",
+            "textpassword",
+            "numberpassword",
+            "password",
+            "pin",
+            "credit card",
+            "creditcard",
+            "plaintext"
+          ],
+          "source": "README.md Implementation and Static Analysis"
+        },
+        {
+          "id": "GT-0008-2",
+          "category": "sensitive_data_in_notification",
+          "must_detect": true,
+          "severity": "medium",
+          "description": "The app sends a notification that contains the credit card number and PIN in plaintext.",
+          "acceptable_scanner_categories": [
+            "sensitive_data_in_notification",
+            "notification_sensitive_data",
+            "plaintext_notification",
+            "ui_sensitive_data_disclosure",
+            "privacy_leak"
+          ],
+          "evidence_keywords": [
+            "notificationmanager",
+            "notificationcompat",
+            "notification.builder",
+            "setcontenttext",
+            "setcontenttitle",
+            "notify",
+            "credit card",
+            "pin",
+            "plaintext"
+          ],
+          "source": "README.md Implementation and Static Analysis"
+        }
+      ],
+      "unmatched_findings": []
+    },
+    {
+      "case_id": "Platform/MASTG-TEST0024",
+      "test_id": "MASTG-TEST-0024",
+      "title": "Testing for App Permissions",
+      "expected_count": 2,
+      "raw_finding_count": 6,
+      "scoped_finding_count": 3,
+      "tp": 0,
+      "fp": 3,
+      "fn": 2,
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": null,
+      "top5_precision": 0.0,
+      "matches": [],
+      "unmatched_expected": [
+        {
+          "id": "GT-0024-1",
+          "category": "excessive_permissions",
+          "must_detect": true,
+          "severity": "medium",
+          "description": "The camera app requests permissions that are not necessary for its core functionality of taking photos and saving them to internal storage.",
+          "acceptable_scanner_categories": [
+            "excessive_permissions",
+            "unnecessary_permissions",
+            "overprivileged_app",
+            "permission_overreach",
+            "manifest_permission"
+          ],
+          "evidence_keywords": [
+            "uses-permission",
+            "internet",
+            "accept_handover",
+            "answer_phone_calls",
+            "call_phone",
+            "write_calendar",
+            "read_contacts",
+            "bluetooth_admin"
+          ],
+          "source": "README.md Implementation and Static Analysis"
+        },
+        {
+          "id": "GT-0024-2",
+          "category": "dangerous_permission_requested",
+          "must_detect": true,
+          "severity": "medium",
+          "description": "The app requests dangerous permissions such as phone, contacts, and calendar permissions without clear need.",
+          "acceptable_scanner_categories": [
+            "dangerous_permission",
+            "sensitive_permission",
+            "privacy_sensitive_permission",
+            "permission_overreach",
+            "manifest_permission"
+          ],
+          "evidence_keywords": [
+            "read_contacts",
+            "write_calendar",
+            "call_phone",
+            "answer_phone_calls",
+            "dangerous",
+            "permission",
+            "android.permission"
+          ],
+          "source": "README.md Android Permissions and Permission Analysis"
+        }
+      ],
+      "unmatched_findings": [
+        {
+          "category": "manifest_issue",
+          "title": "App can be installed on a vulnerable unpatched Android version 7.0, [minSdk=24]",
+          "severity": "high",
+          "confidence": 8,
+          "evidence": "This application can be installed on an older version of android that has multiple unfixed vulnerabilities. These devices won't receive reasonable security updates from Google. Support an Android version => 10, API 29 to receive reasonable security updates.",
+          "file": "AndroidManifest.xml",
+          "raw_rule": "vulnerable_os_version",
+          "source": "manifest_analysis.manifest_findings"
+        },
+        {
+          "category": "logging_sensitive_data",
+          "title": "android_logging",
+          "severity": "low",
+          "confidence": 7,
+          "evidence": "The App logs information. Sensitive information should never be logged. com/example/mastg_test0024/MainActivity.java:79",
+          "file": "com/example/mastg_test0024/MainActivity.java:79",
+          "raw_rule": "android_logging",
+          "source": "code_analysis.findings"
+        },
+        {
+          "category": "local_file_io",
+          "title": "api_local_file_io",
+          "severity": "low",
+          "confidence": 4,
+          "evidence": "Local File I/O Operations com/example/mastg_test0024/MainActivity.java:16,17,17,18,18,19,84",
+          "file": "com/example/mastg_test0024/MainActivity.java:16,17,17,18,18,19,84",
+          "raw_rule": "api_local_file_io",
+          "source": "android_api"
+        }
+      ]
+    },
+    {
+      "case_id": "Platform/MASTG-TEST0028",
+      "test_id": "MASTG-TEST-0028",
+      "title": "Testing Deep Links",
+      "expected_count": 3,
+      "raw_finding_count": 8,
+      "scoped_finding_count": 5,
+      "tp": 3,
+      "fp": 2,
+      "fn": 0,
+      "precision": 0.6,
+      "recall": 1.0,
+      "f1": 0.7499999999999999,
+      "top5_precision": 0.8,
+      "matches": [
+        {
+          "gt_category": "insecure_deeplink",
+          "finding_category": "exported_activity",
+          "finding_title": "Activity (com.example.mastg_test0028.WebViewActivity) is not Protected. [android:exported=true]",
+          "finding_severity": "medium",
+          "finding_confidence": 8
+        },
+        {
+          "gt_category": "deeplink_auth_bypass",
+          "finding_category": "manifest_issue",
+          "finding_title": "App can be installed on a vulnerable Android version 8.0, minSdk=26]",
+          "finding_severity": "medium",
+          "finding_confidence": 8
+        },
+        {
+          "gt_category": "deeplink_webview_input_control",
+          "finding_category": "webview",
+          "finding_title": "android_webview_allow_file_from_url",
+          "finding_severity": "medium",
+          "finding_confidence": 7
+        }
+      ],
+      "unmatched_expected": [],
+      "unmatched_findings": [
+        {
+          "category": "logging_sensitive_data",
+          "title": "android_logging",
+          "severity": "low",
+          "confidence": 7,
+          "evidence": "The App logs information. Sensitive information should never be logged. com/example/mastg_test0028/MainActivity.java:45,123,203,205",
+          "file": "com/example/mastg_test0028/MainActivity.java:45,123,203,205",
+          "raw_rule": "android_logging",
+          "source": "code_analysis.findings"
+        },
+        {
+          "category": "local_file_io",
+          "title": "api_local_file_io",
+          "severity": "low",
+          "confidence": 4,
+          "evidence": "Local File I/O Operations com/example/mastg_test0028/MainActivity.java:15,16,16,17,17,18,18,19,19,20,20,21,94,200,200,201,202",
+          "file": "com/example/mastg_test0028/MainActivity.java:15,16,16,17,17,18,18,19,19,20,20,21,94,200,200,201,202",
+          "raw_rule": "api_local_file_io",
+          "source": "android_api"
+        }
+      ]
+    },
+    {
+      "case_id": "Platform/MASTG-TEST0030",
+      "test_id": "MASTG-TEST-0030",
+      "title": "Testing for Vulnerable Implementation of PendingIntent",
+      "expected_count": 2,
+      "raw_finding_count": 6,
+      "scoped_finding_count": 1,
+      "tp": 0,
+      "fp": 1,
+      "fn": 2,
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": null,
+      "top5_precision": 0.0,
+      "matches": [],
+      "unmatched_expected": [
+        {
+          "id": "GT-0030-1",
+          "category": "mutable_pending_intent",
+          "must_detect": true,
+          "severity": "high",
+          "description": "The app creates a PendingIntent using the MUTABLE flag, allowing the intent to be modified after creation.",
+          "acceptable_scanner_categories": [
+            "mutable_pending_intent",
+            "pendingintent_mutability",
+            "unsafe_pendingintent",
+            "pendingintent_hijacking",
+            "intent_tampering"
+          ],
+          "evidence_keywords": [
+            "pendingintent",
+            "getactivity",
+            "getservice",
+            "getforegroundservice",
+            "getactivities",
+            "flag_mutable",
+            "flag_immutable",
+            "mutable"
+          ],
+          "source": "README.md Implementation and Static Analysis"
+        },
+        {
+          "id": "GT-0030-2",
+          "category": "implicit_pending_intent",
+          "must_detect": true,
+          "severity": "high",
+          "description": "The base intent used by the PendingIntent is implicit or not restricted to an exact package, action, and component.",
+          "acceptable_scanner_categories": [
+            "implicit_pending_intent",
+            "implicit_intent",
+            "unsafe_pendingintent",
+            "pendingintent_hijacking",
+            "intent_redirection"
+          ],
+          "evidence_keywords": [
+            "new intent",
+            "intent.action_view",
+            "setdataandtype",
+            "setpackage",
+            "setcomponent",
+            "setclass",
+            "implicit intent"
+          ],
+          "source": "README.md Static Analysis"
+        }
+      ],
+      "unmatched_findings": [
+        {
+          "category": "manifest_issue",
+          "title": "App can be installed on a vulnerable Android version 8.0, minSdk=26]",
+          "severity": "medium",
+          "confidence": 8,
+          "evidence": "This application can be installed on an older version of android that has multiple vulnerabilities. Support an Android version => 10, API 29 to receive reasonable security updates.",
+          "file": "AndroidManifest.xml",
+          "raw_rule": "vulnerable_os_version2",
+          "source": "manifest_analysis.manifest_findings"
+        }
+      ]
+    },
+    {
+      "case_id": "Platform/MASTG-TEST0031",
+      "test_id": "MASTG-TEST-0031",
+      "title": "Testing JavaScript Execution in WebViews",
+      "expected_count": 2,
+      "raw_finding_count": 3,
+      "scoped_finding_count": 2,
+      "tp": 0,
+      "fp": 2,
+      "fn": 2,
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": null,
+      "top5_precision": 0.0,
+      "matches": [],
+      "unmatched_expected": [
+        {
+          "id": "GT-0031-1",
+          "category": "webview_javascript_enabled",
+          "must_detect": true,
+          "severity": "medium",
+          "description": "The app explicitly enables JavaScript execution in a WebView.",
+          "acceptable_scanner_categories": [
+            "webview_javascript_enabled",
+            "unsafe_webview",
+            "javascript_enabled",
+            "webview_attack_surface",
+            "webview_misconfiguration"
+          ],
+          "evidence_keywords": [
+            "webview",
+            "websettings",
+            "getsettings",
+            "setjavascriptenabled",
+            "setjavascriptenabled(true)",
+            "javascript"
+          ],
+          "source": "README.md Implementation and Static Analysis"
+        },
+        {
+          "id": "GT-0031-2",
+          "category": "user_controlled_webview_content",
+          "must_detect": true,
+          "severity": "medium",
+          "description": "The app takes a user search query from an EditText and loads related results into a WebView, making WebView content influenced by user input.",
+          "acceptable_scanner_categories": [
+            "user_controlled_webview_content",
+            "webview_loadurl_user_controlled",
+            "unsafe_webview_loadurl",
+            "webview_input_injection",
+            "untrusted_webview_content"
+          ],
+          "evidence_keywords": [
+            "edittext",
+            "gettext",
+            "query",
+            "search",
+            "webview",
+            "loadurl",
+            "https",
+            "url"
+          ],
+          "source": "README.md Implementation and Static Analysis"
+        }
+      ],
+      "unmatched_findings": [
+        {
+          "category": "manifest_issue",
+          "title": "App can be installed on a vulnerable unpatched Android version 7.0, [minSdk=24]",
+          "severity": "high",
+          "confidence": 8,
+          "evidence": "This application can be installed on an older version of android that has multiple unfixed vulnerabilities. These devices won't receive reasonable security updates from Google. Support an Android version => 10, API 29 to receive reasonable security updates.",
+          "file": "AndroidManifest.xml",
+          "raw_rule": "vulnerable_os_version",
+          "source": "manifest_analysis.manifest_findings"
+        },
+        {
+          "category": "logging_sensitive_data",
+          "title": "android_logging",
+          "severity": "low",
+          "confidence": 7,
+          "evidence": "The App logs information. Sensitive information should never be logged. com/example/mastg_test0031/MainActivity.java:32",
+          "file": "com/example/mastg_test0031/MainActivity.java:32",
+          "raw_rule": "android_logging",
+          "source": "code_analysis.findings"
+        }
+      ]
+    },
+    {
+      "case_id": "Platform/MASTG-TEST0032",
+      "test_id": "MASTG-TEST-0032",
+      "title": "Testing WebView Protocol Handlers",
+      "expected_count": 3,
+      "raw_finding_count": 9,
+      "scoped_finding_count": 5,
+      "tp": 1,
+      "fp": 4,
+      "fn": 2,
+      "precision": 0.2,
+      "recall": 0.3333333333333333,
+      "f1": 0.25,
+      "top5_precision": 0.6,
+      "matches": [
+        {
+          "gt_category": "webview_loads_external_storage_file",
+          "finding_category": "webview",
+          "finding_title": "android_webview_allow_file_from_url",
+          "finding_severity": "medium",
+          "finding_confidence": 7
+        }
+      ],
+      "unmatched_expected": [
+        {
+          "id": "GT-0032-2",
+          "category": "webview_file_access_enabled",
+          "must_detect": true,
+          "severity": "high",
+          "description": "The WebView may allow file/content access or does not explicitly disable risky protocol handlers.",
+          "acceptable_scanner_categories": [
+            "webview_file_access_enabled",
+            "unsafe_webview_file_access",
+            "webview_protocol_handler",
+            "local_file_access",
+            "webview_misconfiguration"
+          ],
+          "evidence_keywords": [
+            "setallowfileaccess",
+            "setallowcontentaccess",
+            "setallowfileaccessfromfileurls",
+            "setallowuniversalaccessfromfileurls",
+            "file access",
+            "content access"
+          ],
+          "source": "README.md Static Analysis"
+        },
+        {
+          "id": "GT-0032-3",
+          "category": "cleartext_traffic_allowed",
+          "must_detect": true,
+          "severity": "medium",
+          "description": "The network security configuration permits cleartext traffic for 10.0.2.2.",
+          "acceptable_scanner_categories": [
+            "cleartext_traffic_allowed",
+            "network_security_config",
+            "insecure_network_config",
+            "http_cleartext",
+            "cleartext_permitted"
+          ],
+          "evidence_keywords": [
+            "network-security-config",
+            "cleartexttrafficpermitted",
+            "cleartexttrafficpermitted=true",
+            "domain-config",
+            "10.0.2.2",
+            "http"
+          ],
+          "source": "README.md Implementation"
+        }
+      ],
+      "unmatched_findings": [
+        {
+          "category": "manifest_issue",
+          "title": "App can be installed on a vulnerable unpatched Android version 7.0, [minSdk=24]",
+          "severity": "high",
+          "confidence": 8,
+          "evidence": "This application can be installed on an older version of android that has multiple unfixed vulnerabilities. These devices won't receive reasonable security updates from Google. Support an Android version => 10, API 29 to receive reasonable security updates.",
+          "file": "AndroidManifest.xml",
+          "raw_rule": "vulnerable_os_version",
+          "source": "manifest_analysis.manifest_findings"
+        },
+        {
+          "category": "manifest_issue",
+          "title": "App has a Network Security Configuration[android:networkSecurityConfig=@xml/network_security_config]",
+          "severity": "low",
+          "confidence": 8,
+          "evidence": "The Network Security Configuration feature lets apps customize their network security settings in a safe, declarative configuration file without modifying app code. These settings can be configured for specific domains and for a specific app. ",
+          "file": "AndroidManifest.xml",
+          "raw_rule": "has_network_security",
+          "source": "manifest_analysis.manifest_findings"
+        },
+        {
+          "category": "logging_sensitive_data",
+          "title": "android_logging",
+          "severity": "low",
+          "confidence": 7,
+          "evidence": "The App logs information. Sensitive information should never be logged. com/example/mastg_test0032/WebViewActivity.java:46",
+          "file": "com/example/mastg_test0032/WebViewActivity.java:46",
+          "raw_rule": "android_logging",
+          "source": "code_analysis.findings"
+        },
+        {
+          "category": "local_file_io",
+          "title": "api_local_file_io",
+          "severity": "low",
+          "confidence": 4,
+          "evidence": "Local File I/O Operations com/example/mastg_test0032/WebViewActivity.java:45",
+          "file": "com/example/mastg_test0032/WebViewActivity.java:45",
+          "raw_rule": "api_local_file_io",
+          "source": "android_api"
+        }
+      ]
+    },
+    {
+      "case_id": "Platform/MASTG-TEST0033",
+      "test_id": "MASTG-TEST-0033",
+      "title": "Testing for Java Objects Exposed Through WebViews",
+      "expected_count": 3,
+      "raw_finding_count": 12,
+      "scoped_finding_count": 7,
+      "tp": 3,
+      "fp": 4,
+      "fn": 0,
+      "precision": 0.42857142857142855,
+      "recall": 1.0,
+      "f1": 0.6,
+      "top5_precision": 0.6,
+      "matches": [
+        {
+          "gt_category": "javascript_interface_exposed",
+          "finding_category": "exported_activity",
+          "finding_title": "Activity (com.example.mastg_test0033.SupportedWebView) is not Protected. [android:exported=true]",
+          "finding_severity": "medium",
+          "finding_confidence": 8
+        },
+        {
+          "gt_category": "webview_javascript_enabled_with_bridge",
+          "finding_category": "hardcoded_secret",
+          "finding_title": "android_hardcoded",
+          "finding_severity": "medium",
+          "finding_confidence": 7
+        },
+        {
+          "gt_category": "exported_activity_with_webview_bridge",
+          "finding_category": "webview",
+          "finding_title": "android_webview",
+          "finding_severity": "medium",
+          "finding_confidence": 7
+        }
+      ],
+      "unmatched_expected": [],
+      "unmatched_findings": [
+        {
+          "category": "manifest_issue",
+          "title": "App can be installed on a vulnerable Android version 8.0, minSdk=26]",
+          "severity": "medium",
+          "confidence": 8,
+          "evidence": "This application can be installed on an older version of android that has multiple vulnerabilities. Support an Android version => 10, API 29 to receive reasonable security updates.",
+          "file": "AndroidManifest.xml",
+          "raw_rule": "vulnerable_os_version2",
+          "source": "manifest_analysis.manifest_findings"
+        },
+        {
+          "category": "manifest_issue",
+          "title": "App has a Network Security Configuration[android:networkSecurityConfig=@xml/network_security_config]",
+          "severity": "low",
+          "confidence": 8,
+          "evidence": "The Network Security Configuration feature lets apps customize their network security settings in a safe, declarative configuration file without modifying app code. These settings can be configured for specific domains and for a specific app. ",
+          "file": "AndroidManifest.xml",
+          "raw_rule": "has_network_security",
+          "source": "manifest_analysis.manifest_findings"
+        },
+        {
+          "category": "logging_sensitive_data",
+          "title": "android_logging",
+          "severity": "low",
+          "confidence": 7,
+          "evidence": "The App logs information. Sensitive information should never be logged. com/example/mastg_test0033/MainActivity.java:53,55",
+          "file": "com/example/mastg_test0033/MainActivity.java:53,55",
+          "raw_rule": "android_logging",
+          "source": "code_analysis.findings"
+        },
+        {
+          "category": "local_file_io",
+          "title": "api_local_file_io",
+          "severity": "low",
+          "confidence": 4,
+          "evidence": "Local File I/O Operations com/example/mastg_test0033/MainActivity.java:12,13,13,14,50,50,51,52",
+          "file": "com/example/mastg_test0033/MainActivity.java:12,13,13,14,50,50,51,52",
+          "raw_rule": "api_local_file_io",
+          "source": "android_api"
+        }
+      ]
+    },
+    {
+      "case_id": "Platform/MASTG-TEST0035",
+      "test_id": "MASTG-TEST-0035",
+      "title": "Testing for Overlay Attacks",
+      "expected_count": 2,
+      "raw_finding_count": 6,
+      "scoped_finding_count": 3,
+      "tp": 0,
+      "fp": 3,
+      "fn": 2,
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": null,
+      "top5_precision": 0.0,
+      "matches": [],
+      "unmatched_expected": [
+        {
+          "id": "GT-0035-1",
+          "category": "missing_overlay_touch_filtering",
+          "must_detect": true,
+          "severity": "medium",
+          "description": "Sensitive UI elements do not enable touch filtering protections against overlay or tapjacking attacks.",
+          "acceptable_scanner_categories": [
+            "missing_overlay_touch_filtering",
+            "tapjacking",
+            "overlay_attack",
+            "missing_filter_touches_when_obscured",
+            "ui_security_missing"
+          ],
+          "evidence_keywords": [
+            "filtertoucheswhenobscured",
+            "setfiltertoucheswhenobscured",
+            "android:filtertoucheswhenobscured",
+            "tapjacking",
+            "overlay",
+            "login",
+            "edittext",
+            "button"
+          ],
+          "source": "README.md Static Analysis and Implementation"
+        },
+        {
+          "id": "GT-0035-2",
+          "category": "missing_obscured_touch_check",
+          "must_detect": true,
+          "severity": "medium",
+          "description": "The app does not implement custom touch security checks such as onFilterTouchEventForSecurity or checks for obscured touch flags.",
+          "acceptable_scanner_categories": [
+            "missing_obscured_touch_check",
+            "tapjacking",
+            "overlay_attack",
+            "missing_touch_security_policy",
+            "ui_security_missing"
+          ],
+          "evidence_keywords": [
+            "onfiltertoucheventforsecurity",
+            "flag_window_is_obscured",
+            "flag_window_is_partially_obscured",
+            "motionevent",
+            "obscured",
+            "overlay"
+          ],
+          "source": "README.md Static Analysis and Implementation"
+        }
+      ],
+      "unmatched_findings": [
+        {
+          "category": "manifest_issue",
+          "title": "App can be installed on a vulnerable unpatched Android version 5.0-5.0.2, [minSdk=21]",
+          "severity": "high",
+          "confidence": 8,
+          "evidence": "This application can be installed on an older version of android that has multiple unfixed vulnerabilities. These devices won't receive reasonable security updates from Google. Support an Android version => 10, API 29 to receive reasonable security updates.",
+          "file": "AndroidManifest.xml",
+          "raw_rule": "vulnerable_os_version",
+          "source": "manifest_analysis.manifest_findings"
+        },
+        {
+          "category": "logging_sensitive_data",
+          "title": "android_logging",
+          "severity": "low",
+          "confidence": 7,
+          "evidence": "The App logs information. Sensitive information should never be logged. com/example/mastg_test0035/MainActivity.java:84,85,175,177",
+          "file": "com/example/mastg_test0035/MainActivity.java:84,85,175,177",
+          "raw_rule": "android_logging",
+          "source": "code_analysis.findings"
+        },
+        {
+          "category": "local_file_io",
+          "title": "api_local_file_io",
+          "severity": "low",
+          "confidence": 4,
+          "evidence": "Local File I/O Operations com/example/mastg_test0035/MainActivity.java:15,16,16,17,17,18,18,19,19,20,70,172,172,173,174",
+          "file": "com/example/mastg_test0035/MainActivity.java:15,16,16,17,17,18,18,19,19,20,70,172,172,173,174",
+          "raw_rule": "api_local_file_io",
+          "source": "android_api"
+        }
+      ]
+    },
+    {
+      "case_id": "Platform/MASTG-TEST0037",
+      "test_id": "MASTG-TEST-0037",
+      "title": "Testing WebViews Cleanup",
+      "expected_count": 4,
+      "raw_finding_count": 4,
+      "scoped_finding_count": 1,
+      "tp": 0,
+      "fp": 1,
+      "fn": 4,
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": null,
+      "top5_precision": 0.0,
+      "matches": [],
+      "unmatched_expected": [
+        {
+          "id": "GT-0037-1",
+          "category": "webview_storage_not_cleaned",
+          "must_detect": true,
+          "severity": "medium",
+          "description": "The app uses WebView storage-related features or may store WebView data without properly deleting WebStorage data.",
+          "acceptable_scanner_categories": [
+            "webview_storage_not_cleaned",
+            "incomplete_webview_cleanup",
+            "webstorage_not_cleared",
+            "webview_data_persistence",
+            "privacy_leak"
+          ],
+          "evidence_keywords": [
+            "webview",
+            "setdomstorageenabled",
+            "setappcacheenabled",
+            "setdatabaseenabled",
+            "webstorage",
+            "deletealldata",
+            "local storage"
+          ],
+          "source": "README.md Implementation and Static Analysis"
+        },
+        {
+          "id": "GT-0037-2",
+          "category": "webview_cache_not_cleared",
+          "must_detect": true,
+          "severity": "medium",
+          "description": "The app does not fully clear WebView cache, or does not call clearCache with disk-file cleanup.",
+          "acceptable_scanner_categories": [
+            "webview_cache_not_cleared",
+            "incomplete_webview_cleanup",
+            "webview_cache_persistence",
+            "cache_not_cleared",
+            "privacy_leak"
+          ],
+          "evidence_keywords": [
+            "clearcache",
+            "clearcache(true)",
+            "clearcache(false)",
+            "cache",
+            "includeDiskFiles",
+            "webview"
+          ],
+          "source": "README.md Cache and Static Analysis"
+        },
+        {
+          "id": "GT-0037-3",
+          "category": "webview_cookies_not_removed",
+          "must_detect": true,
+          "severity": "medium",
+          "description": "The app does not remove cookies stored by WebView during cleanup.",
+          "acceptable_scanner_categories": [
+            "webview_cookies_not_removed",
+            "cookie_not_cleared",
+            "incomplete_webview_cleanup",
+            "session_data_persistence",
+            "privacy_leak"
+          ],
+          "evidence_keywords": [
+            "cookiemanager",
+            "removeallcookies",
+            "removesessioncookies",
+            "cookie",
+            "webview"
+          ],
+          "source": "README.md Cookies and Static Analysis"
+        },
+        {
+          "id": "GT-0037-4",
+          "category": "webview_files_not_deleted",
+          "must_detect": true,
+          "severity": "medium",
+          "description": "The app does not manually delete known WebView data directories such as app_webview.",
+          "acceptable_scanner_categories": [
+            "webview_files_not_deleted",
+            "incomplete_webview_cleanup",
+            "webview_data_persistence",
+            "app_webview_not_deleted",
+            "privacy_leak"
+          ],
+          "evidence_keywords": [
+            "deleteRecursively",
+            "java.io.File",
+            "app_webview",
+            "delete",
+            "webview directory",
+            "file"
+          ],
+          "source": "README.md File APIs and Static Analysis"
+        }
+      ],
+      "unmatched_findings": [
+        {
+          "category": "manifest_issue",
+          "title": "App can be installed on a vulnerable unpatched Android version 7.0, [minSdk=24]",
+          "severity": "high",
+          "confidence": 8,
+          "evidence": "This application can be installed on an older version of android that has multiple unfixed vulnerabilities. These devices won't receive reasonable security updates from Google. Support an Android version => 10, API 29 to receive reasonable security updates.",
+          "file": "AndroidManifest.xml",
+          "raw_rule": "vulnerable_os_version",
+          "source": "manifest_analysis.manifest_findings"
+        }
+      ]
+    }
+  ],
+  "our_scanner": [
+    {
+      "case_id": "Platform/MASTG-TEST0007",
+      "test_id": "MASTG-TEST-0007",
+      "title": "Determining Whether Sensitive Stored Data Has Been Exposed via IPC Mechanisms",
+      "expected_count": 2,
+      "raw_finding_count": 0,
+      "scoped_finding_count": 0,
+      "tp": 0,
+      "fp": 0,
+      "fn": 2,
+      "precision": null,
+      "recall": 0.0,
+      "f1": null,
+      "top5_precision": null,
+      "matches": [],
+      "unmatched_expected": [
+        {
+          "id": "GT-0007-1",
+          "category": "exported_provider",
+          "must_detect": true,
+          "severity": "high",
+          "description": "The app exposes a ContentProvider that allows other apps to access sensitive stored data through IPC.",
+          "acceptable_scanner_categories": [
+            "exported_provider",
+            "exported_component",
+            "content_provider_exposure",
+            "ipc_exposure",
+            "manifest_provider"
+          ],
+          "evidence_keywords": [
+            "content provider",
+            "provider",
+            "android:exported",
+            "exported=true",
+            "permission",
+            "android:permission",
+            "readPermission",
+            "writePermission"
+          ],
+          "source": "README.md Implementation and Static Analysis"
+        },
+        {
+          "id": "GT-0007-2",
+          "category": "content_provider_sql_injection",
+          "must_detect": true,
+          "severity": "high",
+          "description": "The ContentProvider query logic is vulnerable to SQL injection through attacker-controlled selection/query input.",
+          "acceptable_scanner_categories": [
+            "content_provider_sql_injection",
+            "sql_injection",
+            "unsafe_sql_query",
+            "unsafe_content_provider_query"
+          ],
+          "evidence_keywords": [
+            "sql injection",
+            "raw sql",
+            "sqlite",
+            "sqlitequerybuilder",
+            "sqlite database",
+            "query",
+            "selection",
+            "rawquery",
+            "cursor"
+          ],
+          "source": "README.md Implementation and Static Analysis"
+        }
+      ],
+      "unmatched_findings": []
+    },
+    {
+      "case_id": "Platform/MASTG-TEST0008",
+      "test_id": "MASTG-TEST-0008",
+      "title": "Checking for Sensitive Data Disclosure Through the User Interface",
+      "expected_count": 2,
+      "raw_finding_count": 0,
+      "scoped_finding_count": 0,
+      "tp": 0,
+      "fp": 0,
+      "fn": 2,
+      "precision": null,
+      "recall": 0.0,
+      "f1": null,
+      "top5_precision": null,
+      "matches": [],
+      "unmatched_expected": [
+        {
+          "id": "GT-0008-1",
+          "category": "unmasked_sensitive_input",
+          "must_detect": true,
+          "severity": "medium",
+          "description": "The app asks for sensitive values such as credit card number and PIN, but the input fields are not obscured during entry.",
+          "acceptable_scanner_categories": [
+            "unmasked_sensitive_input",
+            "sensitive_data_ui_exposure",
+            "plaintext_sensitive_input",
+            "missing_password_input_type",
+            "ui_sensitive_data_disclosure"
+          ],
+          "evidence_keywords": [
+            "edittext",
+            "inputtype",
+            "textpassword",
+            "numberpassword",
+            "password",
+            "pin",
+            "credit card",
+            "creditcard",
+            "plaintext"
+          ],
+          "source": "README.md Implementation and Static Analysis"
+        },
+        {
+          "id": "GT-0008-2",
+          "category": "sensitive_data_in_notification",
+          "must_detect": true,
+          "severity": "medium",
+          "description": "The app sends a notification that contains the credit card number and PIN in plaintext.",
+          "acceptable_scanner_categories": [
+            "sensitive_data_in_notification",
+            "notification_sensitive_data",
+            "plaintext_notification",
+            "ui_sensitive_data_disclosure",
+            "privacy_leak"
+          ],
+          "evidence_keywords": [
+            "notificationmanager",
+            "notificationcompat",
+            "notification.builder",
+            "setcontenttext",
+            "setcontenttitle",
+            "notify",
+            "credit card",
+            "pin",
+            "plaintext"
+          ],
+          "source": "README.md Implementation and Static Analysis"
+        }
+      ],
+      "unmatched_findings": []
+    },
+    {
+      "case_id": "Platform/MASTG-TEST0024",
+      "test_id": "MASTG-TEST-0024",
+      "title": "Testing for App Permissions",
+      "expected_count": 2,
+      "raw_finding_count": 0,
+      "scoped_finding_count": 0,
+      "tp": 0,
+      "fp": 0,
+      "fn": 2,
+      "precision": null,
+      "recall": 0.0,
+      "f1": null,
+      "top5_precision": null,
+      "matches": [],
+      "unmatched_expected": [
+        {
+          "id": "GT-0024-1",
+          "category": "excessive_permissions",
+          "must_detect": true,
+          "severity": "medium",
+          "description": "The camera app requests permissions that are not necessary for its core functionality of taking photos and saving them to internal storage.",
+          "acceptable_scanner_categories": [
+            "excessive_permissions",
+            "unnecessary_permissions",
+            "overprivileged_app",
+            "permission_overreach",
+            "manifest_permission"
+          ],
+          "evidence_keywords": [
+            "uses-permission",
+            "internet",
+            "accept_handover",
+            "answer_phone_calls",
+            "call_phone",
+            "write_calendar",
+            "read_contacts",
+            "bluetooth_admin"
+          ],
+          "source": "README.md Implementation and Static Analysis"
+        },
+        {
+          "id": "GT-0024-2",
+          "category": "dangerous_permission_requested",
+          "must_detect": true,
+          "severity": "medium",
+          "description": "The app requests dangerous permissions such as phone, contacts, and calendar permissions without clear need.",
+          "acceptable_scanner_categories": [
+            "dangerous_permission",
+            "sensitive_permission",
+            "privacy_sensitive_permission",
+            "permission_overreach",
+            "manifest_permission"
+          ],
+          "evidence_keywords": [
+            "read_contacts",
+            "write_calendar",
+            "call_phone",
+            "answer_phone_calls",
+            "dangerous",
+            "permission",
+            "android.permission"
+          ],
+          "source": "README.md Android Permissions and Permission Analysis"
+        }
+      ],
+      "unmatched_findings": []
+    },
+    {
+      "case_id": "Platform/MASTG-TEST0028",
+      "test_id": "MASTG-TEST-0028",
+      "title": "Testing Deep Links",
+      "expected_count": 3,
+      "raw_finding_count": 0,
+      "scoped_finding_count": 0,
+      "tp": 0,
+      "fp": 0,
+      "fn": 3,
+      "precision": null,
+      "recall": 0.0,
+      "f1": null,
+      "top5_precision": null,
+      "matches": [],
+      "unmatched_expected": [
+        {
+          "id": "GT-0028-1",
+          "category": "insecure_deeplink",
+          "must_detect": true,
+          "severity": "high",
+          "description": "The app exposes deep links through exported intent filters, increasing the attack surface and allowing external intents to reach app functionality.",
+          "acceptable_scanner_categories": [
+            "insecure_deeplink",
+            "deep_link_exposure",
+            "exported_activity",
+            "browsable_intent_filter",
+            "manifest_deeplink"
+          ],
+          "evidence_keywords": [
+            "intent-filter",
+            "android.intent.action.view",
+            "android.intent.category.browsable",
+            "android.intent.category.default",
+            "data",
+            "scheme",
+            "host",
+            "path",
+            "deeplink"
+          ],
+          "source": "README.md Check for Deep Link Usage"
+        },
+        {
+          "id": "GT-0028-2",
+          "category": "deeplink_auth_bypass",
+          "must_detect": true,
+          "severity": "high",
+          "description": "The app login can be bypassed by generating a crafted intent from the terminal through the deep link entry point.",
+          "acceptable_scanner_categories": [
+            "deeplink_auth_bypass",
+            "authentication_bypass",
+            "insecure_deeplink",
+            "exported_activity_abuse",
+            "intent_injection"
+          ],
+          "evidence_keywords": [
+            "login",
+            "bypass",
+            "intent",
+            "getintent",
+            "getdata",
+            "uri",
+            "admin",
+            "1234",
+            "deeplink"
+          ],
+          "source": "README.md Implementation and Check the Handler Method"
+        },
+        {
+          "id": "GT-0028-3",
+          "category": "deeplink_webview_input_control",
+          "must_detect": true,
+          "severity": "high",
+          "description": "Externally controlled deep link parameters can modify the content or URL displayed inside a WebView.",
+          "acceptable_scanner_categories": [
+            "deeplink_webview_input_control",
+            "webview_loadurl_user_controlled",
+            "unsafe_webview_loadurl",
+            "intent_to_webview",
+            "insecure_deeplink"
+          ],
+          "evidence_keywords": [
+            "webview",
+            "loadurl",
+            "setjavascriptenabled",
+            "getqueryparameter",
+            "getdata",
+            "url",
+            "html",
+            "deeplink_url"
+          ],
+          "source": "README.md Implementation and Check the Handler Method"
+        }
+      ],
+      "unmatched_findings": []
+    },
+    {
+      "case_id": "Platform/MASTG-TEST0030",
+      "test_id": "MASTG-TEST-0030",
+      "title": "Testing for Vulnerable Implementation of PendingIntent",
+      "expected_count": 2,
+      "raw_finding_count": 0,
+      "scoped_finding_count": 0,
+      "tp": 0,
+      "fp": 0,
+      "fn": 2,
+      "precision": null,
+      "recall": 0.0,
+      "f1": null,
+      "top5_precision": null,
+      "matches": [],
+      "unmatched_expected": [
+        {
+          "id": "GT-0030-1",
+          "category": "mutable_pending_intent",
+          "must_detect": true,
+          "severity": "high",
+          "description": "The app creates a PendingIntent using the MUTABLE flag, allowing the intent to be modified after creation.",
+          "acceptable_scanner_categories": [
+            "mutable_pending_intent",
+            "pendingintent_mutability",
+            "unsafe_pendingintent",
+            "pendingintent_hijacking",
+            "intent_tampering"
+          ],
+          "evidence_keywords": [
+            "pendingintent",
+            "getactivity",
+            "getservice",
+            "getforegroundservice",
+            "getactivities",
+            "flag_mutable",
+            "flag_immutable",
+            "mutable"
+          ],
+          "source": "README.md Implementation and Static Analysis"
+        },
+        {
+          "id": "GT-0030-2",
+          "category": "implicit_pending_intent",
+          "must_detect": true,
+          "severity": "high",
+          "description": "The base intent used by the PendingIntent is implicit or not restricted to an exact package, action, and component.",
+          "acceptable_scanner_categories": [
+            "implicit_pending_intent",
+            "implicit_intent",
+            "unsafe_pendingintent",
+            "pendingintent_hijacking",
+            "intent_redirection"
+          ],
+          "evidence_keywords": [
+            "new intent",
+            "intent.action_view",
+            "setdataandtype",
+            "setpackage",
+            "setcomponent",
+            "setclass",
+            "implicit intent"
+          ],
+          "source": "README.md Static Analysis"
+        }
+      ],
+      "unmatched_findings": []
+    },
+    {
+      "case_id": "Platform/MASTG-TEST0031",
+      "test_id": "MASTG-TEST-0031",
+      "title": "Testing JavaScript Execution in WebViews",
+      "expected_count": 2,
+      "raw_finding_count": 0,
+      "scoped_finding_count": 0,
+      "tp": 0,
+      "fp": 0,
+      "fn": 2,
+      "precision": null,
+      "recall": 0.0,
+      "f1": null,
+      "top5_precision": null,
+      "matches": [],
+      "unmatched_expected": [
+        {
+          "id": "GT-0031-1",
+          "category": "webview_javascript_enabled",
+          "must_detect": true,
+          "severity": "medium",
+          "description": "The app explicitly enables JavaScript execution in a WebView.",
+          "acceptable_scanner_categories": [
+            "webview_javascript_enabled",
+            "unsafe_webview",
+            "javascript_enabled",
+            "webview_attack_surface",
+            "webview_misconfiguration"
+          ],
+          "evidence_keywords": [
+            "webview",
+            "websettings",
+            "getsettings",
+            "setjavascriptenabled",
+            "setjavascriptenabled(true)",
+            "javascript"
+          ],
+          "source": "README.md Implementation and Static Analysis"
+        },
+        {
+          "id": "GT-0031-2",
+          "category": "user_controlled_webview_content",
+          "must_detect": true,
+          "severity": "medium",
+          "description": "The app takes a user search query from an EditText and loads related results into a WebView, making WebView content influenced by user input.",
+          "acceptable_scanner_categories": [
+            "user_controlled_webview_content",
+            "webview_loadurl_user_controlled",
+            "unsafe_webview_loadurl",
+            "webview_input_injection",
+            "untrusted_webview_content"
+          ],
+          "evidence_keywords": [
+            "edittext",
+            "gettext",
+            "query",
+            "search",
+            "webview",
+            "loadurl",
+            "https",
+            "url"
+          ],
+          "source": "README.md Implementation and Static Analysis"
+        }
+      ],
+      "unmatched_findings": []
+    },
+    {
+      "case_id": "Platform/MASTG-TEST0032",
+      "test_id": "MASTG-TEST-0032",
+      "title": "Testing WebView Protocol Handlers",
+      "expected_count": 3,
+      "raw_finding_count": 0,
+      "scoped_finding_count": 0,
+      "tp": 0,
+      "fp": 0,
+      "fn": 3,
+      "precision": null,
+      "recall": 0.0,
+      "f1": null,
+      "top5_precision": null,
+      "matches": [],
+      "unmatched_expected": [
+        {
+          "id": "GT-0032-1",
+          "category": "webview_loads_external_storage_file",
+          "must_detect": true,
+          "severity": "high",
+          "description": "The app loads an HTML file from external storage into a WebView, allowing other apps or users to overwrite the loaded content.",
+          "acceptable_scanner_categories": [
+            "webview_loads_external_storage_file",
+            "unsafe_webview_file_access",
+            "external_storage_webview",
+            "webview_protocol_handler",
+            "file_scheme_webview"
+          ],
+          "evidence_keywords": [
+            "webview",
+            "loadurl",
+            "file://",
+            "externalstorage",
+            "getexternalstoragedirectory",
+            "read_external_storage",
+            "home.html",
+            "external storage"
+          ],
+          "source": "README.md Implementation and Static Analysis"
+        },
+        {
+          "id": "GT-0032-2",
+          "category": "webview_file_access_enabled",
+          "must_detect": true,
+          "severity": "high",
+          "description": "The WebView may allow file/content access or does not explicitly disable risky protocol handlers.",
+          "acceptable_scanner_categories": [
+            "webview_file_access_enabled",
+            "unsafe_webview_file_access",
+            "webview_protocol_handler",
+            "local_file_access",
+            "webview_misconfiguration"
+          ],
+          "evidence_keywords": [
+            "setallowfileaccess",
+            "setallowcontentaccess",
+            "setallowfileaccessfromfileurls",
+            "setallowuniversalaccessfromfileurls",
+            "file access",
+            "content access"
+          ],
+          "source": "README.md Static Analysis"
+        },
+        {
+          "id": "GT-0032-3",
+          "category": "cleartext_traffic_allowed",
+          "must_detect": true,
+          "severity": "medium",
+          "description": "The network security configuration permits cleartext traffic for 10.0.2.2.",
+          "acceptable_scanner_categories": [
+            "cleartext_traffic_allowed",
+            "network_security_config",
+            "insecure_network_config",
+            "http_cleartext",
+            "cleartext_permitted"
+          ],
+          "evidence_keywords": [
+            "network-security-config",
+            "cleartexttrafficpermitted",
+            "cleartexttrafficpermitted=true",
+            "domain-config",
+            "10.0.2.2",
+            "http"
+          ],
+          "source": "README.md Implementation"
+        }
+      ],
+      "unmatched_findings": []
+    },
+    {
+      "case_id": "Platform/MASTG-TEST0033",
+      "test_id": "MASTG-TEST-0033",
+      "title": "Testing for Java Objects Exposed Through WebViews",
+      "expected_count": 3,
+      "raw_finding_count": 0,
+      "scoped_finding_count": 0,
+      "tp": 0,
+      "fp": 0,
+      "fn": 3,
+      "precision": null,
+      "recall": 0.0,
+      "f1": null,
+      "top5_precision": null,
+      "matches": [],
+      "unmatched_expected": [
+        {
+          "id": "GT-0033-1",
+          "category": "javascript_interface_exposed",
+          "must_detect": true,
+          "severity": "high",
+          "description": "The app exposes a Java object to JavaScript through addJavascriptInterface.",
+          "acceptable_scanner_categories": [
+            "javascript_interface_exposed",
+            "webview_javascript_bridge",
+            "addjavascriptinterface",
+            "java_object_exposed_to_webview",
+            "unsafe_webview_bridge"
+          ],
+          "evidence_keywords": [
+            "addjavascriptinterface",
+            "javascriptinterface",
+            "@javascriptinterface",
+            "webview",
+            "androidfunction",
+            "window.android",
+            "bridge"
+          ],
+          "source": "README.md Implementation and Static Analysis"
+        },
+        {
+          "id": "GT-0033-2",
+          "category": "webview_javascript_enabled_with_bridge",
+          "must_detect": true,
+          "severity": "high",
+          "description": "JavaScript is enabled in a WebView that also exposes a JavaScript bridge.",
+          "acceptable_scanner_categories": [
+            "webview_javascript_enabled_with_bridge",
+            "unsafe_webview_bridge",
+            "webview_javascript_enabled",
+            "javascript_enabled",
+            "webview_attack_surface"
+          ],
+          "evidence_keywords": [
+            "setjavascriptenabled",
+            "setjavascriptenabled(true)",
+            "addjavascriptinterface",
+            "websettings",
+            "webview",
+            "javascript"
+          ],
+          "source": "README.md Static Analysis"
+        },
+        {
+          "id": "GT-0033-3",
+          "category": "exported_activity_with_webview_bridge",
+          "must_detect": true,
+          "severity": "high",
+          "description": "The activity containing the WebView bridge is exported or externally reachable, increasing exploitability.",
+          "acceptable_scanner_categories": [
+            "exported_activity_with_webview_bridge",
+            "exported_activity",
+            "webview_bridge_exposure",
+            "external_activity_exposure",
+            "manifest_exported_component"
+          ],
+          "evidence_keywords": [
+            "activity",
+            "android:exported",
+            "exported=true",
+            "webview",
+            "addjavascriptinterface",
+            "javascriptinterface"
+          ],
+          "source": "README.md Implementation"
+        }
+      ],
+      "unmatched_findings": []
+    },
+    {
+      "case_id": "Platform/MASTG-TEST0035",
+      "test_id": "MASTG-TEST-0035",
+      "title": "Testing for Overlay Attacks",
+      "expected_count": 2,
+      "raw_finding_count": 0,
+      "scoped_finding_count": 0,
+      "tp": 0,
+      "fp": 0,
+      "fn": 2,
+      "precision": null,
+      "recall": 0.0,
+      "f1": null,
+      "top5_precision": null,
+      "matches": [],
+      "unmatched_expected": [
+        {
+          "id": "GT-0035-1",
+          "category": "missing_overlay_touch_filtering",
+          "must_detect": true,
+          "severity": "medium",
+          "description": "Sensitive UI elements do not enable touch filtering protections against overlay or tapjacking attacks.",
+          "acceptable_scanner_categories": [
+            "missing_overlay_touch_filtering",
+            "tapjacking",
+            "overlay_attack",
+            "missing_filter_touches_when_obscured",
+            "ui_security_missing"
+          ],
+          "evidence_keywords": [
+            "filtertoucheswhenobscured",
+            "setfiltertoucheswhenobscured",
+            "android:filtertoucheswhenobscured",
+            "tapjacking",
+            "overlay",
+            "login",
+            "edittext",
+            "button"
+          ],
+          "source": "README.md Static Analysis and Implementation"
+        },
+        {
+          "id": "GT-0035-2",
+          "category": "missing_obscured_touch_check",
+          "must_detect": true,
+          "severity": "medium",
+          "description": "The app does not implement custom touch security checks such as onFilterTouchEventForSecurity or checks for obscured touch flags.",
+          "acceptable_scanner_categories": [
+            "missing_obscured_touch_check",
+            "tapjacking",
+            "overlay_attack",
+            "missing_touch_security_policy",
+            "ui_security_missing"
+          ],
+          "evidence_keywords": [
+            "onfiltertoucheventforsecurity",
+            "flag_window_is_obscured",
+            "flag_window_is_partially_obscured",
+            "motionevent",
+            "obscured",
+            "overlay"
+          ],
+          "source": "README.md Static Analysis and Implementation"
+        }
+      ],
+      "unmatched_findings": []
+    },
+    {
+      "case_id": "Platform/MASTG-TEST0037",
+      "test_id": "MASTG-TEST-0037",
+      "title": "Testing WebViews Cleanup",
+      "expected_count": 4,
+      "raw_finding_count": 0,
+      "scoped_finding_count": 0,
+      "tp": 0,
+      "fp": 0,
+      "fn": 4,
+      "precision": null,
+      "recall": 0.0,
+      "f1": null,
+      "top5_precision": null,
+      "matches": [],
+      "unmatched_expected": [
+        {
+          "id": "GT-0037-1",
+          "category": "webview_storage_not_cleaned",
+          "must_detect": true,
+          "severity": "medium",
+          "description": "The app uses WebView storage-related features or may store WebView data without properly deleting WebStorage data.",
+          "acceptable_scanner_categories": [
+            "webview_storage_not_cleaned",
+            "incomplete_webview_cleanup",
+            "webstorage_not_cleared",
+            "webview_data_persistence",
+            "privacy_leak"
+          ],
+          "evidence_keywords": [
+            "webview",
+            "setdomstorageenabled",
+            "setappcacheenabled",
+            "setdatabaseenabled",
+            "webstorage",
+            "deletealldata",
+            "local storage"
+          ],
+          "source": "README.md Implementation and Static Analysis"
+        },
+        {
+          "id": "GT-0037-2",
+          "category": "webview_cache_not_cleared",
+          "must_detect": true,
+          "severity": "medium",
+          "description": "The app does not fully clear WebView cache, or does not call clearCache with disk-file cleanup.",
+          "acceptable_scanner_categories": [
+            "webview_cache_not_cleared",
+            "incomplete_webview_cleanup",
+            "webview_cache_persistence",
+            "cache_not_cleared",
+            "privacy_leak"
+          ],
+          "evidence_keywords": [
+            "clearcache",
+            "clearcache(true)",
+            "clearcache(false)",
+            "cache",
+            "includeDiskFiles",
+            "webview"
+          ],
+          "source": "README.md Cache and Static Analysis"
+        },
+        {
+          "id": "GT-0037-3",
+          "category": "webview_cookies_not_removed",
+          "must_detect": true,
+          "severity": "medium",
+          "description": "The app does not remove cookies stored by WebView during cleanup.",
+          "acceptable_scanner_categories": [
+            "webview_cookies_not_removed",
+            "cookie_not_cleared",
+            "incomplete_webview_cleanup",
+            "session_data_persistence",
+            "privacy_leak"
+          ],
+          "evidence_keywords": [
+            "cookiemanager",
+            "removeallcookies",
+            "removesessioncookies",
+            "cookie",
+            "webview"
+          ],
+          "source": "README.md Cookies and Static Analysis"
+        },
+        {
+          "id": "GT-0037-4",
+          "category": "webview_files_not_deleted",
+          "must_detect": true,
+          "severity": "medium",
+          "description": "The app does not manually delete known WebView data directories such as app_webview.",
+          "acceptable_scanner_categories": [
+            "webview_files_not_deleted",
+            "incomplete_webview_cleanup",
+            "webview_data_persistence",
+            "app_webview_not_deleted",
+            "privacy_leak"
+          ],
+          "evidence_keywords": [
+            "deleteRecursively",
+            "java.io.File",
+            "app_webview",
+            "delete",
+            "webview directory",
+            "file"
+          ],
+          "source": "README.md File APIs and Static Analysis"
+        }
+      ],
+      "unmatched_findings": []
+    }
+  ]
+}
