@@ -71,44 +71,34 @@ Scan all APKs under one benchmark category:
 ./run_scanner.sh Platform
 ```
 
-## Run evaluation
+## Current workflow
 
-Evaluate one APK report:
+### 1. Run our scanner
+./run_scanner.sh Platform
 
-```bash
-python evaluation.py \
-  --scanner our_scanner \
-  --result ./reports/our_scanner/Platform/MASTG-TEST0007/com.example.mastg_test0007.json \
-  --ground-truth ./ground_truth.json \
-  --app-id MASTG-TEST0007 \
-  --out ./evaluation_results
-```
+### 2. Run MobSF
+python run_MobSF.py \
+  --category Platform \
+  --benchmark-root ./benchmarks \
+  --out ./reports/mobsf_raw \
+  --server http://127.0.0.1:8000 \
+  --api-key YOUR_MOBSF_API_KEY
 
-Evaluate a whole category:
+### 3. Normalize MobSF reports
+python normalize_mobsf.py \
+  --input-dir ./reports/mobsf_raw/Platform \
+  --out-dir ./reports/mobsf/Platform
 
-```bash
+### 4. Evaluate our scanner
 python evaluation.py \
   --scanner our_scanner \
   --result-dir ./reports/our_scanner/Platform \
   --ground-truth ./ground_truth.json \
   --out ./evaluation_results
-```
 
-Evaluation outputs:
-
-| File | Content |
-|------|---------|
-| `evaluation_results/our_scanner/{app_id}_evaluation.json` | Per-test matching details |
-| `evaluation_results/our_scanner_summary.csv` | Per-test summary |
-| `evaluation_results/our_scanner_overall.json` | Overall benchmark result |
-
-## Current workflow
-
-```text
-1. Put OWApp APKs under benchmarks/
-2. Run ./run_scanner.sh <Category>
-3. Read each test README
-4. Add expected findings to ground_truth.json
-5. Run evaluation.py
-6. Use summary CSV / overall JSON for reporting
-```
+### 5. Evaluate MobSF
+python evaluation.py \
+  --scanner mobsf \
+  --result-dir ./reports/mobsf/Platform \
+  --ground-truth ./ground_truth.json \
+  --out ./evaluation_results
