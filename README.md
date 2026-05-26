@@ -87,18 +87,19 @@ python run_MobSF.py \
 ### 3. Normalize MobSF reports
 python normalize_mobsf.py \
   --input-dir ./reports/mobsf_raw/Platform \
-  --out-dir ./reports/mobsf/Platform
+  --out-dir ./reports/normalized/mobsf/Platform
 
 ### 4. Evaluate our scanner
 python evaluation.py \
-  --scanner our_scanner \
-  --result-dir ./reports/our_scanner/Platform \
   --ground-truth ./ground_truth.json \
-  --out ./evaluation_results
+  --tool mobsf=./reports/normalized/mobsf/Platform \
+  --tool our_scanner=./reports/our_scanner/Platform \
+  --output-dir ./evaluation_results/Platform
 
 ### 5. Evaluate MobSF
 python evaluation.py \
-  --scanner mobsf \
-  --result-dir ./reports/mobsf/Platform \
   --ground-truth ./ground_truth.json \
-  --out ./evaluation_results
+  --tool mobsf=./reports/normalized/mobsf/Platform \
+  --tool our_scanner=./reports/our_scanner/Platform \
+  --output-dir ./evaluation_results/Platform_high_conf \
+  --min-confidence-score 8

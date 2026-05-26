@@ -714,5 +714,2122 @@
       }
     ],
     "notes": "This case targets incomplete cleanup of WebView data. Some cleanup checks are absence-based, so scanners may report them as missing best practices rather than directly proven exploitable vulnerabilities."
+  },
+  "Network/MASTG-TEST0019": {
+    "category": "Network",
+    "case_name": "MASTG-TEST0019",
+    "test_id": "MASTG-TEST-0019",
+    "title": "Testing Data Encryption on the Network",
+    "apk": "benchmarks/Network/MASTG-TEST0019/MASTG-TEST0019.apk",
+    "readme": "benchmarks/Network/MASTG-TEST0019/README.md",
+    "expected_vulnerabilities": [
+      {
+        "id": "GT-0019-1",
+        "category": "cleartext_http",
+        "must_detect": true,
+        "severity": "high",
+        "description": "The app makes network requests to plain HTTP URLs instead of HTTPS, exposing transmitted data to interception or modification.",
+        "acceptable_scanner_categories": [
+          "cleartext_http",
+          "insecure_network",
+          "http_url",
+          "plaintext_traffic",
+          "network_cleartext",
+          "insecure_protocol",
+          "webview_http"
+        ],
+        "evidence_keywords": [
+          "http://",
+          "HTTP",
+          "plain HTTP",
+          "cleartext",
+          "WebView",
+          "loadUrl",
+          "URL",
+          "network request"
+        ],
+        "source": "README.md Implementation and Static Analysis"
+      },
+      {
+        "id": "GT-0019-2",
+        "category": "uses_cleartext_traffic",
+        "must_detect": true,
+        "severity": "high",
+        "description": "The AndroidManifest.xml explicitly enables cleartext traffic by setting android:usesCleartextTraffic=\"true\" in the application tag.",
+        "acceptable_scanner_categories": [
+          "uses_cleartext_traffic",
+          "cleartext_traffic_enabled",
+          "manifest_cleartext",
+          "insecure_network_config",
+          "network_cleartext",
+          "android_manifest"
+        ],
+        "evidence_keywords": [
+          "android:usesCleartextTraffic",
+          "usesCleartextTraffic",
+          "true",
+          "cleartextTraffic",
+          "application",
+          "AndroidManifest.xml",
+          "cleartext"
+        ],
+        "source": "README.md Implementation and Static Analysis"
+      },
+      {
+        "id": "GT-0019-3",
+        "category": "hostname_verification_bypass",
+        "must_detect": true,
+        "severity": "high",
+        "description": "The app skips hostname verification, which can allow man-in-the-middle attackers to present certificates for the wrong host.",
+        "acceptable_scanner_categories": [
+          "hostname_verification_bypass",
+          "insecure_hostname_verifier",
+          "ssl_hostname_verifier",
+          "tls_misconfiguration",
+          "insecure_ssl",
+          "insecure_tls"
+        ],
+        "evidence_keywords": [
+          "HostnameVerifier",
+          "verify",
+          "return true",
+          "setHostnameVerifier",
+          "getDefaultHostnameVerifier",
+          "hostname verification",
+          "SSLSocket",
+          "HttpsURLConnection"
+        ],
+        "source": "README.md Implementation and Static Analysis"
+      },
+      {
+        "id": "GT-0019-4",
+        "category": "tls_error_handling_disabled",
+        "must_detect": true,
+        "severity": "high",
+        "description": "The app disables TLS or SSL error handling, allowing connections to proceed even when certificate validation fails.",
+        "acceptable_scanner_categories": [
+          "tls_error_handling_disabled",
+          "ssl_error_ignored",
+          "webview_ssl_error_bypass",
+          "insecure_ssl",
+          "insecure_tls",
+          "certificate_validation_bypass"
+        ],
+        "evidence_keywords": [
+          "onReceivedSslError",
+          "SslErrorHandler",
+          "proceed",
+          "handler.proceed",
+          "SSL error",
+          "TLS error",
+          "certificate",
+          "TrustManager",
+          "X509TrustManager"
+        ],
+        "source": "README.md Implementation and Static Analysis"
+      },
+      {
+        "id": "GT-0019-5",
+        "category": "low_min_sdk_network_security_bypass",
+        "must_detect": true,
+        "severity": "medium",
+        "description": "The app uses a low minimum SDK version, minSdk = 19, which can weaken or bypass protections expected from newer Android network security defaults.",
+        "acceptable_scanner_categories": [
+          "low_min_sdk",
+          "vulnerable_os_version",
+          "network_security_config_bypass",
+          "insecure_platform_version",
+          "manifest_sdk",
+          "android_manifest"
+        ],
+        "evidence_keywords": [
+          "minSdk",
+          "minSdkVersion",
+          "19",
+          "API level 19",
+          "Android 9",
+          "API level 28",
+          "Network Security Configuration",
+          "cleartext traffic"
+        ],
+        "source": "README.md Implementation and Static Analysis"
+      }
+    ]
+  },
+  "Network/MASTG-TEST0020": {
+    "category": "Network",
+    "case_name": "MASTG-TEST0020",
+    "test_id": "MASTG-TEST-0020",
+    "title": "Testing the TLS Settings",
+    "apk": "benchmarks/Network/MASTG-TEST0020/MASTG-TEST0020.apk",
+    "readme": "benchmarks/Network/MASTG-TEST0020/README.md",
+    "expected_vulnerabilities": [
+      {
+        "id": "GT-0020-1",
+        "category": "obsolete_tls_version",
+        "must_detect": true,
+        "severity": "high",
+        "description": "The app explicitly uses an outdated TLS protocol version, TLS 1.0, for HTTPS connections. Obsolete TLS versions are insecure and should be replaced with modern versions such as TLS 1.2 or TLS 1.3.",
+        "acceptable_scanner_categories": [
+          "obsolete_tls_version",
+          "insecure_tls_version",
+          "weak_tls",
+          "tls_misconfiguration",
+          "insecure_ssl",
+          "insecure_tls",
+          "ssl_context"
+        ],
+        "evidence_keywords": [
+          "SSLContext",
+          "getInstance",
+          "TLSv1",
+          "TLS 1.0",
+          "TLSv1.0",
+          "outdated TLS",
+          "obsolete TLS",
+          "weak TLS",
+          "HTTPS"
+        ],
+        "source": "README.md Implementation and Static Analysis"
+      },
+      {
+        "id": "GT-0020-2",
+        "category": "certificate_validation_bypass",
+        "must_detect": true,
+        "severity": "high",
+        "description": "The app disables SSL/TLS certificate validation by installing a custom TrustManager that trusts all certificates, including self-signed or expired certificates.",
+        "acceptable_scanner_categories": [
+          "certificate_validation_bypass",
+          "trust_all_certificates",
+          "insecure_trust_manager",
+          "x509trustmanager",
+          "ssl_certificate_validation_disabled",
+          "insecure_ssl",
+          "insecure_tls",
+          "tls_misconfiguration"
+        ],
+        "evidence_keywords": [
+          "TrustManager",
+          "X509TrustManager",
+          "trustAllCerts",
+          "checkClientTrusted",
+          "checkServerTrusted",
+          "getAcceptedIssuers",
+          "return null",
+          "setDefaultSSLSocketFactory",
+          "self-signed",
+          "expired certificates",
+          "disableCertificateValidation"
+        ],
+        "source": "README.md Implementation and Static Analysis"
+      }
+    ]
+  },
+  "Network/MASTG-TEST0021": {
+    "category": "Network",
+    "case_name": "MASTG-TEST0021",
+    "test_id": "MASTG-TEST-0021",
+    "title": "Testing Endpoint Identify Verification",
+    "apk": "benchmarks/Network/MASTG-TEST0021/MASTG-TEST0021.apk",
+    "readme": "benchmarks/Network/MASTG-TEST0021/README.md",
+    "expected_vulnerabilities": [
+      {
+        "id": "GT-0021-1",
+        "category": "low_target_sdk_network_security",
+        "must_detect": true,
+        "severity": "medium",
+        "description": "The app targets Android API level 23, which is lower than 24. Apps targeting below Android 7.0 do not benefit from the newer default Network Security Configuration behavior that avoids trusting user-supplied CAs by default.",
+        "acceptable_scanner_categories": [
+          "low_target_sdk",
+          "target_sdk_too_low",
+          "insecure_platform_version",
+          "network_security_config_bypass",
+          "manifest_sdk",
+          "android_manifest",
+          "insecure_network_config"
+        ],
+        "evidence_keywords": [
+          "targetSdkVersion",
+          "targetSdk",
+          "23",
+          "API level 23",
+          "lower than 24",
+          "Android 7.0",
+          "Network Security Configuration",
+          "user supplied CAs",
+          "apktool.yml"
+        ],
+        "source": "README.md Implementation and Static Analysis"
+      },
+      {
+        "id": "GT-0021-2",
+        "category": "user_ca_trust_enabled",
+        "must_detect": true,
+        "severity": "high",
+        "description": "The app may trust user-provided certificate authorities through insecure Network Security Configuration trust anchors, allowing malicious user-installed CAs to intercept TLS traffic.",
+        "acceptable_scanner_categories": [
+          "user_ca_trust_enabled",
+          "custom_trust_anchors",
+          "network_security_config",
+          "insecure_network_config",
+          "trust_user_ca",
+          "certificate_validation_bypass",
+          "insecure_tls"
+        ],
+        "evidence_keywords": [
+          "network-security-config",
+          "trust-anchors",
+          "certificates",
+          "src=\"user\"",
+          "user CAs",
+          "user supplied CAs",
+          "custom trust anchor",
+          "domain-config",
+          "base-config"
+        ],
+        "source": "README.md Static Analysis"
+      },
+      {
+        "id": "GT-0021-3",
+        "category": "webview_ssl_error_bypass",
+        "must_detect": true,
+        "severity": "high",
+        "description": "The app ignores TLS certificate errors in WebView by overriding onReceivedSslError and calling handler.proceed(), allowing the WebView to continue loading pages even when certificate validation fails.",
+        "acceptable_scanner_categories": [
+          "webview_ssl_error_bypass",
+          "ssl_error_ignored",
+          "tls_error_handling_disabled",
+          "certificate_validation_bypass",
+          "insecure_webview",
+          "insecure_ssl",
+          "insecure_tls"
+        ],
+        "evidence_keywords": [
+          "WebView",
+          "WebViewClient",
+          "onReceivedSslError",
+          "SslErrorHandler",
+          "SslError",
+          "handler.proceed",
+          "proceed",
+          "Ignore TLS certificate errors",
+          "TLS error",
+          "SSL error"
+        ],
+        "source": "README.md Implementation and Static Analysis"
+      },
+      {
+        "id": "GT-0021-4",
+        "category": "hostname_verification_bypass",
+        "must_detect": true,
+        "severity": "high",
+        "description": "The app disables hostname verification by using a HostnameVerifier that always returns true, allowing TLS connections to succeed even when the server certificate does not match the requested hostname.",
+        "acceptable_scanner_categories": [
+          "hostname_verification_bypass",
+          "insecure_hostname_verifier",
+          "allow_all_hostname_verifier",
+          "ssl_hostname_verifier",
+          "tls_misconfiguration",
+          "insecure_ssl",
+          "insecure_tls"
+        ],
+        "evidence_keywords": [
+          "HostnameVerifier",
+          "NO_VERIFY",
+          "verify",
+          "return true",
+          "SSLSession",
+          "ALLOW_ALL_HOSTNAME_VERIFIER",
+          "hostname verification",
+          "any hostname"
+        ],
+        "source": "README.md Implementation and Static Analysis"
+      },
+      {
+        "id": "GT-0021-5",
+        "category": "insecure_trust_manager",
+        "must_detect": true,
+        "severity": "high",
+        "description": "The app lacks proper certificate validation through TrustManager or may use an insecure TrustManager pattern that accepts certificates without checking whether they are trusted, expired, or self-signed.",
+        "acceptable_scanner_categories": [
+          "insecure_trust_manager",
+          "trust_all_certificates",
+          "certificate_validation_bypass",
+          "x509trustmanager",
+          "ssl_certificate_validation_disabled",
+          "tls_misconfiguration",
+          "insecure_ssl",
+          "insecure_tls"
+        ],
+        "evidence_keywords": [
+          "TrustManager",
+          "X509TrustManager",
+          "checkClientTrusted",
+          "checkServerTrusted",
+          "getAcceptedIssuers",
+          "trustAllCerts",
+          "context.init",
+          "certificate",
+          "self-signed",
+          "expired"
+        ],
+        "source": "README.md Static Analysis"
+      }
+    ]
+  },
+  "Network/MASTG-TEST0022": {
+    "category": "Network",
+    "case_name": "MASTG-TEST0022",
+    "test_id": "MASTG-TEST-0022",
+    "title": "Testing Custom Certificate Stores and Certificate Pinning",
+    "apk": "benchmarks/Network/MASTG-TEST0022/MASTG-TEST0022.apk",
+    "readme": "benchmarks/Network/MASTG-TEST0022/README.md",
+    "expected_vulnerabilities": [
+      {
+        "id": "GT-0022-1",
+        "category": "missing_certificate_pinning",
+        "must_detect": true,
+        "severity": "medium",
+        "description": "The app includes a network request path that connects to www.example.com without certificate pinning, making the connection more exposed to interception if a malicious or user-installed CA is trusted.",
+        "acceptable_scanner_categories": [
+          "missing_certificate_pinning",
+          "no_ssl_pinning",
+          "no_certificate_pinning",
+          "certificate_pinning_missing",
+          "ssl_pinning_missing",
+          "insecure_tls",
+          "network_security"
+        ],
+        "evidence_keywords": [
+          "No SSL Pinning",
+          "without pinning",
+          "www.example.com",
+          "certificate pinning",
+          "SSL Pinning",
+          "OK",
+          "Error",
+          "Toast"
+        ],
+        "source": "README.md Implementation and Static Analysis"
+      },
+      {
+        "id": "GT-0022-2",
+        "category": "certificate_pinning_configuration",
+        "must_detect": true,
+        "severity": "info",
+        "description": "The app implements certificate pinning through Network Security Configuration. The scanner should identify the presence of pinning-related configuration such as pin-set entries and extract relevant evidence for review.",
+        "acceptable_scanner_categories": [
+          "certificate_pinning",
+          "ssl_pinning",
+          "pin_set",
+          "network_security_config",
+          "custom_certificate_store",
+          "certificate_pin",
+          "tls_pinning"
+        ],
+        "evidence_keywords": [
+          "network_security_config.xml",
+          "network-security-config",
+          "pin-set",
+          "pin",
+          "digest",
+          "SHA-256",
+          "expiration",
+          "certificate pinning",
+          "SSL Pinning"
+        ],
+        "source": "README.md Network Security Configuration"
+      },
+      {
+        "id": "GT-0022-3",
+        "category": "expired_certificate_pinning",
+        "must_detect": false,
+        "severity": "medium",
+        "description": "If the app defines certificate pinning with an expired pin-set, certificate pinning will be disabled for the affected domains. This should be reported when an expired pin-set is found.",
+        "acceptable_scanner_categories": [
+          "expired_certificate_pinning",
+          "expired_pin_set",
+          "pinning_expired",
+          "certificate_pinning_disabled",
+          "network_security_config",
+          "pin_set_expiration"
+        ],
+        "evidence_keywords": [
+          "pin-set",
+          "expiration",
+          "expired",
+          "certificate pinning will be disabled",
+          "network-security-config",
+          "domain-config"
+        ],
+        "source": "README.md Network Security Configuration"
+      },
+      {
+        "id": "GT-0022-4",
+        "category": "custom_certificate_store",
+        "must_detect": false,
+        "severity": "info",
+        "description": "The app may use a custom certificate store or KeyStore-based TrustManager for certificate pinning. The scanner should recognize KeyStore, TrustManagerFactory, and SSLContext usage as pinning-related evidence rather than automatically treating it as insecure.",
+        "acceptable_scanner_categories": [
+          "custom_certificate_store",
+          "custom_keystore",
+          "trustmanager_factory",
+          "keystore_pinning",
+          "certificate_pinning",
+          "ssl_context",
+          "trust_manager"
+        ],
+        "evidence_keywords": [
+          "KeyStore",
+          "BKS",
+          "TrustManagerFactory",
+          "getDefaultAlgorithm",
+          "tmf.init",
+          "getTrustManagers",
+          "SSLContext",
+          "sslContext.init",
+          "openRawResource"
+        ],
+        "source": "README.md TrustManager"
+      },
+      {
+        "id": "GT-0022-5",
+        "category": "okhttp_certificate_pinner",
+        "must_detect": false,
+        "severity": "info",
+        "description": "If the app uses OkHttp, certificate pinning may be implemented through OkHttp CertificatePinner. The scanner should recognize CertificatePinner configuration as certificate-pinning evidence.",
+        "acceptable_scanner_categories": [
+          "okhttp_certificate_pinner",
+          "certificate_pinner",
+          "okhttp_pinning",
+          "certificate_pinning",
+          "ssl_pinning",
+          "network_library_pinning"
+        ],
+        "evidence_keywords": [
+          "OkHttpClient",
+          "CertificatePinner",
+          "certificatePinner",
+          "sha256/",
+          "add",
+          "example.com",
+          "Builder"
+        ],
+        "source": "README.md Network Libraries and WebViews"
+      }
+    ]
+  },
+  "Network/MASTG-TEST0023": {
+    "category": "Network",
+    "case_name": "MASTG-TEST0023",
+    "test_id": "MASTG-TEST-0023",
+    "title": "Testing the Security Provider",
+    "apk": "benchmarks/Network/MASTG-TEST0023/MASTG-TEST0023.apk",
+    "readme": "benchmarks/Network/MASTG-TEST0023/README.md",
+    "expected_vulnerabilities": [
+      {
+        "id": "GT-0023-1",
+        "category": "missing_security_provider_update",
+        "must_detect": true,
+        "severity": "medium",
+        "description": "The app does not update the Android security provider through Google Play Services ProviderInstaller. Without updating the provider, the app may continue using an outdated TLS/SSL implementation that is vulnerable to known SSL/TLS issues.",
+        "acceptable_scanner_categories": [
+          "missing_security_provider_update",
+          "security_provider_not_updated",
+          "providerinstaller_missing",
+          "outdated_security_provider",
+          "google_play_services_missing",
+          "insecure_tls_provider",
+          "tls_misconfiguration"
+        ],
+        "evidence_keywords": [
+          "ProviderInstaller",
+          "installIfNeeded",
+          "installIfNeededAsync",
+          "GoogleApiAvailability",
+          "Google Play Services",
+          "play-services-gcm",
+          "com.google.android.gms",
+          "security provider",
+          "SSL exploits",
+          "TLS"
+        ],
+        "source": "README.md Implementation and Static Analysis"
+      },
+      {
+        "id": "GT-0023-2",
+        "category": "missing_google_play_services_dependency",
+        "must_detect": true,
+        "severity": "medium",
+        "description": "The app does not include the Google Play Services dependency required for using ProviderInstaller, such as com.google.android.gms:play-services-gcm. As a result, the app cannot perform the recommended security provider update checks.",
+        "acceptable_scanner_categories": [
+          "missing_google_play_services_dependency",
+          "google_play_services_missing",
+          "play_services_gcm_missing",
+          "providerinstaller_missing",
+          "missing_dependency",
+          "gradle_dependency_missing",
+          "security_provider_not_updated"
+        ],
+        "evidence_keywords": [
+          "com.google.android.gms:play-services-gcm",
+          "play-services-gcm",
+          "17.0.0",
+          "implementation",
+          "compile",
+          "dependencies",
+          "Gradle",
+          "build.gradle",
+          "GooglePlayServices",
+          "Google Play Services"
+        ],
+        "source": "README.md Implementation and Static Analysis"
+      },
+      {
+        "id": "GT-0023-3",
+        "category": "security_provider_error_not_handled",
+        "must_detect": false,
+        "severity": "medium",
+        "description": "If the app attempts to update the security provider, exceptions from ProviderInstaller should be caught and handled correctly. The app should report the insecure state to the backend or restrict risky user actions if the provider cannot be patched.",
+        "acceptable_scanner_categories": [
+          "security_provider_error_not_handled",
+          "providerinstaller_exception_unhandled",
+          "security_provider_update_error",
+          "missing_error_handling",
+          "insecure_tls_provider",
+          "tls_misconfiguration"
+        ],
+        "evidence_keywords": [
+          "ProviderInstaller",
+          "installIfNeeded",
+          "installIfNeededAsync",
+          "Exception",
+          "catch",
+          "reportSecurityProviderUpdateError",
+          "backend",
+          "restrict user actions",
+          "unpatched security provider",
+          "less secure state"
+        ],
+        "source": "README.md Static Analysis"
+      },
+      {
+        "id": "GT-0023-4",
+        "category": "native_tls_library_review",
+        "must_detect": false,
+        "severity": "info",
+        "description": "If the app uses NDK-based networking or native TLS libraries, the scanner should identify native SSL/TLS library usage so reviewers can verify that it binds only to recent and properly patched SSL/TLS implementations.",
+        "acceptable_scanner_categories": [
+          "native_tls_library_review",
+          "native_ssl_library",
+          "ndk_tls_usage",
+          "native_networking",
+          "openssl_native",
+          "boringssl_native",
+          "tls_library"
+        ],
+        "evidence_keywords": [
+          "NDK",
+          "native",
+          ".so",
+          "OpenSSL",
+          "BoringSSL",
+          "SSL",
+          "TLS",
+          "security provider",
+          "patched library"
+        ],
+        "source": "README.md Static Analysis"
+      }
+    ]
+  },
+  "Code/MASTG-TEST0025": {
+    "category": "Code",
+    "case_name": "MASTG-TEST0025",
+    "test_id": "MASTG-TEST-0025",
+    "title": "Testing for Injection Flaws",
+    "apk": "benchmarks/Code/MASTG-TEST0025/MASTG-TEST0025.apk",
+    "readme": "benchmarks/Code/MASTG-TEST0025/README.md",
+    "expected_vulnerabilities": [
+      {
+        "id": "GT-0025-1",
+        "category": "sql_injection",
+        "must_detect": true,
+        "severity": "high",
+        "description": "The app performs login checks against a local SQL database without properly sanitizing or parameterizing user input. An attacker can use SQL injection payloads such as ' or 1=1 -- - to bypass authentication.",
+        "acceptable_scanner_categories": [
+          "sql_injection",
+          "injection_flaw",
+          "database_injection",
+          "sqlite_injection",
+          "unsafe_sql_query",
+          "raw_query",
+          "unsanitized_input",
+          "authentication_bypass"
+        ],
+        "evidence_keywords": [
+          "SQL injection",
+          "SQLite",
+          "database",
+          "login",
+          "username",
+          "password",
+          "or 1=1",
+          "--",
+          "rawQuery",
+          "execSQL",
+          "query",
+          "selection",
+          "selectionArgs",
+          "unsanitized",
+          "sanitize",
+          "prepared statements"
+        ],
+        "source": "README.md Implementation and Static Analysis"
+      },
+      {
+        "id": "GT-0025-2",
+        "category": "missing_input_validation",
+        "must_detect": true,
+        "severity": "medium",
+        "description": "The app does not validate user-controlled input before using it in security-sensitive logic. Input validation should be applied to UI input, IPC input, and URL scheme input before processing.",
+        "acceptable_scanner_categories": [
+          "missing_input_validation",
+          "insufficient_input_validation",
+          "unsanitized_input",
+          "unsafe_user_input",
+          "injection_flaw",
+          "validation_missing",
+          "input_validation"
+        ],
+        "evidence_keywords": [
+          "input validation",
+          "sanitize",
+          "user input",
+          "username",
+          "password",
+          "isAlphaNumeric",
+          "matches",
+          "Integer.parseInt",
+          "validation function",
+          "UI input",
+          "IPC",
+          "URL schemes"
+        ],
+        "source": "README.md Implementation and Static Analysis"
+      },
+      {
+        "id": "GT-0025-3",
+        "category": "content_provider_sql_injection",
+        "must_detect": false,
+        "severity": "high",
+        "description": "If the app exposes a ContentProvider that builds SQL queries from URI path segments or other IPC-controlled input, other apps may be able to trigger SQL injection through the provider.",
+        "acceptable_scanner_categories": [
+          "content_provider_sql_injection",
+          "sql_injection",
+          "exported_provider",
+          "ipc_injection",
+          "content_provider_exposure",
+          "unsafe_content_provider",
+          "unsafe_sql_query"
+        ],
+        "evidence_keywords": [
+          "ContentProvider",
+          "provider",
+          "android:authorities",
+          "exported",
+          "query",
+          "Uri",
+          "uri.getPathSegments",
+          "appendWhere",
+          "selection",
+          "selectionArgs",
+          "SQLiQueryBuilder",
+          "STUDENT_ID",
+          "content://"
+        ],
+        "source": "README.md Static Analysis"
+      },
+      {
+        "id": "GT-0025-4",
+        "category": "missing_prepared_statements",
+        "must_detect": false,
+        "severity": "medium",
+        "description": "The app should use prepared statements or parameterized queries instead of concatenating user-controlled input into SQL statements.",
+        "acceptable_scanner_categories": [
+          "missing_prepared_statements",
+          "unsafe_sql_query",
+          "sql_injection",
+          "raw_query",
+          "string_concatenation_sql",
+          "parameterized_query_missing",
+          "database_injection"
+        ],
+        "evidence_keywords": [
+          "prepared statements",
+          "parameterized",
+          "rawQuery",
+          "execSQL",
+          "SQLiteDatabase",
+          "selectionArgs",
+          "concat",
+          "+",
+          "WHERE",
+          "username",
+          "password"
+        ],
+        "source": "README.md Static Analysis"
+      }
+    ]
+  },
+  "Code/MASTG-TEST0026": {
+    "category": "Code",
+    "case_name": "MASTG-TEST0026",
+    "test_id": "MASTG-TEST-0026",
+    "title": "Testing Implicit Intents",
+    "apk": "benchmarks/Code/MASTG-TEST0026/MASTG-TEST0026.apk",
+    "readme": "benchmarks/Code/MASTG-TEST0026/README.md",
+    "expected_vulnerabilities": [
+      {
+        "id": "GT-0026-1",
+        "category": "implicit_intent_hijacking",
+        "must_detect": true,
+        "severity": "high",
+        "description": "The app uses an implicit intent action for sensitive functionality, allowing another app that registers the same action with higher priority to intercept the intent flow.",
+        "acceptable_scanner_categories": [
+          "implicit_intent_hijacking",
+          "implicit_intent",
+          "intent_interception",
+          "intent_hijacking",
+          "unsafe_intent",
+          "insecure_ipc",
+          "ipc_exposure"
+        ],
+        "evidence_keywords": [
+          "implicit intent",
+          "intent-filter",
+          "com.victim.ADD_CARD_ACTION",
+          "android.intent.category.DEFAULT",
+          "android:priority",
+          "higher priority",
+          "intercept",
+          "AddCardActivity",
+          "startActivity",
+          "startActivityForResult"
+        ],
+        "source": "README.md Implementation and Static Analysis"
+      },
+      {
+        "id": "GT-0026-2",
+        "category": "sensitive_functionality_exposed_via_intent",
+        "must_detect": true,
+        "severity": "high",
+        "description": "The app exposes sensitive post-login functionality, adding a credit card, through an intent-based flow. If the intent is not explicit or otherwise protected, another app may intercept or abuse the flow.",
+        "acceptable_scanner_categories": [
+          "sensitive_functionality_exposed_via_intent",
+          "sensitive_ipc_exposure",
+          "unsafe_intent",
+          "implicit_intent",
+          "intent_filter_sensitive_action",
+          "ipc_exposure",
+          "platform_misuse"
+        ],
+        "evidence_keywords": [
+          "login",
+          "credit card",
+          "AddCardActivity",
+          "ADD_CARD_ACTION",
+          "intent-filter",
+          "sensitive functionality",
+          "post-login",
+          "android:exported",
+          "android:exported=\"false\""
+        ],
+        "source": "README.md Implementation"
+      },
+      {
+        "id": "GT-0026-3",
+        "category": "unvalidated_intent_result",
+        "must_detect": false,
+        "severity": "high",
+        "description": "If the app uses startActivityForResult with an implicit intent and does not validate the returned URI or result data, an attacker-controlled app may return malicious file:// or content:// URIs.",
+        "acceptable_scanner_categories": [
+          "unvalidated_intent_result",
+          "unsafe_intent_result",
+          "startactivityforresult_misuse",
+          "implicit_intent",
+          "uri_validation_missing",
+          "unsafe_uri_handling",
+          "intent_injection"
+        ],
+        "evidence_keywords": [
+          "startActivityForResult",
+          "onActivityResult",
+          "intent.getData",
+          "Uri",
+          "file://",
+          "content://",
+          "getFileItemFromUri",
+          "openInputStream",
+          "validation",
+          "return value"
+        ],
+        "source": "README.md Static Analysis"
+      },
+      {
+        "id": "GT-0026-4",
+        "category": "arbitrary_file_read_via_intent",
+        "must_detect": false,
+        "severity": "high",
+        "description": "Improper validation of an implicit intent return URI can allow a malicious app to cause arbitrary files from the victim app's internal storage to be copied to externally readable storage.",
+        "acceptable_scanner_categories": [
+          "arbitrary_file_read_via_intent",
+          "arbitrary_file_read",
+          "unsafe_uri_handling",
+          "unvalidated_intent_result",
+          "implicit_intent_hijacking",
+          "file_uri_exposure",
+          "data_leak"
+        ],
+        "evidence_keywords": [
+          "Arbitrary File Read",
+          "file:///data/data",
+          "shared_preferences",
+          "session.xml",
+          "getExternalCacheDir",
+          "getExternalFilesDir",
+          "READ_EXTERNAL_STORAGE",
+          "copy",
+          "openInputStream",
+          "setResult"
+        ],
+        "source": "README.md Case 1: Arbitrary File Read"
+      },
+      {
+        "id": "GT-0026-5",
+        "category": "arbitrary_code_execution_via_intent",
+        "must_detect": false,
+        "severity": "high",
+        "description": "Improper handling of file:// or content:// URLs returned from an implicit intent can enable arbitrary code execution when attacker-controlled native libraries or files are copied and loaded by the victim app.",
+        "acceptable_scanner_categories": [
+          "arbitrary_code_execution_via_intent",
+          "arbitrary_code_execution",
+          "unsafe_uri_handling",
+          "unvalidated_intent_result",
+          "implicit_intent_hijacking",
+          "content_provider_abuse",
+          "native_library_injection"
+        ],
+        "evidence_keywords": [
+          "Arbitrary Code Execution",
+          "content://",
+          "file://",
+          "ParcelFileDescriptor",
+          "openFile",
+          "fakelib.so",
+          "lib.so",
+          "ContentProvider",
+          "MatrixCursor",
+          "_display_name",
+          "setResult"
+        ],
+        "source": "README.md Case 2: Arbitrary Code Execution"
+      }
+    ]
+  },
+  "Code/MASTG-TEST0027": {
+    "category": "Code",
+    "case_name": "MASTG-TEST0027",
+    "test_id": "MASTG-TEST-0027",
+    "title": "Testing for URL Loading in WebViews",
+    "apk": "benchmarks/Code/MASTG-TEST0027/MASTG-TEST0027.apk",
+    "readme": "benchmarks/Code/MASTG-TEST0027/README.md",
+    "expected_vulnerabilities": [
+      {
+        "id": "GT-0027-1",
+        "category": "webview_safe_browsing_disabled",
+        "must_detect": true,
+        "severity": "high",
+        "description": "The app disables WebView Safe Browsing by setting android.webkit.WebView.EnableSafeBrowsing to false in the AndroidManifest.xml file.",
+        "acceptable_scanner_categories": [
+          "webview_safe_browsing_disabled",
+          "safe_browsing_disabled",
+          "insecure_webview",
+          "webview_misconfiguration",
+          "android_manifest",
+          "manifest_webview_config"
+        ],
+        "evidence_keywords": [
+          "android.webkit.WebView.EnableSafeBrowsing",
+          "EnableSafeBrowsing",
+          "android:value=\"false\"",
+          "SafeBrowsing",
+          "Safe Browsing",
+          "meta-data",
+          "AndroidManifest.xml",
+          "WebView"
+        ],
+        "source": "README.md Implementation and Static Analysis"
+      },
+      {
+        "id": "GT-0027-2",
+        "category": "unsafe_webview_url_loading",
+        "must_detect": true,
+        "severity": "high",
+        "description": "The app handles page navigation inside a WebView without adequately validating URLs, allowing users or attackers to navigate away from trusted content and potentially load phishing pages or malicious content.",
+        "acceptable_scanner_categories": [
+          "unsafe_webview_url_loading",
+          "insecure_webview",
+          "webview_url_validation_missing",
+          "unvalidated_url_loading",
+          "unsafe_url_handling",
+          "webview_navigation_hijacking",
+          "webview_misconfiguration"
+        ],
+        "evidence_keywords": [
+          "WebView",
+          "WebViewClient",
+          "URL loading",
+          "page navigation",
+          "shouldOverrideUrlLoading",
+          "loadUrl",
+          "trusted environment",
+          "malicious URL",
+          "phishing",
+          "URL validation",
+          "without proper validation"
+        ],
+        "source": "README.md Implementation and Static Analysis"
+      },
+      {
+        "id": "GT-0027-3",
+        "category": "should_override_url_loading_misuse",
+        "must_detect": true,
+        "severity": "medium",
+        "description": "The app overrides shouldOverrideUrlLoading and handles all URL loading inside the WebView without proper allowlist or scheme validation.",
+        "acceptable_scanner_categories": [
+          "should_override_url_loading_misuse",
+          "unsafe_should_override_url_loading",
+          "webview_url_validation_missing",
+          "unsafe_webview_url_loading",
+          "insecure_webview",
+          "unsafe_url_handling"
+        ],
+        "evidence_keywords": [
+          "shouldOverrideUrlLoading",
+          "return true",
+          "WebViewClient",
+          "URL",
+          "navigation",
+          "allowlist",
+          "whitelist",
+          "scheme",
+          "validation",
+          "handles all URL loading"
+        ],
+        "source": "README.md Implementation and Static Analysis"
+      },
+      {
+        "id": "GT-0027-4",
+        "category": "should_intercept_request_misuse",
+        "must_detect": true,
+        "severity": "high",
+        "description": "The app overrides shouldInterceptRequest and returns crafted responses based on weak string matching instead of robust URL validation, which may allow content injection or security check bypasses.",
+        "acceptable_scanner_categories": [
+          "should_intercept_request_misuse",
+          "unsafe_should_intercept_request",
+          "webview_request_interception",
+          "content_injection",
+          "webview_url_validation_missing",
+          "unsafe_url_handling",
+          "insecure_webview"
+        ],
+        "evidence_keywords": [
+          "shouldInterceptRequest",
+          "WebResourceResponse",
+          "intercept",
+          "crafted response",
+          "malicious",
+          "contains",
+          "string",
+          "content injection",
+          "bypass",
+          "without proper validation"
+        ],
+        "source": "README.md Implementation and Static Analysis"
+      },
+      {
+        "id": "GT-0027-5",
+        "category": "webview_unrestricted_scheme_loading",
+        "must_detect": false,
+        "severity": "medium",
+        "description": "When a WebViewClient handles navigation and resource interception, the app should validate URL schemes such as http, https, data, file, and content. Failure to restrict schemes may allow unexpected local file or injected content loading.",
+        "acceptable_scanner_categories": [
+          "webview_unrestricted_scheme_loading",
+          "unsafe_scheme_handling",
+          "file_url_loading",
+          "content_url_loading",
+          "data_url_loading",
+          "unsafe_webview_url_loading",
+          "insecure_webview"
+        ],
+        "evidence_keywords": [
+          "http:",
+          "https:",
+          "data:",
+          "file:",
+          "content:",
+          "scheme",
+          "URL scheme",
+          "shouldInterceptRequest",
+          "shouldOverrideUrlLoading",
+          "WebView"
+        ],
+        "source": "README.md Static Analysis"
+      }
+    ]
+  },
+  "Code/MASTG-TEST0036": {
+    "category": "Code",
+    "case_name": "MASTG-TEST0036",
+    "test_id": "MASTG-TEST-0036",
+    "title": "Testing Enforced Updating",
+    "apk": "benchmarks/Code/MASTG-TEST0036/MASTG-TEST0036.apk",
+    "readme": "benchmarks/Code/MASTG-TEST0036/README.md",
+    "expected_vulnerabilities": [
+      {
+        "id": "GT-0036-1",
+        "category": "missing_enforced_update",
+        "must_detect": true,
+        "severity": "medium",
+        "description": "The app does not implement an enforced update mechanism or version check to prevent users from continuing to use outdated versions that may contain known vulnerabilities.",
+        "acceptable_scanner_categories": [
+          "missing_enforced_update",
+          "missing_update_check",
+          "no_version_check",
+          "outdated_app_allowed",
+          "insecure_update_policy",
+          "app_update_missing",
+          "architecture_flaw"
+        ],
+        "evidence_keywords": [
+          "version check",
+          "outdated",
+          "known vulnerabilities",
+          "enforced update",
+          "forced update",
+          "update check",
+          "AppUpdateManager",
+          "AppUpdateManagerFactory",
+          "getAppUpdateInfo",
+          "UpdateAvailability",
+          "UPDATE_AVAILABLE"
+        ],
+        "source": "README.md Implementation and Static Analysis"
+      },
+      {
+        "id": "GT-0036-2",
+        "category": "missing_in_app_update_api",
+        "must_detect": true,
+        "severity": "medium",
+        "description": "The app does not use the recommended Android in-app update APIs, such as AppUpdateManager and AppUpdateInfo, to check for and request updates.",
+        "acceptable_scanner_categories": [
+          "missing_in_app_update_api",
+          "missing_update_check",
+          "app_update_missing",
+          "appupdatemanager_missing",
+          "play_core_update_missing",
+          "insecure_update_policy"
+        ],
+        "evidence_keywords": [
+          "AppUpdateManager",
+          "AppUpdateInfo",
+          "AppUpdateManagerFactory.create",
+          "getAppUpdateInfo",
+          "startUpdateFlowForResult",
+          "AppUpdateType.IMMEDIATE",
+          "AppUpdateType.FLEXIBLE",
+          "UpdateAvailability.UPDATE_AVAILABLE",
+          "isUpdateTypeAllowed"
+        ],
+        "source": "README.md Implementation and Static Analysis"
+      },
+      {
+        "id": "GT-0036-3",
+        "category": "missing_update_failure_handling",
+        "must_detect": false,
+        "severity": "medium",
+        "description": "If an update mechanism exists, the app should handle failed or canceled update flows and retry or restrict access when forced updates are required.",
+        "acceptable_scanner_categories": [
+          "missing_update_failure_handling",
+          "update_flow_failure_unhandled",
+          "incomplete_update_flow",
+          "forced_update_bypass",
+          "insecure_update_policy",
+          "app_update_missing"
+        ],
+        "evidence_keywords": [
+          "onActivityResult",
+          "RESULT_OK",
+          "Update flow failed",
+          "resultCode",
+          "requestCode",
+          "MY_REQUEST_CODE",
+          "canceled",
+          "cancelled",
+          "fails",
+          "forced updates"
+        ],
+        "source": "README.md Static Analysis"
+      },
+      {
+        "id": "GT-0036-4",
+        "category": "missing_update_resume_check",
+        "must_detect": false,
+        "severity": "medium",
+        "description": "If an immediate update flow is used, the app should check during onResume or other entry points whether a developer-triggered update is still in progress and resume it if necessary.",
+        "acceptable_scanner_categories": [
+          "missing_update_resume_check",
+          "incomplete_update_flow",
+          "developer_triggered_update_not_resumed",
+          "forced_update_bypass",
+          "insecure_update_policy",
+          "app_update_missing"
+        ],
+        "evidence_keywords": [
+          "onResume",
+          "DEVELOPER_TRIGGERED_UPDATE_IN_PROGRESS",
+          "getAppUpdateInfo",
+          "addOnSuccessListener",
+          "startUpdateFlowForResult",
+          "IMMEDIATE",
+          "resume the update",
+          "entry points"
+        ],
+        "source": "README.md Static Analysis"
+      }
+    ]
+  },
+  "Code/MASTG-TEST0043": {
+    "category": "Code",
+    "case_name": "MASTG-TEST0043",
+    "test_id": "MASTG-TEST-0043",
+    "title": "Memory Corruption Bugs",
+    "apk": "benchmarks/Code/MASTG-TEST0043/MASTG-TEST0043.apk",
+    "readme": "benchmarks/Code/MASTG-TEST0043/README.md",
+    "expected_vulnerabilities": [
+      {
+        "id": "GT-0043-1",
+        "category": "memory_leak_timer_not_cancelled",
+        "must_detect": true,
+        "severity": "medium",
+        "description": "The app creates a Timer but never cancels it when the Activity is destroyed. This can keep references alive after the Activity lifecycle ends and cause a memory leak.",
+        "acceptable_scanner_categories": [
+          "memory_leak_timer_not_cancelled",
+          "timer_memory_leak",
+          "memory_leak",
+          "lifecycle_leak",
+          "timer_task_leak",
+          "resource_not_released",
+          "android_memory_leak"
+        ],
+        "evidence_keywords": [
+          "Timer",
+          "TimerTask",
+          "cancelTimer",
+          "onDestroy",
+          "activity destroyed",
+          "never cancelled",
+          "memory leak",
+          "lifecycle",
+          "Activity",
+          "cancel"
+        ],
+        "source": "README.md Implementation and Static Analysis"
+      },
+      {
+        "id": "GT-0043-2",
+        "category": "missing_lifecycle_cleanup",
+        "must_detect": true,
+        "severity": "medium",
+        "description": "The app does not clean up long-running resources during the Activity lifecycle, such as calling cancelTimer() from onDestroy(). Missing lifecycle cleanup can lead to leaked Activity or Context references.",
+        "acceptable_scanner_categories": [
+          "missing_lifecycle_cleanup",
+          "lifecycle_cleanup_missing",
+          "resource_not_released",
+          "memory_leak",
+          "activity_leak",
+          "context_leak",
+          "android_memory_leak"
+        ],
+        "evidence_keywords": [
+          "onDestroy",
+          "super.onDestroy",
+          "cancelTimer",
+          "cleanup",
+          "Activity",
+          "Context",
+          "resource",
+          "memory leak",
+          "destroyed",
+          "lifecycle"
+        ],
+        "source": "README.md Implementation"
+      },
+      {
+        "id": "GT-0043-3",
+        "category": "android_memory_leak_patterns",
+        "must_detect": false,
+        "severity": "medium",
+        "description": "The scanner should identify common Android memory leak patterns, such as unregistered BroadcastReceivers, static Activity or View references, Singleton references to Context, inner class references, Handler references, AsyncTask references, Thread misuse, and TimerTask references.",
+        "acceptable_scanner_categories": [
+          "android_memory_leak_patterns",
+          "memory_leak",
+          "broadcast_receiver_leak",
+          "static_activity_reference",
+          "context_leak",
+          "handler_leak",
+          "asynctask_leak",
+          "thread_leak",
+          "timer_task_leak"
+        ],
+        "evidence_keywords": [
+          "BroadcastReceiver",
+          "unregistered",
+          "static references",
+          "Activity",
+          "View",
+          "Singleton",
+          "Context",
+          "Inner Class",
+          "Anonymous Class",
+          "AsyncTask",
+          "Handler",
+          "Thread",
+          "TimerTask"
+        ],
+        "source": "README.md Static Analysis"
+      },
+      {
+        "id": "GT-0043-4",
+        "category": "native_memory_corruption_review",
+        "must_detect": false,
+        "severity": "high",
+        "description": "If the app contains native code, the scanner should flag JNI, NDK, C, C++, or native library usage for further review of memory corruption risks.",
+        "acceptable_scanner_categories": [
+          "native_memory_corruption_review",
+          "native_code_detected",
+          "jni_usage",
+          "ndk_usage",
+          "cpp_code",
+          "native_library",
+          "memory_corruption"
+        ],
+        "evidence_keywords": [
+          "JNI",
+          "NDK",
+          ".so",
+          ".cpp",
+          ".c",
+          ".h",
+          "native",
+          "System.loadLibrary",
+          "memory corruption",
+          "buffer overflow"
+        ],
+        "source": "README.md Static Analysis"
+      },
+      {
+        "id": "GT-0043-5",
+        "category": "deserialization_risk_review",
+        "must_detect": false,
+        "severity": "medium",
+        "description": "If the app uses Java or Kotlin serialization/deserialization with untrusted data, the scanner should flag it for review because deserialization bugs can lead to security vulnerabilities.",
+        "acceptable_scanner_categories": [
+          "deserialization_risk_review",
+          "unsafe_deserialization",
+          "java_deserialization",
+          "kotlin_deserialization",
+          "serialization_issue",
+          "code_quality_risk"
+        ],
+        "evidence_keywords": [
+          "Serializable",
+          "ObjectInputStream",
+          "readObject",
+          "deserialize",
+          "deserialization",
+          "serialization",
+          "Parcelable",
+          "Java",
+          "Kotlin"
+        ],
+        "source": "README.md Static Analysis"
+      }
+    ]
+  },
+  "Code/MASTG-TEST0044": {
+    "category": "Code",
+    "case_name": "MASTG-TEST0044",
+    "test_id": "MASTG-TEST-0044",
+    "title": "Make Sure That Free Security Features Are Activated",
+    "apk": "benchmarks/Code/MASTG-TEST0044/MASTG-TEST0044.apk",
+    "readme": "benchmarks/Code/MASTG-TEST0044/README.md",
+    "expected_vulnerabilities": [
+      {
+        "id": "GT-0044-1",
+        "category": "native_stack_canary_disabled",
+        "must_detect": true,
+        "severity": "high",
+        "description": "The app uses a native library compiled with stack canary protection disabled through -fno-stack-protector. Disabling stack smashing protection makes the native code more vulnerable to stack overflow attacks, which may lead to crashes or arbitrary code execution.",
+        "acceptable_scanner_categories": [
+          "native_stack_canary_disabled",
+          "stack_canary_disabled",
+          "stack_smashing_protection_disabled",
+          "missing_stack_protector",
+          "native_binary_hardening_missing",
+          "native_security_feature_disabled",
+          "memory_corruption_hardening"
+        ],
+        "evidence_keywords": [
+          "-fno-stack-protector",
+          "CMakeLists.txt",
+          "CMAKE_C_FLAGS",
+          "CMAKE_CXX_FLAGS",
+          "stack canary",
+          "stack smashing protection",
+          "canary false",
+          "native library",
+          ".so",
+          "stack overflow"
+        ],
+        "source": "README.md Implementation and Static Analysis"
+      },
+      {
+        "id": "GT-0044-2",
+        "category": "native_binary_hardening_missing",
+        "must_detect": true,
+        "severity": "high",
+        "description": "The app contains native code that should be checked for binary hardening protections. Native libraries should have security features such as stack canary and position-independent code enabled.",
+        "acceptable_scanner_categories": [
+          "native_binary_hardening_missing",
+          "native_security_feature_disabled",
+          "binary_hardening",
+          "native_library_hardening",
+          "elf_hardening",
+          "native_code_detected",
+          "memory_corruption_hardening"
+        ],
+        "evidence_keywords": [
+          "native library",
+          "libnative-lib.so",
+          ".so",
+          "JNI",
+          "NDK",
+          "rabin2",
+          "canary",
+          "pic",
+          "PIE",
+          "stack smashing"
+        ],
+        "source": "README.md Implementation and Static Analysis"
+      },
+      {
+        "id": "GT-0044-3",
+        "category": "native_pie_disabled",
+        "must_detect": false,
+        "severity": "high",
+        "description": "Native libraries should be compiled as position-independent code. If a native library has PIE or PIC disabled, address randomization protections may be weakened.",
+        "acceptable_scanner_categories": [
+          "native_pie_disabled",
+          "pic_disabled",
+          "pie_disabled",
+          "position_independent_code_missing",
+          "native_binary_hardening_missing",
+          "elf_hardening",
+          "aslr_weakness"
+        ],
+        "evidence_keywords": [
+          "pic false",
+          "PIE",
+          "PIC",
+          "position independent",
+          "rabin2",
+          "native library",
+          ".so",
+          "ASLR",
+          "lib",
+          "ELF"
+        ],
+        "source": "README.md Static Analysis"
+      },
+      {
+        "id": "GT-0044-4",
+        "category": "native_code_memory_corruption_risk",
+        "must_detect": false,
+        "severity": "medium",
+        "description": "Because the app performs functionality through native code, the native library should be reviewed for memory corruption risks such as stack overflows, especially when compiler hardening protections are disabled.",
+        "acceptable_scanner_categories": [
+          "native_code_memory_corruption_risk",
+          "native_code_detected",
+          "jni_usage",
+          "ndk_usage",
+          "memory_corruption",
+          "buffer_overflow_risk",
+          "native_library"
+        ],
+        "evidence_keywords": [
+          "native library",
+          "addition of two numbers",
+          "JNI",
+          "NDK",
+          ".so",
+          "CMakeLists.txt",
+          "stack overflow",
+          "arbitrary code execution",
+          "crashing",
+          "memory corruption"
+        ],
+        "source": "README.md Implementation and Static Analysis"
+      }
+    ]
+  },
+  "Storage/MASTG-TEST0001": {
+    "category": "Storage",
+    "case_name": "MASTG-TEST0001",
+    "test_id": "MASTG-TEST-0001",
+    "title": "Testing Local Storage for Sensitive Data",
+    "apk": "benchmarks/Storage/MASTG-TEST0001/MASTG-TEST0001.apk",
+    "readme": "benchmarks/Storage/MASTG-TEST0001/README.md",
+    "expected_vulnerabilities": [
+      {
+        "id": "GT-0001-1",
+        "category": "sensitive_data_in_shared_preferences",
+        "must_detect": true,
+        "severity": "high",
+        "description": "The app stores sensitive credentials or user-provided sensitive information in SharedPreferences. SharedPreferences should not be used for sensitive data unless the data is properly encrypted with securely managed keys.",
+        "acceptable_scanner_categories": [
+          "sensitive_data_in_shared_preferences",
+          "insecure_shared_preferences",
+          "sensitive_data_local_storage",
+          "insecure_local_storage",
+          "plaintext_storage",
+          "storage_sensitive_data",
+          "shared_preferences"
+        ],
+        "evidence_keywords": [
+          "SharedPreferences",
+          "shared preferences",
+          "credentials",
+          "username",
+          "password",
+          "sensitive",
+          "getSharedPreferences",
+          "putString",
+          "getString",
+          "MODE_PRIVATE",
+          "displayed",
+          "form"
+        ],
+        "source": "README.md Implementation and Static Analysis"
+      },
+      {
+        "id": "GT-0001-2",
+        "category": "external_storage_permission",
+        "must_detect": true,
+        "severity": "medium",
+        "description": "The app requests WRITE_EXTERNAL_STORAGE permission, which can indicate that sensitive data may be written to external storage where it is more exposed to other apps or users.",
+        "acceptable_scanner_categories": [
+          "external_storage_permission",
+          "write_external_storage",
+          "insecure_external_storage",
+          "sensitive_data_external_storage",
+          "android_permission",
+          "manifest_storage_permission",
+          "insecure_local_storage"
+        ],
+        "evidence_keywords": [
+          "WRITE_EXTERNAL_STORAGE",
+          "android.permission.WRITE_EXTERNAL_STORAGE",
+          "external storage",
+          "AndroidManifest.xml",
+          "uses-permission",
+          "getExternalFilesDir",
+          "getExternalStoragePublicDirectory",
+          "Environment"
+        ],
+        "source": "README.md Implementation and Static Analysis"
+      },
+      {
+        "id": "GT-0001-3",
+        "category": "hardcoded_database_encryption_key",
+        "must_detect": true,
+        "severity": "high",
+        "description": "The app encrypts a local database using a hardcoded key in the source code. Hardcoded cryptographic keys can be extracted from the app and used to decrypt locally stored sensitive data.",
+        "acceptable_scanner_categories": [
+          "hardcoded_database_encryption_key",
+          "hardcoded_crypto_key",
+          "hardcoded_secret",
+          "insecure_key_storage",
+          "weak_database_encryption",
+          "sensitive_data_local_storage",
+          "cryptographic_key_disclosure"
+        ],
+        "evidence_keywords": [
+          "SecureDatabaseHelper.java",
+          "Secret",
+          "hardcoded",
+          "hardcoded key",
+          "cryptographic key",
+          "database",
+          "SQLiteDatabase",
+          "getWritableDatabase",
+          "encrypted",
+          "db",
+          "key",
+          "secret"
+        ],
+        "source": "README.md Implementation and Static Analysis"
+      },
+      {
+        "id": "GT-0001-4",
+        "category": "sensitive_data_in_local_database",
+        "must_detect": true,
+        "severity": "high",
+        "description": "The app stores secret data in a local database. The database protection is insufficient because the encryption key is hardcoded, making the stored secrets recoverable.",
+        "acceptable_scanner_categories": [
+          "sensitive_data_in_local_database",
+          "insecure_sqlite_storage",
+          "insecure_database_storage",
+          "sensitive_data_local_storage",
+          "weak_database_encryption",
+          "plaintext_storage",
+          "sqlite_database"
+        ],
+        "evidence_keywords": [
+          "database",
+          "db",
+          "SQLiteDatabase",
+          "secrets",
+          "secret",
+          "internal storage",
+          "getReadableDatabase",
+          "getWritableDatabase",
+          "SecureDatabaseHelper",
+          "encrypted",
+          "hardcoded"
+        ],
+        "source": "README.md Implementation and Static Analysis"
+      },
+      {
+        "id": "GT-0001-5",
+        "category": "hardcoded_secret_in_resources",
+        "must_detect": true,
+        "severity": "medium",
+        "description": "The app adds a secret-like value in string.xml. Secrets stored in Android resources can be extracted from the APK and should not be treated as secure.",
+        "acceptable_scanner_categories": [
+          "hardcoded_secret_in_resources",
+          "hardcoded_secret",
+          "sensitive_data_in_resources",
+          "string_resource_secret",
+          "insecure_key_storage",
+          "secret_disclosure",
+          "resource_secret"
+        ],
+        "evidence_keywords": [
+          "string.xml",
+          "strings.xml",
+          "res/values",
+          "secret_key",
+          "secret",
+          "string name",
+          "resources",
+          "hardcoded",
+          "key",
+          "sensitive"
+        ],
+        "source": "README.md Implementation and Static Analysis"
+      },
+      {
+        "id": "GT-0001-6",
+        "category": "weak_or_custom_local_encryption",
+        "must_detect": false,
+        "severity": "medium",
+        "description": "The app should avoid weak local encryption patterns such as XOR, bit flipping, encoded keys, or custom key hiding. Local encryption should rely on proven Android APIs and keys managed through Android Keystore.",
+        "acceptable_scanner_categories": [
+          "weak_or_custom_local_encryption",
+          "weak_encryption",
+          "custom_crypto",
+          "xor_obfuscation",
+          "insecure_key_storage",
+          "android_keystore_missing",
+          "cryptographic_weakness"
+        ],
+        "evidence_keywords": [
+          "XOR",
+          "bit flipping",
+          "Base64",
+          "myCompositeKey",
+          "xorKey",
+          "HidingUtil",
+          "Android Keystore",
+          "EncryptedFile",
+          "AES-256",
+          "custom encryption"
+        ],
+        "source": "README.md Static Analysis"
+      }
+    ]
+  },
+  "Storage/MASTG-TEST0006": {
+    "category": "Storage",
+    "case_name": "MASTG-TEST0006",
+    "test_id": "MASTG-TEST-0006",
+    "title": "Determining Whether the Keyboard Cache Is Disabled for Text Input Fields",
+    "apk": "benchmarks/Storage/MASTG-TEST0006/MASTG-TEST0006.apk",
+    "readme": "benchmarks/Storage/MASTG-TEST0006/README.md",
+    "expected_vulnerabilities": [
+      {
+        "id": "GT-0006-1",
+        "category": "keyboard_cache_not_disabled",
+        "must_detect": true,
+        "severity": "medium",
+        "description": "The app contains sensitive login input fields where keyboard suggestions are not disabled. This may allow usernames, passwords, or other sensitive input to be cached or suggested by the keyboard.",
+        "acceptable_scanner_categories": [
+          "keyboard_cache_not_disabled",
+          "keyboard_suggestions_enabled",
+          "sensitive_input_suggestions_enabled",
+          "input_suggestions_not_disabled",
+          "insecure_input_field",
+          "storage_sensitive_data",
+          "keyboard_cache"
+        ],
+        "evidence_keywords": [
+          "EditText",
+          "username",
+          "password",
+          "login",
+          "suggestions",
+          "keyboard cache",
+          "textNoSuggestions",
+          "android:inputType",
+          "inputType",
+          "sensitive information"
+        ],
+        "source": "README.md Implementation and Static Analysis"
+      },
+      {
+        "id": "GT-0006-2",
+        "category": "missing_text_no_suggestions",
+        "must_detect": true,
+        "severity": "medium",
+        "description": "Sensitive text input fields do not use android:inputType=\"textNoSuggestions\" or an equivalent secure input type to prevent keyboard suggestions.",
+        "acceptable_scanner_categories": [
+          "missing_text_no_suggestions",
+          "keyboard_cache_not_disabled",
+          "keyboard_suggestions_enabled",
+          "input_type_misconfiguration",
+          "insecure_edittext",
+          "sensitive_input_suggestions_enabled"
+        ],
+        "evidence_keywords": [
+          "textNoSuggestions",
+          "android:inputType",
+          "EditText",
+          "KeyBoardCache",
+          "input field",
+          "XML",
+          "layout",
+          "keyboard suggestions",
+          "disable",
+          "sensitive information"
+        ],
+        "source": "README.md Implementation and Static Analysis"
+      },
+      {
+        "id": "GT-0006-3",
+        "category": "password_input_type_missing",
+        "must_detect": false,
+        "severity": "medium",
+        "description": "Password fields should use password-specific input types such as textPassword, textVisiblePassword, numberPassword, or textWebPassword. If password fields are plain text input fields, keyboard caching and visual exposure risks may increase.",
+        "acceptable_scanner_categories": [
+          "password_input_type_missing",
+          "insecure_password_field",
+          "input_type_misconfiguration",
+          "keyboard_cache_not_disabled",
+          "sensitive_input_suggestions_enabled",
+          "insecure_edittext"
+        ],
+        "evidence_keywords": [
+          "textPassword",
+          "textVisiblePassword",
+          "numberPassword",
+          "textWebPassword",
+          "TYPE_TEXT_VARIATION_PASSWORD",
+          "TYPE_NUMBER_VARIATION_PASSWORD",
+          "TYPE_TEXT_VARIATION_WEB_PASSWORD",
+          "password",
+          "InputType"
+        ],
+        "source": "README.md Static Analysis"
+      },
+      {
+        "id": "GT-0006-4",
+        "category": "input_type_overwritten_in_code",
+        "must_detect": false,
+        "severity": "medium",
+        "description": "The app should not overwrite secure XML input types in code with less secure values such as InputType.TYPE_CLASS_TEXT, because doing so can re-enable keyboard suggestions.",
+        "acceptable_scanner_categories": [
+          "input_type_overwritten_in_code",
+          "input_type_misconfiguration",
+          "keyboard_cache_not_disabled",
+          "keyboard_suggestions_enabled",
+          "insecure_edittext",
+          "sensitive_input_suggestions_enabled"
+        ],
+        "evidence_keywords": [
+          "setInputType",
+          "InputType.TYPE_CLASS_TEXT",
+          "TYPE_CLASS_TEXT",
+          "findViewById",
+          "KeyBoardCache",
+          "text",
+          "reenabling",
+          "keyboard cache",
+          "input type"
+        ],
+        "source": "README.md Static Analysis"
+      },
+      {
+        "id": "GT-0006-5",
+        "category": "input_type_min_sdk_incompatible",
+        "must_detect": false,
+        "severity": "low",
+        "description": "The app should ensure that the configured minimum SDK version supports the secure input type constants used for sensitive fields. Otherwise, the compiled app may not honor those constants.",
+        "acceptable_scanner_categories": [
+          "input_type_min_sdk_incompatible",
+          "min_sdk_incompatible",
+          "input_type_misconfiguration",
+          "keyboard_cache_not_disabled",
+          "manifest_sdk",
+          "android_manifest"
+        ],
+        "evidence_keywords": [
+          "minSdkVersion",
+          "android:minSdkVersion",
+          "API level",
+          "textWebPassword",
+          "numberPassword",
+          "TYPE_TEXT_VARIATION_WEB_PASSWORD",
+          "TYPE_NUMBER_VARIATION_PASSWORD",
+          "input type constants",
+          "keyboard caching"
+        ],
+        "source": "README.md Static Analysis"
+      }
+    ]
+  },
+  "Storage/MASTG-TEST0009": {
+    "category": "Storage",
+    "case_name": "MASTG-TEST0009",
+    "test_id": "MASTG-TEST-0009",
+    "title": "Testing Backups for Sensitive Data",
+    "apk": "benchmarks/Storage/MASTG-TEST0009/MASTG-TEST0009.apk",
+    "readme": "benchmarks/Storage/MASTG-TEST0009/README.md",
+    "expected_vulnerabilities": [
+      {
+        "id": "GT-0009-1",
+        "category": "allow_backup_enabled",
+        "must_detect": true,
+        "severity": "high",
+        "description": "The app leaves android:allowBackup=\"true\" enabled in the AndroidManifest.xml file. If the app stores sensitive data locally, this may allow sensitive files to be included in device or cloud backups.",
+        "acceptable_scanner_categories": [
+          "allow_backup_enabled",
+          "backup_enabled",
+          "android_allow_backup_true",
+          "insecure_backup",
+          "sensitive_data_backup",
+          "manifest_backup_misconfiguration",
+          "android_manifest"
+        ],
+        "evidence_keywords": [
+          "android:allowBackup",
+          "allowBackup",
+          "true",
+          "AndroidManifest.xml",
+          "backup",
+          "Auto Backup",
+          "Google Drive",
+          "cloud backup",
+          "sensitive data"
+        ],
+        "source": "README.md Implementation and Static Analysis"
+      },
+      {
+        "id": "GT-0009-2",
+        "category": "sensitive_credentials_in_internal_file",
+        "must_detect": true,
+        "severity": "high",
+        "description": "The app stores login and registration credentials in a local text file named credentials.txt using a plaintext format containing the username and password.",
+        "acceptable_scanner_categories": [
+          "sensitive_credentials_in_internal_file",
+          "plaintext_credentials_storage",
+          "sensitive_data_local_storage",
+          "insecure_file_storage",
+          "credentials_in_file",
+          "plaintext_storage",
+          "storage_sensitive_data"
+        ],
+        "evidence_keywords": [
+          "credentials.txt",
+          "Username",
+          "Password",
+          "username",
+          "password",
+          "Login",
+          "Registration",
+          "internal storage",
+          "text file",
+          "plaintext",
+          "sensitive data"
+        ],
+        "source": "README.md Implementation"
+      },
+      {
+        "id": "GT-0009-3",
+        "category": "sensitive_data_in_backup",
+        "must_detect": true,
+        "severity": "high",
+        "description": "Because the app stores sensitive credentials locally while backup is enabled, the sensitive credentials may be included in Android Auto Backup or other backup mechanisms unless explicitly excluded or encrypted.",
+        "acceptable_scanner_categories": [
+          "sensitive_data_in_backup",
+          "insecure_backup",
+          "backup_sensitive_data",
+          "allow_backup_enabled",
+          "sensitive_data_local_storage",
+          "auto_backup_exposure",
+          "cloud_backup_exposure"
+        ],
+        "evidence_keywords": [
+          "allowBackup",
+          "credentials.txt",
+          "Username",
+          "Password",
+          "Auto Backup",
+          "backup",
+          "Google Drive",
+          "cloud",
+          "encrypted",
+          "exclude",
+          "sensitive information"
+        ],
+        "source": "README.md Implementation and Static Analysis"
+      },
+      {
+        "id": "GT-0009-4",
+        "category": "missing_backup_exclusion_rules",
+        "must_detect": false,
+        "severity": "medium",
+        "description": "Sensitive files should be excluded from Android Auto Backup using backup rules, or encrypted before backup. If no backup exclusion configuration is present, sensitive local files may be backed up.",
+        "acceptable_scanner_categories": [
+          "missing_backup_exclusion_rules",
+          "backup_rules_missing",
+          "full_backup_content_missing",
+          "data_extraction_rules_missing",
+          "auto_backup_exposure",
+          "insecure_backup",
+          "sensitive_data_backup"
+        ],
+        "evidence_keywords": [
+          "fullBackupContent",
+          "dataExtractionRules",
+          "backup rules",
+          "exclude",
+          "Auto Backup",
+          "credentials.txt",
+          "SharedPreferences",
+          "files",
+          "cloud",
+          "encrypted"
+        ],
+        "source": "README.md Static Analysis"
+      },
+      {
+        "id": "GT-0009-5",
+        "category": "key_value_backup_review",
+        "must_detect": false,
+        "severity": "info",
+        "description": "If the app defines a key/value backup agent, reviewers should inspect the BackupAgent or BackupAgentHelper implementation to determine whether sensitive data is backed up.",
+        "acceptable_scanner_categories": [
+          "key_value_backup_review",
+          "backup_agent_detected",
+          "backupagent_usage",
+          "backupagenthelper_usage",
+          "key_value_backup",
+          "insecure_backup"
+        ],
+        "evidence_keywords": [
+          "android:backupAgent",
+          "backupAgent",
+          "BackupAgent",
+          "BackupAgentHelper",
+          "key/value backup",
+          "AndroidManifest.xml",
+          "SharedPreferences",
+          "sensitive information"
+        ],
+        "source": "README.md Static Analysis"
+      }
+    ]
+  },
+  "Storage/MASTG-TEST0011": {
+    "category": "Storage",
+    "case_name": "MASTG-TEST0011",
+    "test_id": "MASTG-TEST-0011",
+    "title": "Testing Memory for Sensitive Data",
+    "apk": "benchmarks/Storage/MASTG-TEST0011/MASTG-TEST0011.apk",
+    "readme": "benchmarks/Storage/MASTG-TEST0011/README.md",
+    "expected_vulnerabilities": [
+      {
+        "id": "GT-0011-1",
+        "category": "sensitive_key_stored_in_string",
+        "must_detect": true,
+        "severity": "high",
+        "description": "The app stores the encryption key as a String object in memory. Immutable objects such as String cannot be reliably overwritten, so sensitive values may remain in memory longer than necessary.",
+        "acceptable_scanner_categories": [
+          "sensitive_key_stored_in_string",
+          "sensitive_data_in_memory",
+          "secret_in_string",
+          "immutable_secret",
+          "memory_sensitive_data",
+          "insecure_secret_handling",
+          "crypto_key_memory_exposure"
+        ],
+        "evidence_keywords": [
+          "encryptionKey",
+          "Talos",
+          "String",
+          "immutable",
+          "encryption key",
+          "key",
+          "memory",
+          "sensitive data",
+          "secret",
+          "Note Manager"
+        ],
+        "source": "README.md Implementation and Static Analysis"
+      },
+      {
+        "id": "GT-0011-2",
+        "category": "sensitive_data_not_cleared_on_logout",
+        "must_detect": true,
+        "severity": "high",
+        "description": "The app does not properly clear sensitive data from memory when the user signs out. Setting this.encryptionKey = null only removes the reference and does not overwrite the sensitive key material.",
+        "acceptable_scanner_categories": [
+          "sensitive_data_not_cleared_on_logout",
+          "memory_sensitive_data_not_cleared",
+          "logout_secret_not_cleared",
+          "sensitive_data_in_memory",
+          "insecure_session_cleanup",
+          "memory_exposure",
+          "user_authentication_cleanup_missing"
+        ],
+        "evidence_keywords": [
+          "logout",
+          "signs out",
+          "this.encryptionKey = null",
+          "encryptionKey",
+          "clear sensitive data",
+          "memory",
+          "decrypted notes",
+          "application is closed",
+          "null",
+          "sensitive data"
+        ],
+        "source": "README.md Implementation and Static Analysis"
+      },
+      {
+        "id": "GT-0011-3",
+        "category": "sensitive_notes_in_memory",
+        "must_detect": true,
+        "severity": "medium",
+        "description": "The app handles encrypted notes and may leave the encryption key or decrypted note content accessible in memory until the application is closed.",
+        "acceptable_scanner_categories": [
+          "sensitive_notes_in_memory",
+          "sensitive_data_in_memory",
+          "decrypted_data_in_memory",
+          "memory_exposure",
+          "insecure_secret_handling",
+          "storage_sensitive_data"
+        ],
+        "evidence_keywords": [
+          "note.txt",
+          "notes",
+          "decrypted notes",
+          "encrypted",
+          "encryption key",
+          "Talos",
+          "memory",
+          "application is closed",
+          "sensitive data"
+        ],
+        "source": "README.md Implementation"
+      },
+      {
+        "id": "GT-0011-4",
+        "category": "missing_memory_overwrite",
+        "must_detect": false,
+        "severity": "medium",
+        "description": "Sensitive values should be stored in mutable primitive arrays such as byte[] or char[] and overwritten when no longer needed. The app does not demonstrate proper overwrite-based cleanup for sensitive memory.",
+        "acceptable_scanner_categories": [
+          "missing_memory_overwrite",
+          "sensitive_data_not_overwritten",
+          "memory_sensitive_data_not_cleared",
+          "insecure_secret_handling",
+          "sensitive_data_in_memory",
+          "secret_cleanup_missing"
+        ],
+        "evidence_keywords": [
+          "byte[]",
+          "char[]",
+          "Arrays.fill",
+          "overwrite",
+          "zeroes",
+          "random data",
+          "destroy",
+          "System.gc",
+          "clear",
+          "sensitive information"
+        ],
+        "source": "README.md Static Analysis"
+      },
+      {
+        "id": "GT-0011-5",
+        "category": "sensitive_data_not_cleared_on_pause",
+        "must_detect": false,
+        "severity": "medium",
+        "description": "Highly sensitive information should be cleared when an Activity or Fragment enters onPause. If the app keeps sensitive notes or keys in memory across lifecycle transitions, the data may remain exposed.",
+        "acceptable_scanner_categories": [
+          "sensitive_data_not_cleared_on_pause",
+          "lifecycle_secret_cleanup_missing",
+          "memory_sensitive_data_not_cleared",
+          "sensitive_data_in_memory",
+          "activity_sensitive_data_exposure",
+          "fragment_sensitive_data_exposure"
+        ],
+        "evidence_keywords": [
+          "onPause",
+          "Activity",
+          "Fragment",
+          "lifecycle",
+          "clear",
+          "sensitive information",
+          "memory",
+          "re-authenticate",
+          "resumes"
+        ],
+        "source": "README.md Static Analysis"
+      }
+    ]
   }
 }
