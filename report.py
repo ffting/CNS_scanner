@@ -42,6 +42,34 @@ def write_markdown(result: ScanResult, output_path: Path) -> None:
     for key, val in result.summary.items():
         lines.append(f"- **{key}**: {val}")
 
+    lines.extend(["", "## API keys / tokens", ""])
+    if not getattr(result, "api_keys", None):
+        lines.append("_No API keys/tokens matched by built-in patterns._")
+    else:
+        confirmed = [k for k in result.api_keys if k.verified]
+        warnings = [k for k in result.api_keys if not k.verified]
+
+        lines.append(
+            "Only **verified** keys are treated as confirmed findings. "
+            "Regex-only matches are warnings/candidates."
+        )
+        lines.append("")
+        lines.append(f"- Confirmed: **{len(confirmed)}**")
+        lines.append(f"- Warnings: **{len(warnings)}**")
+        lines.append("")
+        lines.append("| Provider | Kind | Redacted | Status | Source |")
+        lines.append("|----------|------|----------|----------|--------|")
+        for k in sorted(result.api_keys, key=lambda x: (x.provider, x.kind, x.source)):
+            verified = "confirmed" if k.verified else "warning"
+            lines.append(
+                f"| {k.provider} | {k.kind} | `{k.redacted}` | {verified} | `{k.source}` |"
+            )
+        lines.append("")
+        # Include details separately to keep table clean.
+        for k in result.api_keys:
+            if k.verification_detail:
+                lines.append(f"- `{k.redacted}`: {k.verification_detail}")
+
     lines.extend(["", "## Detected vulnerabilities (patterns)", ""])
     if not result.vulnerabilities:
         lines.append("_No vulnerability patterns matched._")

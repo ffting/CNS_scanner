@@ -28,6 +28,10 @@ def _print_scan_summary(result) -> None:
     print(f"Package: {result.meta.package_name}")
     print(f"Exported/implicit components: {result.summary.get('exported_or_implicit', 0)}")
     print(f"Deep links: {result.summary.get('deep_link_count', 0)}")
+    print(
+        f"API keys/tokens (confirmed): {result.summary.get('api_key_confirmed_count', 0)} "
+        f"(Warnings: {result.summary.get('api_key_warning_count', 0)})"
+    )
     print(f"Vulnerabilities: {result.summary.get('vulnerability_count', 0)} "
           f"(Critical: {result.summary.get('critical_vulns', 0)})")
     print(f"Attack chains: {result.summary.get('attack_chain_count', 0)}")
@@ -62,16 +66,41 @@ def parse_args() -> argparse.Namespace:
         default=None,
         help="Write JSON, Markdown, and poc.sh to this directory",
     )
+    parser.add_argument(
+        "--verify-api-keys",
+        action="store_true",
+        help=(
+            "Best-effort online verification for detected API keys/tokens. "
+            "Use ONLY for keys you own/have authorization to test."
+        ),
+    )
+    parser.add_argument(
+        "--verify-api-keys-allow",
+        default="github,stripe,slack",
+        help="Comma-separated providers to verify (default: github,stripe,slack)",
+    )
+    parser.add_argument(
+        "--i-own-these-keys",
+        action="store_true",
+        help="Required acknowledgement to run API key verification.",
+    )
     return parser.parse_args()
 
 
 def main() -> int:
     args = parse_args()
     apk = Path(args.apk_file)
+    allow = {p.strip().lower() for p in str(args.verify_api_keys_allow).split(",") if p.strip()}
 
     try:
         if args.output_dir:
-            result = scan_apk_to_dir(str(apk), args.output_dir)
+            result = scan_apk_to_dir(
+                str(apk),
+                args.output_dir,
+                verify_api_keys=bool(args.verify_api_keys),
+                verify_allow_providers=allow,
+                i_own_these_keys=bool(args.i_own_these_keys),
+            )
             pkg = result.meta.package_name
             out = Path(args.output_dir)
             print(f"Reports written to {out.resolve()}")
@@ -80,7 +109,12 @@ def main() -> int:
             print(f"  - {pkg}_poc.sh")
             _print_scan_summary(result)
         else:
-            result = scan_apk(str(apk))
+            result = scan_apk(
+                str(apk),
+                verify_api_keys=bool(args.verify_api_keys),
+                verify_allow_providers=allow,
+                i_own_these_keys=bool(args.i_own_these_keys),
+            )
             _print_scan_summary(result)
     except ImportError as err:
         print("Error: androguard is required. Install with:", file=sys.stderr)

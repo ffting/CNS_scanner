@@ -21,6 +21,19 @@ python our_scanner.py -f path/to/app.apk
 python our_scanner.py -f path/to/app.apk -o ./reports/
 ```
 
+## API key / token leak scan
+
+The scanner also performs a lightweight **static secret scan** to detect likely hardcoded API keys/tokens
+in APK strings/assets/code (values are **redacted** in reports).
+
+Optional online verification is available for a small provider set and is **disabled by default**.
+Only enable it for keys you own or have explicit authorization to test:
+
+```bash
+python our_scanner.py -f path/to/app.apk -o ./reports/ --verify-api-keys --i-own-these-keys
+python our_scanner.py -f path/to/app.apk -o ./reports/ --verify-api-keys --verify-api-keys-allow github,stripe
+```
+
 ## Output
 
 | File | Content |

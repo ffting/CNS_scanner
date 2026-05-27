@@ -93,6 +93,29 @@ class ScanResult:
     components: list[ComponentSurface] = field(default_factory=list)
     deep_links: list[DeepLink] = field(default_factory=list)
     custom_permissions: dict[str, str] = field(default_factory=dict)
+    api_keys: list["ApiKeyFinding"] = field(default_factory=list)
     vulnerabilities: list[VulnerabilityFinding] = field(default_factory=list)
     attack_chains: list[AttackChainFinding] = field(default_factory=list)
     summary: dict[str, Any] = field(default_factory=dict)
+
+
+@dataclass
+class ApiKeyFinding:
+    """
+    Possible API key / token leak found in APK assets/resources/code strings.
+
+    Notes:
+    - We store a redacted value to reduce accidental leakage in reports.
+    - 'verified' only means the token was accepted by a minimal provider API call.
+      Verification is optional and should only be used on keys you own.
+    """
+
+    provider: str  # e.g. github, stripe, slack, google, aws, generic
+    kind: str  # api_key | token | secret
+    redacted: str
+    fingerprint: str  # short hash to dedupe without storing full key
+    source: str  # file path inside APK, or "strings" for extracted strings
+    evidence: str | None = None
+    confidence: str = "Medium"  # High | Medium | Low
+    verified: bool = False
+    verification_detail: str | None = None
