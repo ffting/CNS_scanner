@@ -62,6 +62,9 @@ def write_markdown(result: ScanResult, output_path: Path) -> None:
     for key, val in result.summary.items():
         lines.append(f"- **{key}**: {val}")
 
+    # ------------------------------------------------------------------
+    # API keys / tokens
+    # ------------------------------------------------------------------
     lines.extend(["", "## API keys / tokens", ""])
     if not getattr(result, "api_keys", None):
         lines.append("_No API keys/tokens matched by built-in patterns._")
@@ -90,7 +93,17 @@ def write_markdown(result: ScanResult, output_path: Path) -> None:
             if k.verification_detail:
                 lines.append(f"- `{k.redacted}`: {k.verification_detail}")
 
-    lines.extend(["", "## Detected vulnerabilities (patterns)", ""])
+    # ------------------------------------------------------------------
+    # Vulnerability findings
+    # ------------------------------------------------------------------
+    lines.extend(
+        [
+            "",
+            "## Detected vulnerabilities",
+            "",
+        ]
+    )
+
     if not result.vulnerabilities:
         lines.append("_No vulnerability patterns matched._")
     else:

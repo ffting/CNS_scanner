@@ -47,15 +47,30 @@ def _score_text(vuln) -> str:
 def _print_scan_summary(result) -> None:
     """Print human-readable CLI summary."""
     print(f"Package: {result.meta.package_name}")
-    print(f"Exported/implicit components: {result.summary.get('exported_or_implicit', 0)}")
-    print(f"Deep links: {result.summary.get('deep_link_count', 0)}")
+    print(f"APK: {result.meta.apk_path}")
+    print(f"minSdk / targetSdk: {result.meta.min_sdk} / {result.meta.target_sdk}")
+    print(f"debuggable: {result.meta.debuggable}")
+    print(f"allowBackup: {result.meta.allow_backup}")
+    print()
+
+    print("Summary:")
+    print(f"  Total components: {result.summary.get('total_components', 0)}")
+    print(f"  Exported/implicit components: {result.summary.get('exported_or_implicit', 0)}")
+    print(f"  Deep links: {result.summary.get('deep_link_count', 0)}")
+    print(f"  P0 components: {result.summary.get('p0_components', 0)}")
+    print(f"  P0 deep links: {result.summary.get('p0_deep_links', 0)}")
     print(
-        f"API keys/tokens (confirmed): {result.summary.get('api_key_confirmed_count', 0)} "
-        f"(Warnings: {result.summary.get('api_key_warning_count', 0)})"
+        f"  API keys/tokens (confirmed): {result.summary.get('api_key_confirmed_count', 0)} "
+        f"(warnings: {result.summary.get('api_key_warning_count', 0)})"
     )
-    print(f"Vulnerabilities: {result.summary.get('vulnerability_count', 0)} "
-          f"(Critical: {result.summary.get('critical_vulns', 0)})")
-    print(f"Attack chains: {result.summary.get('attack_chain_count', 0)}")
+    print(
+        f"  Vulnerabilities: {result.summary.get('vulnerability_count', 0)} "
+        f"(Critical: {result.summary.get('critical_vulns', 0)})"
+    )
+    print(
+        f"  Attack chains: {result.summary.get('attack_chain_count', 0)} "
+        f"(Critical: {result.summary.get('critical_chains', 0)})"
+    )
     print()
 
     if result.vulnerabilities:
@@ -70,8 +85,9 @@ def _print_scan_summary(result) -> None:
         print()
         print("Attack chains:")
         for chain in result.attack_chains:
+            score = _score_text(chain)
             parts = " + ".join(chain.composed_of[:5])
-            print(f"  [{chain.severity}] {chain.chain_id}: {chain.title}")
+            print(f"  [{chain.severity}] {chain.chain_id}: {chain.title}{score}")
             if parts:
                 print(f"      {parts}")
 

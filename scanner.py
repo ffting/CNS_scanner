@@ -33,7 +33,7 @@ from risk_rules import apply_risk_analysis
 from scoring import apply_scoring
 from vulnerability_patterns import detect_vulnerabilities
 
-DEFAULT_VERIFY_PROVIDERS = {
+DEFAULT_VERIFY_PROVIDERS = frozenset({
     "github",
     "stripe",
     "slack",
@@ -41,22 +41,56 @@ DEFAULT_VERIFY_PROVIDERS = {
     "google",
     "firebase",
     "anthropic",
-}
-
-DEFAULT_VERIFY_PROVIDERS = {
-    "github",
-    "stripe",
-    "slack",
-    "openai",
-    "google",
-    "firebase",
-    "anthropic",
-}
+})
 
 
-def scan_apk(
-    apk_path: str,
-) -> ScanResult:
+def _scan_api_keys(apk_path: str, result: ScanResult) -> None:
+    """Static secret scan + optional online verification for supported providers."""
+    result.api_keys = scan_apk_for_api_keys(apk_path)
+    if not result.summary:
+        result.summary = {}
+
+    result.summary["api_key_candidate_count"] = len(result.api_keys)
+    result.summary["api_key_confirmed_count"] = sum(1 for k in result.api_keys if k.verified)
+    result.summary["api_key_warning_count"] = sum(1 for k in result.api_keys if not k.verified)
+
+    if not result.api_keys:
+        return
+
+    full_tokens = extract_full_tokens_for_verification(
+        apk_path,
+        allow_providers=DEFAULT_VERIFY_PROVIDERS,
+    )
+    verified = verify_full_tokens(full_tokens, allow_providers=DEFAULT_VERIFY_PROVIDERS)
+    for finding in result.api_keys:
+        if finding.fingerprint in verified:
+            ok, detail = verified[finding.fingerprint]
+            finding.verified = ok
+            finding.verification_detail = detail
+        else:
+            finding.verification_detail = (
+                "Verification unavailable for this provider/pattern."
+            )
+
+    result.summary["api_key_confirmed_count"] = sum(1 for k in result.api_keys if k.verified)
+    result.summary["api_key_warning_count"] = sum(1 for k in result.api_keys if not k.verified)
+
+
+def scan_apk(apk_path: str) -> ScanResult:
+    """Scan one APK and return a ScanResult.
+
+    Pipeline order:
+
+    1. Load APK metadata and AndroidManifest.xml
+    2. Extract components from Manifest
+    3. Extract deep links from intent filters
+    4. Static API key / token scan (+ online verification when supported)
+    5. Apply risk tags and rough priority labels
+    6. Attach adb PoC commands for actionable findings
+    7. Detect vulnerability patterns and attack chains
+    8. Apply severity_score / confidence_score
+    """
+
     apk_path = os.path.abspath(apk_path)
 
     if not os.path.isfile(apk_path):
@@ -80,31 +114,7 @@ def scan_apk(
         custom_permissions=custom_permissions,
     )
 
-    # Static secret scan: detect likely hardcoded API keys/tokens (redacted).
-    result.api_keys = scan_apk_for_api_keys(apk_path)
-    if not result.summary:
-        result.summary = {}
-    result.summary["api_key_candidate_count"] = len(result.api_keys)
-    result.summary["api_key_confirmed_count"] = sum(1 for k in result.api_keys if k.verified)
-    result.summary["api_key_warning_count"] = sum(1 for k in result.api_keys if not k.verified)
-
-    # Always attempt online verification for supported providers.
-    if result.api_keys:
-        full_tokens = extract_full_tokens_for_verification(
-            apk_path,
-            allow_providers=DEFAULT_VERIFY_PROVIDERS,
-        )
-        verified = verify_full_tokens(full_tokens, allow_providers=DEFAULT_VERIFY_PROVIDERS)
-        for f in result.api_keys:
-            if f.fingerprint in verified:
-                ok, detail = verified[f.fingerprint]
-                f.verified = ok
-                f.verification_detail = detail
-            else:
-                f.verification_detail = "Verification unavailable for this provider/pattern."
-        result.summary["api_key_confirmed_count"] = sum(1 for k in result.api_keys if k.verified)
-        result.summary["api_key_warning_count"] = sum(1 for k in result.api_keys if not k.verified)
-
+    _scan_api_keys(apk_path, result)
     apply_risk_analysis(result)
     attach_poc_commands(result)
     detect_vulnerabilities(result)
@@ -113,10 +123,9 @@ def scan_apk(
     return result
 
 
-def scan_apk_to_dir(
-    apk_path: str,
-    output_dir: str,
-) -> ScanResult:
+def scan_apk_to_dir(apk_path: str, output_dir: str) -> ScanResult:
+    """Scan one APK and write JSON / Markdown / PoC reports."""
+
     result = scan_apk(apk_path)
 
     out = Path(output_dir)
