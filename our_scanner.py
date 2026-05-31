@@ -2,8 +2,13 @@
 """
 Attack Surface Scanner for Android APK.
 
-Focus: exported components, ContentProvider exposure, implicit services,
-       deep links / app links, and adb PoC drafts for manual testing.
+CLI entry point only.
+
+Responsibilities:
+- Parse command-line arguments
+- Call scan pipeline
+- Print concise summary
+- Optionally write JSON / Markdown / PoC reports
 
 Usage:
     python our_scanner.py -f path/to/app.apk
@@ -16,7 +21,9 @@ import argparse
 import sys
 from pathlib import Path
 
-# Allow running as script from repo: python our_scanner/our_scanner.py
+# Allow running as script from repo:
+#   python our_scanner.py
+#   python our_scanner/our_scanner.py
 _SCRIPT_DIR = Path(__file__).resolve().parent
 if str(_SCRIPT_DIR) not in sys.path:
     sys.path.insert(0, str(_SCRIPT_DIR))
@@ -24,7 +31,21 @@ if str(_SCRIPT_DIR) not in sys.path:
 from scanner import scan_apk, scan_apk_to_dir  # noqa: E402
 
 
+def _score_text(vuln) -> str:
+    """Return compact severity/confidence score text if available."""
+    severity_score = getattr(vuln, "severity_score", None)
+    confidence_score = getattr(vuln, "confidence_score", None)
+
+    if severity_score is None and confidence_score is None:
+        return ""
+
+    sev = "-" if severity_score is None else str(severity_score)
+    conf = "-" if confidence_score is None else str(confidence_score)
+    return f" severity={sev}/10 confidence={conf}/10"
+
+
 def _print_scan_summary(result) -> None:
+    """Print human-readable CLI summary."""
     print(f"Package: {result.meta.package_name}")
     print(f"Exported/implicit components: {result.summary.get('exported_or_implicit', 0)}")
     print(f"Deep links: {result.summary.get('deep_link_count', 0)}")
@@ -36,36 +57,46 @@ def _print_scan_summary(result) -> None:
           f"(Critical: {result.summary.get('critical_vulns', 0)})")
     print(f"Attack chains: {result.summary.get('attack_chain_count', 0)}")
     print()
+
     if result.vulnerabilities:
         print("Vulnerability patterns:")
         for vuln in result.vulnerabilities:
-            print(f"  [{vuln.severity}] {vuln.pattern_id}: {vuln.title}")
+            score = _score_text(vuln)
+            print(f"  [{vuln.severity}] {vuln.pattern_id}: {vuln.title}{score}")
+    else:
+        print("Vulnerability patterns: none")
+
     if result.attack_chains:
         print()
-        print("Attack chains (A + B):")
+        print("Attack chains:")
         for chain in result.attack_chains:
             parts = " + ".join(chain.composed_of[:5])
-            print(f"  [{chain.severity}] {chain.chain_id}")
-            print(f"      {parts}")
+            print(f"  [{chain.severity}] {chain.chain_id}: {chain.title}")
+            if parts:
+                print(f"      {parts}")
+
     print()
 
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
-        description="Android APK Attack Surface Scanner (Manifest + Deep Links)",
+        description="Android APK Attack Surface Scanner",
     )
+
     parser.add_argument(
         "-f",
         "--apk_file",
         required=True,
         help="Path to APK file",
     )
+
     parser.add_argument(
         "-o",
         "--output_dir",
         default=None,
-        help="Write JSON, Markdown, and poc.sh to this directory",
+        help="Write JSON, Markdown, and poc.sh reports to this directory",
     )
+
     return parser.parse_args()
 
 
@@ -76,24 +107,36 @@ def main() -> int:
     try:
         if args.output_dir:
             result = scan_apk_to_dir(str(apk), args.output_dir)
-            pkg = result.meta.package_name
+
+            pkg = result.meta.package_name or "unknown"
             out = Path(args.output_dir)
+
             print(f"Reports written to {out.resolve()}")
             print(f"  - {pkg}.json")
             print(f"  - {pkg}.md")
             print(f"  - {pkg}_poc.sh")
+            print()
+
             _print_scan_summary(result)
         else:
             result = scan_apk(str(apk))
             _print_scan_summary(result)
+
     except ImportError as err:
-        print("Error: androguard is required. Install with:", file=sys.stderr)
+        print("Error: missing dependency.", file=sys.stderr)
+        print("Install dependencies with:", file=sys.stderr)
         print("  pip install -r requirements.txt", file=sys.stderr)
         print(err, file=sys.stderr)
         return 1
+
     except FileNotFoundError as err:
-        print(err, file=sys.stderr)
+        print(f"Error: {err}", file=sys.stderr)
         return 1
+
+    except KeyboardInterrupt:
+        print("Scan interrupted.", file=sys.stderr)
+        return 130
+
     except Exception as err:
         print(f"Scan failed: {err}", file=sys.stderr)
         return 1

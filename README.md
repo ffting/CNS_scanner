@@ -83,3 +83,48 @@ See `vulnerability_patterns.py` for the full rule list.
 - Static analysis only; does not confirm exploitability
 - Does not replace dynamic tools (e.g. drozer) or full SAST (MobSF, AndroBugs)
 - Code-level taint analysis is not included in v1
+
+## Ground truth
+
+`ground_truth.json` stores the expected finding for each benchmark test.
+
+## Run benchmark scan
+
+Scan all APKs under one benchmark category:
+
+```bash
+./run_scanner.sh Platform
+```
+
+## Current workflow
+
+### 1. Run our scanner
+./run_scanner.sh Platform
+
+### 2. Run MobSF
+python run_MobSF.py \
+  --category Platform \
+  --benchmark-root ./benchmarks \
+  --out ./reports/mobsf_raw \
+  --server http://127.0.0.1:8000 \
+  --api-key YOUR_MOBSF_API_KEY
+
+### 3. Normalize MobSF reports
+python normalize_mobsf.py \
+  --input-dir ./reports/mobsf_raw/Platform \
+  --out-dir ./reports/normalized/mobsf/Platform
+
+### 4. Evaluate our scanner
+python evaluation.py \
+  --ground-truth ./ground_truth.json \
+  --tool mobsf=./reports/normalized/mobsf/Platform \
+  --tool our_scanner=./reports/our_scanner/Platform \
+  --output-dir ./evaluation_results/Platform
+
+### 5. Evaluate MobSF
+python evaluation.py \
+  --ground-truth ./ground_truth.json \
+  --tool mobsf=./reports/normalized/mobsf/Platform \
+  --tool our_scanner=./reports/our_scanner/Platform \
+  --output-dir ./evaluation_results/Platform_high_conf \
+  --min-confidence-score 8

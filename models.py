@@ -19,28 +19,49 @@ class ComponentSurface:
     kind: str  # activity | activity-alias | service | receiver | provider
     name: str
     exported: str  # true | false | implicit
+
+    # Protection / permission information
     permission: str | None = None
     read_permission: str | None = None
     write_permission: str | None = None
+
+    # Provider-specific information
+    authorities: list[str] = field(default_factory=list)
+
+    # Intent filters
     intent_filters: list[IntentFilter] = field(default_factory=list)
+
+    # Common context flags
     is_launcher: bool = False
     is_sync_adapter: bool = False
+
+    # Risk analysis output
     risk_tags: list[str] = field(default_factory=list)
     priority: str = "P3"  # P0 | P1 | P2 | P3
     notes: list[str] = field(default_factory=list)
+
+    # Future context-aware code analysis output
+    code_signals: list[str] = field(default_factory=list)
+    code_evidence: list[str] = field(default_factory=list)
 
 
 @dataclass
 class DeepLink:
     component_kind: str
     component_name: str
+
     schemes: list[str] = field(default_factory=list)
     hosts: list[str] = field(default_factory=list)
     path_prefixes: list[str] = field(default_factory=list)
     path_patterns: list[str] = field(default_factory=list)
     mime_types: list[str] = field(default_factory=list)
+
     actions: list[str] = field(default_factory=list)
+    categories: list[str] = field(default_factory=list)
+
+    browsable: bool = False
     auto_verify: bool = False
+
     risk_tags: list[str] = field(default_factory=list)
     priority: str = "P3"
     adb_command: str | None = None
@@ -66,9 +87,18 @@ class VulnerabilityFinding:
     title: str
     severity: str  # Critical | High | Medium | Low
     description: str
+
+    # Added for proposal alignment and evaluation.
+    # These are optional so old reports / old logic remain compatible.
+    severity_score: int | None = None       # 1-10
+    confidence_score: int | None = None     # 1-10
+    category: str | None = None
+    location: str | None = None
+
     evidence: list[str] = field(default_factory=list)
     related_components: list[str] = field(default_factory=list)
     related_deep_links: list[str] = field(default_factory=list)
+
     cwe: str | None = None
     owasp_masvs: str | None = None
 
@@ -81,6 +111,11 @@ class AttackChainFinding:
     title: str
     severity: str
     narrative: str
+
+    # Optional scores for report sorting / prioritization.
+    severity_score: int | None = None       # 1-10
+    confidence_score: int | None = None     # 1-10
+
     composed_of: list[str] = field(default_factory=list)
     evidence: list[str] = field(default_factory=list)
     related_components: list[str] = field(default_factory=list)
@@ -96,6 +131,7 @@ class ScanResult:
     api_keys: list["ApiKeyFinding"] = field(default_factory=list)
     vulnerabilities: list[VulnerabilityFinding] = field(default_factory=list)
     attack_chains: list[AttackChainFinding] = field(default_factory=list)
+
     summary: dict[str, Any] = field(default_factory=dict)
 
 
