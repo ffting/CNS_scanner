@@ -5,14 +5,14 @@ Goal: identify likely hardcoded keys (bug-bounty-relevant) and optionally verify
 whether a key is accepted by a provider API (only when explicitly enabled).
 
 Security / ethics:
-- Verification sends minimal "whoami"-style requests for a small provider set.
-- This feature is OFF by default and should only be used for keys you own or
-  have explicit authorization to test.
+- Verification sends minimal provider API requests (e.g. list models, geocode).
+- Only use on APKs you own or have explicit authorization to test.
 """
 
 from __future__ import annotations
 
 import hashlib
+import json
 import re
 import time
 import urllib.error
@@ -23,6 +23,10 @@ from typing import Iterable
 
 from androguard.core.apk import APK
 
+from firebase_scanner import (
+    extract_firebase_tokens_for_verification,
+    scan_firebase_from_apk,
+)
 from models import ApiKeyFinding
 
 
@@ -60,28 +64,57 @@ def _iter_ascii_strings(data: bytes, min_len: int = 12) -> Iterable[str]:
         yield "".join(buf)
 
 
+# Order matters: more specific prefixes (sk-proj, sk_live) before generic sk- patterns.
 PATTERNS: list[_Pattern] = [
+    # --- Google (Maps, Places, Firebase, YouTube, Gemini API, etc.) ---
     _Pattern(
         provider="google",
         kind="api_key",
-        # Google API key (e.g., Maps, Firebase): AIza...
         regex=re.compile(r"\bAIza[0-9A-Za-z\-_]{30,60}\b"),
         confidence="High",
     ),
     _Pattern(
+        provider="google",
+        kind="oauth_token",
+        # Short-lived OAuth access token (often leaked in logs/strings)
+        regex=re.compile(r"\bya29\.[0-9A-Za-z\-_]{20,200}\b"),
+        confidence="Medium",
+    ),
+    # --- OpenAI / ChatGPT ---
+    _Pattern(
+        provider="openai",
+        kind="api_key",
+        regex=re.compile(r"\bsk-proj-[A-Za-z0-9_\-]{20,300}\b"),
+        confidence="High",
+    ),
+    _Pattern(
+        provider="openai",
+        kind="api_key",
+        # Legacy user keys; exclude stripe (sk_live/sk_test) and Anthropic (sk-ant)
+        regex=re.compile(r"\bsk-(?!proj|live|test|ant)[A-Za-z0-9_\-]{20,200}\b"),
+        confidence="High",
+    ),
+    # --- Anthropic Claude (often bundled with "AI chat" apps) ---
+    _Pattern(
+        provider="anthropic",
+        kind="api_key",
+        regex=re.compile(r"\bsk-ant-[A-Za-z0-9_\-]{20,300}\b"),
+        confidence="High",
+    ),
+    # --- GitHub ---
+    _Pattern(
         provider="github",
         kind="token",
-        # GitHub classic PAT
         regex=re.compile(r"\bghp_[0-9A-Za-z]{20,200}\b"),
         confidence="High",
     ),
     _Pattern(
         provider="github",
         kind="token",
-        # GitHub fine-grained tokens (common prefix)
         regex=re.compile(r"\bgithub_pat_[0-9A-Za-z_]{20,300}\b"),
         confidence="High",
     ),
+    # --- Stripe (before generic sk-) ---
     _Pattern(
         provider="stripe",
         kind="api_key",
@@ -97,8 +130,19 @@ PATTERNS: list[_Pattern] = [
     _Pattern(
         provider="aws",
         kind="api_key",
-        # Access key ID. Alone is not sufficient; still a strong signal.
         regex=re.compile(r"\bAKIA[0-9A-Z]{16}\b"),
+        confidence="Medium",
+    ),
+    _Pattern(
+        provider="sendgrid",
+        kind="api_key",
+        regex=re.compile(r"\bSG\.[0-9A-Za-z_\-]{20,100}\.[0-9A-Za-z_\-]{20,100}\b"),
+        confidence="High",
+    ),
+    _Pattern(
+        provider="twilio",
+        kind="api_key",
+        regex=re.compile(r"\bSK[0-9a-fA-F]{32}\b"),
         confidence="Medium",
     ),
 ]
@@ -109,7 +153,9 @@ GENERIC_NAME_PATTERNS: list[re.Pattern[str]] = [
         r"""(?ix)
         (?:
             ["']?
-            (?:api[_-]?key|apikey|access[_-]?key|client[_-]?secret|secret[_-]?key|auth[_-]?token|access[_-]?token|private[_-]?key)
+            (?:api[_-]?key|apikey|access[_-]?key|client[_-]?secret|secret[_-]?key|auth[_-]?token|access[_-]?token|private[_-]?key|
+               openai[_-]?api[_-]?key|chatgpt[_-]?api[_-]?key|google[_-]?maps[_-]?api[_-]?key|firebase[_-]?api[_-]?key|
+               gemini[_-]?api[_-]?key|anthropic[_-]?api[_-]?key)
             ["']?
         )
         \s*[:=]\s*
@@ -121,7 +167,9 @@ GENERIC_NAME_PATTERNS: list[re.Pattern[str]] = [
     # const API_KEY "...."  (smali / decompiled edge cases)
     re.compile(
         r"""(?ix)
-        (?:api[_-]?key|apikey|access[_-]?key|client[_-]?secret|secret[_-]?key|auth[_-]?token|access[_-]?token)
+        (?:api[_-]?key|apikey|access[_-]?key|client[_-]?secret|secret[_-]?key|auth[_-]?token|access[_-]?token|
+           openai[_-]?api[_-]?key|chatgpt[_-]?api[_-]?key|google[_-]?maps[_-]?api[_-]?key|firebase[_-]?api[_-]?key|
+           gemini[_-]?api[_-]?key|anthropic[_-]?api[_-]?key)
         [^A-Za-z0-9]{1,20}
         ([A-Za-z0-9_\-]{16,200})
         """,
@@ -197,6 +245,10 @@ def scan_apk_for_api_keys(apk_path: str, max_bytes_per_file: int = 5_000_000) ->
                     confidence="Medium",
                 )
 
+    for item in scan_firebase_from_apk(apk_path):
+        if item.fingerprint not in findings:
+            findings[item.fingerprint] = item
+
     return list(findings.values())
 
 
@@ -236,6 +288,11 @@ def extract_full_tokens_for_verification(
                     if fp not in out:
                         out[fp] = (fp, pat.provider, pat.kind, val)
 
+    if "firebase" in allow_providers or "google" in allow_providers:
+        for row in extract_firebase_tokens_for_verification(apk_path):
+            if row[0] not in out:
+                out[row[0]] = row
+
     return list(out.values())
 
 
@@ -274,8 +331,17 @@ def verify_full_tokens(
 
     results: dict[str, tuple[bool, str]] = {}
 
-    def _http_json(url: str, headers: dict[str, str]) -> tuple[int, str]:
-        req = urllib.request.Request(url, headers=headers, method="GET")
+    def _http_request(
+        url: str,
+        headers: dict[str, str],
+        *,
+        method: str = "GET",
+        data: bytes | None = None,
+    ) -> tuple[int, str]:
+        hdrs = dict(headers)
+        if data is not None and "Content-Type" not in hdrs:
+            hdrs["Content-Type"] = "application/json"
+        req = urllib.request.Request(url, headers=hdrs, method=method, data=data)
         try:
             with urllib.request.urlopen(req, timeout=timeout_s) as resp:
                 code = getattr(resp, "status", 200)
@@ -290,6 +356,9 @@ def verify_full_tokens(
             return int(getattr(e, "code", 0) or 0), body
         except Exception as e:
             return 0, f"{type(e).__name__}: {e}"
+
+    def _http_json(url: str, headers: dict[str, str]) -> tuple[int, str]:
+        return _http_request(url, headers, method="GET")
 
     for fp, provider, kind, val in tokens:
         if provider not in allow_providers:
@@ -338,6 +407,75 @@ def verify_full_tokens(
                 results[fp] = (False, "Slack auth.test returned ok=false.")
             else:
                 results[fp] = (False, f"Slack verify error (HTTP {code}).")
+            continue
+
+        if provider == "openai" and kind == "api_key":
+            code, body = _http_json(
+                "https://api.openai.com/v1/models",
+                headers={
+                    "Authorization": f"Bearer {val}",
+                    "User-Agent": "our_scanner",
+                },
+            )
+            if code == 200:
+                results[fp] = (True, "OpenAI API accepted key (GET /v1/models => 200).")
+            elif code in (401, 403):
+                results[fp] = (False, f"OpenAI rejected key (HTTP {code}).")
+            else:
+                results[fp] = (False, f"OpenAI verify error (HTTP {code}).")
+            continue
+
+        if provider in ("google", "firebase") and kind == "api_key":
+            url = (
+                "https://maps.googleapis.com/maps/api/geocode/json?"
+                f"address=test&key={urllib.parse.quote(val)}"
+            )
+            code, body = _http_json(url, headers={"User-Agent": "our_scanner"})
+            body_l = body.lower()
+            invalid_markers = (
+                "api key not valid",
+                "the provided api key is invalid",
+                "invalid api key",
+            )
+            label = "Firebase" if provider == "firebase" else "Google"
+            if any(m in body_l for m in invalid_markers):
+                results[fp] = (False, f"{label} rejected API key (invalid key response).")
+            elif code == 200 and '"status"' in body_l:
+                if "request_denied" in body_l and any(m in body_l for m in invalid_markers):
+                    results[fp] = (False, f"{label} rejected API key.")
+                else:
+                    results[fp] = (
+                        True,
+                        f"{label} recognized API key (Geocoding API; may need billing/API enable).",
+                    )
+            else:
+                results[fp] = (False, f"{label} verify error (HTTP {code}).")
+            continue
+
+        if provider == "anthropic" and kind == "api_key":
+            payload = json.dumps(
+                {
+                    "model": "claude-3-5-haiku-latest",
+                    "max_tokens": 1,
+                    "messages": [{"role": "user", "content": "ping"}],
+                }
+            ).encode("utf-8")
+            code, body = _http_request(
+                "https://api.anthropic.com/v1/messages",
+                headers={
+                    "x-api-key": val,
+                    "anthropic-version": "2023-06-01",
+                    "User-Agent": "our_scanner",
+                },
+                method="POST",
+                data=payload,
+            )
+            if code == 200:
+                results[fp] = (True, "Anthropic API accepted key (POST /v1/messages => 200).")
+            elif code in (401, 403):
+                results[fp] = (False, f"Anthropic rejected key (HTTP {code}).")
+            else:
+                results[fp] = (False, f"Anthropic verify error (HTTP {code}).")
             continue
 
         results[fp] = (False, "Verification not implemented for this provider.")

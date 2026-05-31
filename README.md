@@ -26,13 +26,23 @@ python our_scanner.py -f path/to/app.apk -o ./reports/
 The scanner also performs a lightweight **static secret scan** to detect likely hardcoded API keys/tokens
 in APK strings/assets/code (values are **redacted** in reports).
 
-Optional online verification is available for a small provider set and is **disabled by default**.
-Only enable it for keys you own or have explicit authorization to test:
+The scanner will then **always attempt online verification** for supported providers:
+`github`, `stripe`, `slack`, `openai` (ChatGPT), `google`, `firebase`, `anthropic` (Claude).
+
+**Firebase:** parses embedded `google-services.json` (e.g. `res/raw/google-services.json`)
+and extracts `current_key` plus project metadata.
+
+**Detection** (regex; warning if verify fails): `aws`, `sendgrid`, `twilio`,
+Google OAuth tokens (`ya29.…`), and variable names like `OPENAI_API_KEY`, `CHATGPT_API_KEY`,
+`GOOGLE_MAPS_API_KEY`, `FIREBASE_API_KEY`.
 
 ```bash
-python our_scanner.py -f path/to/app.apk -o ./reports/ --verify-api-keys --i-own-these-keys
-python our_scanner.py -f path/to/app.apk -o ./reports/ --verify-api-keys --verify-api-keys-allow github,stripe
+python our_scanner.py -f path/to/app.apk -o ./reports/
 ```
+
+Notes:
+- Verified keys are counted as confirmed findings.
+- Regex-only matches (or unsupported providers/patterns) remain warnings.
 
 ## Output
 
@@ -60,6 +70,8 @@ See `vulnerability_patterns.py` for the full rule list.
 ## Modules
 
 - `manifest_parser.py` — APK / Manifest via androguard
+- `api_key_scanner.py` — secret patterns + online verification
+- `firebase_scanner.py` — `google-services.json` parsing
 - `deep_link.py` — intent-filter URL patterns
 - `risk_rules.py` — heuristics and P0–P3 scoring
 - `vulnerability_patterns.py` — pattern + chain detection
