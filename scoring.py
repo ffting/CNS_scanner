@@ -497,9 +497,36 @@ def _sort_results(result: ScanResult) -> None:
     )
 
 
-def _update_summary(result: ScanResult) -> None:
+def refresh_finding_summary(result: ScanResult) -> None:
+    """Recompute finding counts after all detectors have run.
+
+    Must run after vulnerability_patterns, network_code_scanner, and scoring,
+    so Summary / JSON / CLI stay aligned with result.vulnerabilities.
+    """
+
     if not result.summary:
         result.summary = {}
+
+    result.summary["vulnerability_count"] = len(result.vulnerabilities)
+    result.summary["attack_chain_count"] = len(result.attack_chains)
+    result.summary["critical_vulns"] = sum(
+        1 for finding in result.vulnerabilities if finding.severity == "Critical"
+    )
+    result.summary["high_vulns"] = sum(
+        1 for finding in result.vulnerabilities if finding.severity == "High"
+    )
+    result.summary["medium_vulns"] = sum(
+        1 for finding in result.vulnerabilities if finding.severity == "Medium"
+    )
+    result.summary["low_vulns"] = sum(
+        1 for finding in result.vulnerabilities if finding.severity == "Low"
+    )
+    result.summary["critical_chains"] = sum(
+        1 for chain in result.attack_chains if chain.severity == "Critical"
+    )
+    result.summary["high_chains"] = sum(
+        1 for chain in result.attack_chains if chain.severity == "High"
+    )
 
     result.summary["high_confidence_vulns"] = sum(
         1
@@ -540,4 +567,4 @@ def apply_scoring(result: ScanResult) -> None:
 
     assign_test_priorities(result)
     navigation_sort_result(result)
-    _update_summary(result)
+    refresh_finding_summary(result)

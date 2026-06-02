@@ -64,21 +64,33 @@ def _print_scan_summary(result) -> None:
         f"  API keys/tokens (confirmed): {result.summary.get('api_key_confirmed_count', 0)} "
         f"(warnings: {result.summary.get('api_key_warning_count', 0)})"
     )
+    vuln_n = len(result.vulnerabilities)
+    chain_n = len(result.attack_chains)
+    crit_v = sum(1 for v in result.vulnerabilities if v.severity == "Critical")
+    high_v = sum(1 for v in result.vulnerabilities if v.severity == "High")
+    med_v = sum(1 for v in result.vulnerabilities if v.severity == "Medium")
+    low_v = sum(1 for v in result.vulnerabilities if v.severity == "Low")
     print(
-        f"  Vulnerabilities: {result.summary.get('vulnerability_count', 0)} "
-        f"(Critical: {result.summary.get('critical_vulns', 0)})"
+        f"  Vulnerabilities: {vuln_n} "
+        f"(Critical: {crit_v}, High: {high_v}, Medium: {med_v}, Low: {low_v})"
     )
+    crit_c = sum(1 for c in result.attack_chains if c.severity == "Critical")
+    high_c = sum(1 for c in result.attack_chains if c.severity == "High")
     print(
-        f"  Attack chains: {result.summary.get('attack_chain_count', 0)} "
-        f"(Critical: {result.summary.get('critical_chains', 0)})"
+        f"  Attack chains: {chain_n} "
+        f"(Critical: {crit_c}, High: {high_c})"
     )
     print()
 
     if result.vulnerabilities:
-        print("Vulnerability patterns:")
+        print("Vulnerability patterns (sorted by navigation score):")
         for vuln in result.vulnerabilities:
             score = _score_text(vuln)
-            print(f"  [{vuln.severity}] {vuln.pattern_id}: {vuln.title}{score}")
+            pri = getattr(vuln, "test_priority", None) or "-"
+            print(
+                f"  [{vuln.severity}] P={pri} {vuln.pattern_id}: "
+                f"{vuln.title}{score}"
+            )
     else:
         print("Vulnerability patterns: none")
 
@@ -87,15 +99,19 @@ def _print_scan_summary(result) -> None:
         print("Attack chains:")
         for chain in result.attack_chains:
             score = _score_text(chain)
+            pri = getattr(chain, "test_priority", None) or "-"
             parts = " + ".join(chain.composed_of[:5])
-            print(f"  [{chain.severity}] {chain.chain_id}: {chain.title}{score}")
+            print(f"  [{chain.severity}] P={pri} {chain.chain_id}: {chain.title}{score}")
             if parts:
                 print(f"      {parts}")
 
     nav = build_navigation_items(result)
     if nav:
         print()
-        print(f"Top {NAVIGATION_TOP_N} navigation targets (P + sev×conf):")
+        print(
+            f"Top {NAVIGATION_TOP_N} navigation targets "
+            f"(nav = P-weight + severity×confidence; P0–P3 = test priority, not severity):"
+        )
         for idx, row in enumerate(nav[:NAVIGATION_TOP_N], start=1):
             print(
                 f"  {idx}. [{row.priority}] nav={row.nav_score} "
