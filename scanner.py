@@ -29,6 +29,7 @@ from manifest_parser import extract_components, load_apk
 from models import ScanResult
 from poc_generator import attach_poc_commands
 from report import write_json, write_markdown, write_poc_shell
+from test_plan import write_test_plan_markdown
 from risk_rules import apply_risk_analysis
 from scoring import apply_scoring
 from vulnerability_patterns import detect_vulnerabilities
@@ -136,6 +137,7 @@ def scan_apk_to_dir(apk_path: str, output_dir: str) -> ScanResult:
 
     write_json(result, base.with_suffix(".json"))
     write_markdown(result, base.with_suffix(".md"))
+    write_test_plan_markdown(result, base.with_name(f"{pkg}_test_plan.md"))
     write_poc_shell(result, base.with_name(base.name + "_poc.sh"))
 
     return result

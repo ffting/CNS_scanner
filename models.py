@@ -92,6 +92,7 @@ class VulnerabilityFinding:
     # These are optional so old reports / old logic remain compatible.
     severity_score: int | None = None       # 1-10
     confidence_score: int | None = None     # 1-10
+    test_priority: str | None = None        # P0..P3 for navigation ranking
     category: str | None = None
     location: str | None = None
 
@@ -115,8 +116,11 @@ class AttackChainFinding:
     # Optional scores for report sorting / prioritization.
     severity_score: int | None = None       # 1-10
     confidence_score: int | None = None     # 1-10
+    test_priority: str | None = None        # P0..P3 for navigation ranking
 
     composed_of: list[str] = field(default_factory=list)
+    reasoning_steps: list[str] = field(default_factory=list)
+    poc_commands: list[str] = field(default_factory=list)
     evidence: list[str] = field(default_factory=list)
     related_components: list[str] = field(default_factory=list)
     related_deep_links: list[str] = field(default_factory=list)

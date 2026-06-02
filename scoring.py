@@ -15,6 +15,7 @@ high severity + high confidence should be reviewed first.
 from __future__ import annotations
 
 from models import AttackChainFinding, ScanResult, VulnerabilityFinding
+from test_plan import assign_test_priorities, navigation_sort_result
 
 
 SEVERITY_BASE_SCORE: dict[str, int] = {
@@ -364,5 +365,6 @@ def apply_scoring(result: ScanResult) -> None:
         chain.severity_score = _score_chain_severity(chain)
         chain.confidence_score = _score_chain_confidence(chain, result)
 
-    _sort_results(result)
+    assign_test_priorities(result)
+    navigation_sort_result(result)
     _update_summary(result)

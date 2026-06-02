@@ -29,6 +29,7 @@ if str(_SCRIPT_DIR) not in sys.path:
     sys.path.insert(0, str(_SCRIPT_DIR))
 
 from scanner import scan_apk, scan_apk_to_dir  # noqa: E402
+from test_plan import NAVIGATION_TOP_N, build_navigation_items  # noqa: E402
 
 
 def _score_text(vuln) -> str:
@@ -91,6 +92,17 @@ def _print_scan_summary(result) -> None:
             if parts:
                 print(f"      {parts}")
 
+    nav = build_navigation_items(result)
+    if nav:
+        print()
+        print(f"Top {NAVIGATION_TOP_N} navigation targets (P + sev×conf):")
+        for idx, row in enumerate(nav[:NAVIGATION_TOP_N], start=1):
+            print(
+                f"  {idx}. [{row.priority}] nav={row.nav_score} "
+                f"({row.severity_score}×{row.confidence_score}) "
+                f"{row.kind}: {row.title}"
+            )
+
     print()
 
 
@@ -130,6 +142,7 @@ def main() -> int:
             print(f"Reports written to {out.resolve()}")
             print(f"  - {pkg}.json")
             print(f"  - {pkg}.md")
+            print(f"  - {pkg}_test_plan.md")
             print(f"  - {pkg}_poc.sh")
             print()
 

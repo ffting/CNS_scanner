@@ -613,17 +613,11 @@ def finding_matches_gt(
 # ---------------------------------------------------------------------------
 
 def sort_findings(findings: list[dict[str, Any]]) -> list[dict[str, Any]]:
-    return sorted(
-        findings,
-        key=lambda f: (
-            get_severity_score(f),
-            get_confidence_score(f),
-            severity_rank(f.get("severity")),
-            get_finding_id(f),
-            normalize_text(f.get("title")),
-        ),
-        reverse=True,
-    )
+    """Sort by ASNav navigation score (same rule as {package}_test_plan.md Top-10)."""
+
+    from test_plan import sort_findings_by_navigation
+
+    return sort_findings_by_navigation(findings)
 
 
 def filter_scope_findings(
@@ -828,13 +822,11 @@ def evaluate_case(
 
     high_conf_precision = safe_div(high_conf_matched, len(high_conf_findings))
 
-    # High-severity + high-confidence subset precision
-    high_priority_findings = [
-        finding
-        for finding in scoped_findings
-        if get_severity_score(finding) >= high_sev_threshold
-        and get_confidence_score(finding) >= high_conf_threshold
-    ]
+    # High-priority = Top-N navigation targets (aligned with test plan / CLI Top-10)
+    from test_plan import NAVIGATION_TOP_N
+
+    nav_top_n = NAVIGATION_TOP_N
+    high_priority_findings = scoped_findings[:nav_top_n]
 
     high_priority_matched = 0
     for finding in high_priority_findings:
@@ -1115,6 +1107,8 @@ def write_markdown_report(
     min_severity_score: int | None,
     min_confidence_score: int | None,
 ) -> None:
+    from test_plan import NAVIGATION_TOP_N
+
     path.parent.mkdir(parents=True, exist_ok=True)
 
     lines: list[str] = []
@@ -1129,6 +1123,10 @@ def write_markdown_report(
     lines.append(f"- Top-k: `{top_k}`")
     lines.append(f"- High confidence threshold: `{high_conf_threshold}`")
     lines.append(f"- High severity threshold: `{high_sev_threshold}`")
+    lines.append(
+        "- High-priority subset: Top-N navigation list "
+        f"(nav = priority_weight + severity×confidence, N=`{NAVIGATION_TOP_N}`)"
+    )
     lines.append(f"- Minimum severity score filter: `{min_severity_score}`")
     lines.append(f"- Minimum confidence score filter: `{min_confidence_score}`")
     lines.append("")
