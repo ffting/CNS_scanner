@@ -19,6 +19,8 @@ from __future__ import annotations
 import os
 from pathlib import Path
 
+from network_code_scanner import scan_network_code_patterns
+
 from api_key_scanner import (
     extract_full_tokens_for_verification,
     scan_apk_for_api_keys,
@@ -119,8 +121,9 @@ def scan_apk(apk_path: str) -> ScanResult:
     apply_risk_analysis(result)
     attach_poc_commands(result)
     detect_vulnerabilities(result)
+    scan_network_code_patterns(apk_path, result)
     apply_scoring(result)
-
+    
     return result
 
 

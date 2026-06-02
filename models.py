@@ -77,6 +77,7 @@ class AppMeta:
     target_sdk: int | None = None
     debuggable: bool = False
     allow_backup: bool | None = None
+    uses_cleartext_traffic: bool | None = None
 
 
 @dataclass

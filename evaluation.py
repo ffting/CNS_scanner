@@ -176,6 +176,58 @@ DEFAULT_SCOPE_CATEGORIES = {
     "storage",
     "android_api",
     "code_analysis",
+
+    # Network / TLS / Network Security Config
+    "cleartext_http",
+    "uses_cleartext_traffic",
+    "cleartext_traffic_enabled",
+    "manifest_cleartext",
+    "network_cleartext",
+    "insecure_network",
+    "insecure_network_config",
+    "http_url",
+    "plaintext_traffic",
+    "insecure_protocol",
+    "webview_http",
+
+    "low_min_sdk",
+    "low_min_sdk_network_security_bypass",
+    "low_target_sdk",
+    "low_target_sdk_network_security",
+    "target_sdk_too_low",
+    "network_security_config_bypass",
+    "insecure_platform_version",
+    "manifest_sdk",
+
+    "hostname_verification_bypass",
+    "insecure_hostname_verifier",
+    "ssl_hostname_verifier",
+    "tls_misconfiguration",
+    "insecure_ssl",
+    "insecure_tls",
+
+    "tls_error_handling_disabled",
+    "ssl_error_ignored",
+    "webview_ssl_error_bypass",
+    "certificate_validation_bypass",
+    "insecure_trust_manager",
+    "trust_all_certificates",
+    "x509trustmanager",
+    "ssl_certificate_validation_disabled",
+
+    "obsolete_tls_version",
+    "insecure_tls_version",
+    "weak_tls",
+    "ssl_context",
+
+    "certificate_pinning_configuration",
+    "certificate_pinning",
+    "ssl_pinning",
+    "pin_set",
+    "network_security_config",
+    "custom_certificate_store",
+    "certificate_pin",
+    "tls_pinning",
 }
 
 THIRD_PARTY_PATH_HINTS = [
@@ -1299,54 +1351,6 @@ def aggregate_nonempty_tool_rows(
         if rows
     }
 
-
-def write_evaluation_outputs(
-    output_dir: Path,
-    tool_rows: dict[str, list[dict[str, Any]]],
-    summary_rows: dict[str, dict[str, Any]],
-    top_k: int,
-    must_detect_only: bool,
-    ignore_third_party: bool,
-    use_scope_filter: bool,
-    high_conf_threshold: int,
-    high_sev_threshold: int,
-    min_severity_score: int | None,
-    min_confidence_score: int | None,
-) -> None:
-    """
-    Write all output files for one evaluation result directory.
-
-    Kept as a wrapper so the same output set can be written globally and inside
-    each category folder without duplicating writer calls.
-    """
-
-    output_dir.mkdir(parents=True, exist_ok=True)
-
-    write_case_csv(output_dir / "case_results.csv", tool_rows, top_k=top_k)
-    write_summary_csv(output_dir / "summary_results.csv", summary_rows)
-
-    write_markdown_report(
-        output_dir / "evaluation_report.md",
-        tool_rows,
-        summary_rows,
-        top_k=top_k,
-        must_detect_only=must_detect_only,
-        ignore_third_party=ignore_third_party,
-        use_scope_filter=use_scope_filter,
-        high_conf_threshold=high_conf_threshold,
-        high_sev_threshold=high_sev_threshold,
-        min_severity_score=min_severity_score,
-        min_confidence_score=min_confidence_score,
-    )
-
-    write_json(output_dir / "case_results.json", tool_rows)
-    write_json(output_dir / "summary_results.json", summary_rows)
-
-    # Short aliases for easier downstream scripts.
-    write_json(output_dir / "cases.json", tool_rows)
-    write_json(output_dir / "summary.json", summary_rows)
-
-
 def write_category_outputs(
     output_root: Path,
     all_tool_rows: dict[str, list[dict[str, Any]]],
@@ -1367,9 +1371,10 @@ def write_category_outputs(
 
     Output:
         <output_root>/Platform/summary.json
-        <output_root>/Platform/summary_results.json
+        <output_root>/Platform/summary_results.csv
         <output_root>/Platform/case_results.json
-        ...
+        <output_root>/Platform/case_results.csv
+        <output_root>/Platform/evaluation_report.md
     """
 
     categories = sorted(
@@ -1390,9 +1395,24 @@ def write_category_outputs(
             continue
 
         category_output_dir = output_root / category
+        category_output_dir.mkdir(parents=True, exist_ok=True)
 
-        write_evaluation_outputs(
-            output_dir=category_output_dir,
+        write_json(category_output_dir / "summary.json", category_summary)
+        write_json(category_output_dir / "case_results.json", category_rows)
+
+        write_summary_csv(
+            category_output_dir / "summary_results.csv",
+            category_summary,
+        )
+
+        write_case_csv(
+            category_output_dir / "case_results.csv",
+            category_rows,
+            top_k=top_k,
+        )
+
+        write_markdown_report(
+            category_output_dir / "evaluation_report.md",
             tool_rows=category_rows,
             summary_rows=category_summary,
             top_k=top_k,
@@ -1546,20 +1566,6 @@ def evaluate_all(
         all_tool_rows[tool] = rows
         summary_rows[tool] = aggregate_results(rows)
 
-    write_evaluation_outputs(
-        output_dir=output_dir,
-        tool_rows=all_tool_rows,
-        summary_rows=summary_rows,
-        top_k=top_k,
-        must_detect_only=must_detect_only,
-        ignore_third_party=ignore_third_party,
-        use_scope_filter=use_scope_filter,
-        high_conf_threshold=high_conf_threshold,
-        high_sev_threshold=high_sev_threshold,
-        min_severity_score=min_severity_score,
-        min_confidence_score=min_confidence_score,
-    )
-
     category_dirs = write_category_outputs(
         output_root=output_dir,
         all_tool_rows=all_tool_rows,
@@ -1575,11 +1581,6 @@ def evaluate_all(
 
     if requested_category is not None:
         print(f"[OK] Category filter: {requested_category}")
-
-    print(f"[OK] Wrote global results to: {output_dir}")
-    print(f"[OK] Global summary: {output_dir / 'summary_results.csv'}")
-    print(f"[OK] Global cases:   {output_dir / 'case_results.csv'}")
-    print(f"[OK] Global report:  {output_dir / 'evaluation_report.md'}")
 
     for category_dir in category_dirs:
         print(f"[OK] Category output: {category_dir}")
@@ -1637,7 +1638,11 @@ def main() -> None:
     parser.add_argument(
         "--output-dir",
         default="./evaluation_results",
-        help="Directory for CSV/JSON/Markdown outputs.",
+        help=(
+            "Root directory for evaluation outputs. "
+            "Category-specific outputs will be written to "
+            "<output-dir>/<Category>/, e.g. ./evaluation_results/Platform."
+        ),
     )
 
     parser.add_argument(

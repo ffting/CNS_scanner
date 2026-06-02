@@ -3109,48 +3109,93 @@
       "test_id": "MASTG-TEST-0007",
       "title": "Determining Whether Sensitive Stored Data Has Been Exposed via IPC Mechanisms",
       "expected_count": 2,
-      "raw_finding_count": 0,
-      "scoped_finding_count": 0,
-      "tp": 0,
+      "raw_finding_count": 1,
+      "scoped_finding_count": 1,
+      "tp": 1,
       "fp": 0,
-      "fn": 2,
-      "precision": null,
-      "recall": 0.0,
-      "f1": null,
-      "top5_precision": null,
-      "high_confidence_finding_count": 0,
-      "high_confidence_precision": null,
-      "high_priority_finding_count": 0,
-      "high_priority_precision": null,
+      "fn": 1,
+      "precision": 1.0,
+      "recall": 0.5,
+      "f1": 0.6666666666666666,
+      "top5_precision": 1.0,
+      "high_confidence_finding_count": 1,
+      "high_confidence_precision": 1.0,
+      "high_priority_finding_count": 1,
+      "high_priority_precision": 1.0,
       "severity_score_mae": null,
       "confidence_score_mae": null,
-      "matches": [],
-      "unmatched_expected": [
+      "matches": [
         {
-          "id": "GT-0007-1",
-          "category": "exported_provider",
-          "must_detect": true,
-          "severity": "high",
-          "description": "The app exposes a ContentProvider that allows other apps to access sensitive stored data through IPC.",
-          "acceptable_scanner_categories": [
-            "exported_provider",
-            "exported_component",
-            "content_provider_exposure",
-            "ipc_exposure",
-            "manifest_provider"
-          ],
-          "evidence_keywords": [
-            "content provider",
-            "provider",
-            "android:exported",
-            "exported=true",
-            "permission",
-            "android:permission",
-            "readPermission",
-            "writePermission"
-          ],
-          "source": "README.md Implementation and Static Analysis"
-        },
+          "gt_id": "GT-0007-1",
+          "gt_category": "exported_provider",
+          "finding_id": "VULN_EXPORTED_PROVIDER_LEAK",
+          "finding_category": "exported_provider",
+          "finding_title": "Exported ContentProvider with weak protection",
+          "finding_severity": "Critical",
+          "finding_severity_score": 9,
+          "finding_confidence_score": 10,
+          "match_info": {
+            "match_type": "medium",
+            "category": true,
+            "component": false,
+            "location": false,
+            "authority": false,
+            "deeplink": false,
+            "keyword_hits": 3,
+            "keyword_total": 8
+          },
+          "ground_truth": {
+            "id": "GT-0007-1",
+            "category": "exported_provider",
+            "must_detect": true,
+            "severity": "high",
+            "description": "The app exposes a ContentProvider that allows other apps to access sensitive stored data through IPC.",
+            "acceptable_scanner_categories": [
+              "exported_provider",
+              "exported_component",
+              "content_provider_exposure",
+              "ipc_exposure",
+              "manifest_provider"
+            ],
+            "evidence_keywords": [
+              "content provider",
+              "provider",
+              "android:exported",
+              "exported=true",
+              "permission",
+              "android:permission",
+              "readPermission",
+              "writePermission"
+            ],
+            "source": "README.md Implementation and Static Analysis"
+          },
+          "finding": {
+            "pattern_id": "VULN_EXPORTED_PROVIDER_LEAK",
+            "title": "Exported ContentProvider with weak protection",
+            "severity": "Critical",
+            "description": "A ContentProvider is reachable from other apps but lacks signature-level read/write protection. Attackers may read or tamper with app data via content:// URIs.",
+            "severity_score": 9,
+            "confidence_score": 10,
+            "category": "exported_provider",
+            "location": "AndroidManifest.xml",
+            "evidence": [
+              "Component: com.example.mastg_test0007.MyContentProvider (provider)",
+              "exported=true",
+              "authorities=['com.example.mastg_test0007.provider']",
+              "provider permissions=(none)",
+              "tags=WEAK_PROVIDER_PROTECTION"
+            ],
+            "related_components": [
+              "com.example.mastg_test0007.MyContentProvider"
+            ],
+            "related_deep_links": [],
+            "cwe": "CWE-926",
+            "owasp_masvs": "MSTG-PLATFORM-2",
+            "source": "our_scanner"
+          }
+        }
+      ],
+      "unmatched_expected": [
         {
           "id": "GT-0007-2",
           "category": "content_provider_sql_injection",
@@ -3335,19 +3380,19 @@
       "test_id": "MASTG-TEST-0028",
       "title": "Testing Deep Links",
       "expected_count": 3,
-      "raw_finding_count": 0,
-      "scoped_finding_count": 0,
+      "raw_finding_count": 1,
+      "scoped_finding_count": 1,
       "tp": 0,
-      "fp": 0,
+      "fp": 1,
       "fn": 3,
-      "precision": null,
+      "precision": 0.0,
       "recall": 0.0,
       "f1": null,
-      "top5_precision": null,
-      "high_confidence_finding_count": 0,
-      "high_confidence_precision": null,
-      "high_priority_finding_count": 0,
-      "high_priority_precision": null,
+      "top5_precision": 0.0,
+      "high_confidence_finding_count": 1,
+      "high_confidence_precision": 0.0,
+      "high_priority_finding_count": 1,
+      "high_priority_precision": 0.0,
       "severity_score_mae": null,
       "confidence_score_mae": null,
       "matches": [],
@@ -3430,7 +3475,37 @@
           "source": "README.md Implementation and Check the Handler Method"
         }
       ],
-      "unmatched_findings": []
+      "unmatched_findings": [
+        {
+          "pattern_id": "VULN_CUSTOM_SCHEME_CALLBACK",
+          "title": "Custom-scheme deep link callback",
+          "severity": "High",
+          "description": "The app uses a non-http(s) custom URL scheme for a deep link callback. Other apps may register the same scheme and intercept redirect parameters.",
+          "severity_score": 8,
+          "confidence_score": 9,
+          "category": "deep_link_custom_scheme",
+          "location": "AndroidManifest.xml",
+          "evidence": [
+            "Deep link on: com.example.mastg_test0028.WebViewActivity",
+            "schemes=['mastg-test0028']",
+            "hosts=['com.mastg-test0028']",
+            "paths=[]",
+            "browsable=True",
+            "autoVerify=False",
+            "tags=CUSTOM_SCHEME, EXPORTED_HANDLER",
+            "Test: adb shell am start -a android.intent.action.VIEW -d \"mastg-test0028://com.mastg-test0028/?test=1\" -n com.example.mastg_test0028/.WebViewActivity"
+          ],
+          "related_components": [
+            "com.example.mastg_test0028.WebViewActivity"
+          ],
+          "related_deep_links": [
+            "com.example.mastg_test0028.WebViewActivity"
+          ],
+          "cwe": "CWE-939",
+          "owasp_masvs": null,
+          "source": "our_scanner"
+        }
+      ]
     },
     {
       "case_id": "Platform/MASTG-TEST0030",

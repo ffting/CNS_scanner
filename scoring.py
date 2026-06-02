@@ -2,7 +2,7 @@
 
 This module does not detect vulnerabilities.
 It only assigns numeric scores to findings that were already produced by
-vulnerability_patterns.py.
+vulnerability_patterns.py or other detector modules such as network_code_scanner.py.
 
 Scores:
 - severity_score: 1-10, potential impact if the finding is real
@@ -18,32 +18,100 @@ from models import AttackChainFinding, ScanResult, VulnerabilityFinding
 from test_plan import assign_test_priorities, navigation_sort_result
 
 
+# ---------------------------------------------------------------------------
+# Base score tables
+# ---------------------------------------------------------------------------
+
 SEVERITY_BASE_SCORE: dict[str, int] = {
     "Critical": 9,
     "High": 7,
     "Medium": 5,
     "Low": 3,
+    "Info": 2,
 }
 
 
 PATTERN_SEVERITY_OVERRIDES: dict[str, int] = {
+    # ------------------------------------------------------------------
+    # Network / manifest / XML-level rules
+    # ------------------------------------------------------------------
+    "VULN_USES_CLEARTEXT_TRAFFIC": 7,
+    "VULN_LOW_MIN_SDK_NETWORK_SECURITY_BYPASS": 5,
+    "VULN_LOW_TARGET_SDK_NETWORK_SECURITY": 5,
+    "VULN_CERTIFICATE_PINNING_CONFIGURATION": 3,
+
+    # ------------------------------------------------------------------
+    # Network / DEX-source string-level rules
+    # ------------------------------------------------------------------
+    "VULN_OBSOLETE_TLS_VERSION": 7,
+    "VULN_CERTIFICATE_VALIDATION_BYPASS": 8,
+
+    # Future compatible aliases if you later name them differently.
+    "VULN_INSECURE_TRUST_MANAGER": 8,
+    "VULN_WEBVIEW_SSL_ERROR_BYPASS": 8,
+    "VULN_HOSTNAME_VERIFICATION_BYPASS": 8,
+    "VULN_USER_CA_TRUST_ENABLED": 7,
+    "VULN_CLEARTEXT_HTTP": 7,
+
+    # ------------------------------------------------------------------
+    # Platform / IPC / manifest rules
+    # ------------------------------------------------------------------
     "VULN_EXPORTED_PROVIDER_LEAK": 9,
     "VULN_PROVIDER_IMPLICIT_EXPORT": 8,
     "VULN_IMPLICIT_EXPORTED_SERVICE": 7,
     "VULN_EXPORTED_NO_PERMISSION": 5,
+
+    # ------------------------------------------------------------------
+    # Deep link rules
+    # ------------------------------------------------------------------
     "VULN_OAUTH_DEEP_LINK_OPEN": 9,
     "VULN_CUSTOM_SCHEME_CALLBACK": 8,
     "VULN_HTTP_DEEP_LINK": 8,
     "VULN_PAYMENT_CALLBACK_OPEN": 8,
+
+    # ------------------------------------------------------------------
+    # App-level config / permission rules
+    # ------------------------------------------------------------------
     "VULN_INTENT_FILTER_NO_ACTION": 4,
     "VULN_APP_DEBUGGABLE": 5,
     "VULN_APP_ALLOW_BACKUP": 4,
     "VULN_DANGEROUS_CUSTOM_PERMISSION": 7,
+
+    # ------------------------------------------------------------------
+    # Secret scanner rule
+    # ------------------------------------------------------------------
+    "VULN_HARDCODED_API_KEY": 9,
 }
 
 
 PATTERN_CONFIDENCE_BASE: dict[str, int] = {
+    # ------------------------------------------------------------------
+    # Network / manifest / XML-level rules
+    # ------------------------------------------------------------------
+    "VULN_USES_CLEARTEXT_TRAFFIC": 9,
+    "VULN_LOW_MIN_SDK_NETWORK_SECURITY_BYPASS": 9,
+    "VULN_LOW_TARGET_SDK_NETWORK_SECURITY": 9,
+    "VULN_CERTIFICATE_PINNING_CONFIGURATION": 8,
+
+    # ------------------------------------------------------------------
+    # Network / DEX-source string-level rules
+    # These are high-confidence only when detector rules require multiple
+    # related keywords, such as SSLContext + TLSv1 or TrustManager + methods.
+    # ------------------------------------------------------------------
+    "VULN_OBSOLETE_TLS_VERSION": 8,
+    "VULN_CERTIFICATE_VALIDATION_BYPASS": 8,
+
+    # Future compatible aliases if you later name them differently.
+    "VULN_INSECURE_TRUST_MANAGER": 8,
+    "VULN_WEBVIEW_SSL_ERROR_BYPASS": 8,
+    "VULN_HOSTNAME_VERIFICATION_BYPASS": 8,
+    "VULN_USER_CA_TRUST_ENABLED": 8,
+    "VULN_CLEARTEXT_HTTP": 8,
+
+    # ------------------------------------------------------------------
+    # Platform / IPC / manifest rules
     # Manifest-only provider evidence is usually reliable.
+    # ------------------------------------------------------------------
     "VULN_EXPORTED_PROVIDER_LEAK": 8,
     "VULN_PROVIDER_IMPLICIT_EXPORT": 7,
 
@@ -52,17 +120,28 @@ PATTERN_CONFIDENCE_BASE: dict[str, int] = {
     "VULN_IMPLICIT_EXPORTED_SERVICE": 7,
     "VULN_EXPORTED_NO_PERMISSION": 6,
 
+    # ------------------------------------------------------------------
+    # Deep link rules
     # Deep link findings depend on whether the path really processes sensitive data.
+    # ------------------------------------------------------------------
     "VULN_OAUTH_DEEP_LINK_OPEN": 7,
     "VULN_CUSTOM_SCHEME_CALLBACK": 7,
     "VULN_HTTP_DEEP_LINK": 7,
     "VULN_PAYMENT_CALLBACK_OPEN": 6,
 
-    # Config signals are reliable, but may not always be exploitable.
+    # ------------------------------------------------------------------
+    # App-level config / permission rules
+    # ------------------------------------------------------------------
     "VULN_INTENT_FILTER_NO_ACTION": 6,
     "VULN_APP_DEBUGGABLE": 9,
     "VULN_APP_ALLOW_BACKUP": 8,
     "VULN_DANGEROUS_CUSTOM_PERMISSION": 8,
+
+    # ------------------------------------------------------------------
+    # Secret scanner rule
+    # Only verified keys are promoted to vulnerability findings.
+    # ------------------------------------------------------------------
+    "VULN_HARDCODED_API_KEY": 10,
 }
 
 
@@ -92,12 +171,16 @@ CHAIN_CONFIDENCE_BASE: dict[str, int] = {
 }
 
 
+# ---------------------------------------------------------------------------
+# Helpers
+# ---------------------------------------------------------------------------
+
 def _clamp_score(value: int) -> int:
     return max(1, min(10, value))
 
 
 def _evidence_text(items: list[str]) -> str:
-    return "\n".join(items).lower()
+    return "\n".join(str(item) for item in items).lower()
 
 
 def _component_by_name(result: ScanResult) -> dict[str, object]:
@@ -145,6 +228,89 @@ def _score_vulnerability_confidence(
 ) -> int:
     score = PATTERN_CONFIDENCE_BASE.get(finding.pattern_id, 5)
     evidence = _evidence_text(finding.evidence)
+
+    # ------------------------------------------------------------------
+    # Network / manifest / XML-level evidence
+    # ------------------------------------------------------------------
+    if finding.pattern_id == "VULN_USES_CLEARTEXT_TRAFFIC":
+        if "android:usescleartexttraffic=true" in evidence:
+            score += 1
+        if "androidmanifest.xml" in evidence:
+            score += 1
+
+    if finding.pattern_id == "VULN_LOW_MIN_SDK_NETWORK_SECURITY_BYPASS":
+        if "minsdkversion=" in evidence or "minsdk" in evidence:
+            score += 1
+        if "19" in evidence or "api level 19" in evidence:
+            score += 1
+
+    if finding.pattern_id == "VULN_LOW_TARGET_SDK_NETWORK_SECURITY":
+        if "targetsdkversion=" in evidence or "targetsdk" in evidence:
+            score += 1
+        if "lower than 24" in evidence or "api level 23" in evidence:
+            score += 1
+
+    if finding.pattern_id == "VULN_CERTIFICATE_PINNING_CONFIGURATION":
+        if "pin-set" in evidence:
+            score += 1
+        if "sha-256" in evidence or "sha256" in evidence:
+            score += 1
+        if "network-security-config" in evidence:
+            score += 1
+
+    # ------------------------------------------------------------------
+    # Network / DEX-source string-level evidence
+    # ------------------------------------------------------------------
+    if finding.pattern_id == "VULN_OBSOLETE_TLS_VERSION":
+        if "tlsv1" in evidence or "tls 1.0" in evidence:
+            score += 1
+        if "sslcontext" in evidence:
+            score += 1
+        if "getinstance" in evidence:
+            score += 1
+
+    if finding.pattern_id in {
+        "VULN_CERTIFICATE_VALIDATION_BYPASS",
+        "VULN_INSECURE_TRUST_MANAGER",
+    }:
+        if "x509trustmanager" in evidence:
+            score += 1
+        if "checkservertrusted" in evidence or "checkclienttrusted" in evidence:
+            score += 1
+        if "return null" in evidence or "trustallcerts" in evidence:
+            score += 1
+        if "setdefaultsslsocketfactory" in evidence:
+            score += 1
+
+    if finding.pattern_id == "VULN_WEBVIEW_SSL_ERROR_BYPASS":
+        if "onreceivedsslerror" in evidence:
+            score += 1
+        if "sslerrorhandler" in evidence:
+            score += 1
+        if "handler.proceed" in evidence or "proceed" in evidence:
+            score += 1
+
+    if finding.pattern_id == "VULN_HOSTNAME_VERIFICATION_BYPASS":
+        if "hostnameverifier" in evidence:
+            score += 1
+        if "verify" in evidence:
+            score += 1
+        if "return true" in evidence or "no_verify" in evidence:
+            score += 1
+
+    if finding.pattern_id == "VULN_USER_CA_TRUST_ENABLED":
+        if "trust-anchors" in evidence:
+            score += 1
+        if 'src="user"' in evidence or "user supplied cas" in evidence:
+            score += 1
+        if "network-security-config" in evidence:
+            score += 1
+
+    if finding.pattern_id == "VULN_CLEARTEXT_HTTP":
+        if "http://" in evidence:
+            score += 1
+        if "loadurl" in evidence or "url" in evidence:
+            score += 1
 
     # ------------------------------------------------------------------
     # Manifest / provider evidence
@@ -256,6 +422,13 @@ def _score_vulnerability_confidence(
         "VULN_DANGEROUS_CUSTOM_PERMISSION",
     }:
         if "app signal:" in evidence:
+            score += 1
+
+    # ------------------------------------------------------------------
+    # Verified hardcoded secrets
+    # ------------------------------------------------------------------
+    if finding.pattern_id == "VULN_HARDCODED_API_KEY":
+        if "verified key accepted by provider api" in evidence:
             score += 1
 
     return _clamp_score(score)
