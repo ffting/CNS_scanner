@@ -121,7 +121,7 @@ DEFAULT_SCOPE_CATEGORIES = {
     "deep_link",
     "insecure_deep_link",
     "deep_link_oauth",
-    "deep_link_custom_scheme",
+    # "deep_link_custom_scheme",
     "deep_link_http",
     "deep_link_payment",
     "intent_filter",
@@ -131,6 +131,10 @@ DEFAULT_SCOPE_CATEGORIES = {
     "unvalidated_deep_link",
     "intent_redirection",
     "unsafe_uri_handling",
+     "insecure_deeplink",
+    "deep_link_exposure",
+    "browsable_intent_filter",
+    "manifest_deeplink",
 
     # Permission
     "dangerous_permission",
@@ -139,6 +143,12 @@ DEFAULT_SCOPE_CATEGORIES = {
     "least_privilege_violation",
     "custom_permission_weak_protection",
     "permission",
+    "excessive_permissions",
+    "dangerous_permission_requested",
+    "manifest_permission",
+    "permission_overreach",
+    "overprivileged_app",
+    "unnecessary_permissions",
 
     # PendingIntent
     "pending_intent",

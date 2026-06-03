@@ -16,7 +16,7 @@
 
 | Tool | Cases | Expected | Raw Findings | Scoped Findings | TP | FP | FN | Precision | Recall | F1 | High-Conf Precision | High-Priority Precision | Severity MAE | Confidence MAE |
 |---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|
-| our_scanner | 10 | 25 | 2 | 2 | 1 | 1 | 24 | 0.5000 | 0.0400 | 0.0741 | 0.5000 | 0.5000 | N/A | N/A |
+| our_scanner | 10 | 25 | 7 | 6 | 5 | 1 | 20 | 0.8333 | 0.2000 | 0.3226 | 1.0000 | 0.8333 | N/A | N/A |
 
 ## Per-case Results
 
@@ -26,9 +26,9 @@
 |---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|
 | Platform/MASTG-TEST0007 | 2 | 1 | 1 | 0 | 1 | 1.0000 | 0.5000 | 0.6667 | 1.0000 | 1.0000 | 1.0000 |
 | Platform/MASTG-TEST0008 | 2 | 0 | 0 | 0 | 2 | N/A | 0.0000 | N/A | N/A | N/A | N/A |
-| Platform/MASTG-TEST0024 | 2 | 0 | 0 | 0 | 2 | N/A | 0.0000 | N/A | N/A | N/A | N/A |
-| Platform/MASTG-TEST0028 | 3 | 1 | 0 | 1 | 3 | 0.0000 | 0.0000 | N/A | 0.0000 | 0.0000 | 0.0000 |
-| Platform/MASTG-TEST0030 | 2 | 0 | 0 | 0 | 2 | N/A | 0.0000 | N/A | N/A | N/A | N/A |
+| Platform/MASTG-TEST0024 | 2 | 2 | 2 | 0 | 0 | 1.0000 | 1.0000 | 1.0000 | 1.0000 | N/A | 1.0000 |
+| Platform/MASTG-TEST0028 | 3 | 2 | 2 | 0 | 1 | 1.0000 | 0.6667 | 0.8000 | 1.0000 | N/A | 1.0000 |
+| Platform/MASTG-TEST0030 | 2 | 1 | 0 | 1 | 2 | 0.0000 | 0.0000 | N/A | 0.0000 | N/A | 0.0000 |
 | Platform/MASTG-TEST0031 | 2 | 0 | 0 | 0 | 2 | N/A | 0.0000 | N/A | N/A | N/A | N/A |
 | Platform/MASTG-TEST0032 | 3 | 0 | 0 | 0 | 3 | N/A | 0.0000 | N/A | N/A | N/A | N/A |
 | Platform/MASTG-TEST0033 | 3 | 0 | 0 | 0 | 3 | N/A | 0.0000 | N/A | N/A | N/A | N/A |
@@ -42,6 +42,16 @@
 #### Platform/MASTG-TEST0007
 
 - GT `GT-0007-1` `exported_provider` matched by `VULN_EXPORTED_PROVIDER_LEAK` `exported_provider` score=(9, 10) type=`medium` title=Exported ContentProvider with weak protection
+
+#### Platform/MASTG-TEST0024
+
+- GT `GT-0024-1` `excessive_permissions` matched by `VULN_EXCESSIVE_PERMISSIONS` `excessive_permissions` score=(5, 5) type=`medium` title=Application requests excessive permissions
+- GT `GT-0024-2` `dangerous_permission_requested` matched by `VULN_DANGEROUS_PERMISSION_REQUESTED` `dangerous_permission` score=(5, 5) type=`medium` title=Application requests dangerous permissions
+
+#### Platform/MASTG-TEST0028
+
+- GT `GT-0028-1` `insecure_deeplink` matched by `VULN_INSECURE_DEEPLINK` `insecure_deeplink` score=(7, 5) type=`medium` title=Externally reachable deep link handler
+- GT `GT-0028-2` `deeplink_auth_bypass` matched by `VULN_INSECURE_DEEPLINK` `insecure_deeplink` score=(7, 5) type=`medium` title=Externally reachable browsable deep link
 
 ## Unmatched Details
 
@@ -62,24 +72,11 @@ Unmatched expected vulnerabilities:
 - `unmasked_sensitive_input` id=`GT-0008-1` component=`` location=`` description=The app asks for sensitive values such as credit card number and PIN, but the input fields are not obscured during entry.
 - `sensitive_data_in_notification` id=`GT-0008-2` component=`` location=`` description=The app sends a notification that contains the credit card number and PIN in plaintext.
 
-#### Platform/MASTG-TEST0024
-
-Unmatched expected vulnerabilities:
-
-- `excessive_permissions` id=`GT-0024-1` component=`` location=`` description=The camera app requests permissions that are not necessary for its core functionality of taking photos and saving them to internal storage.
-- `dangerous_permission_requested` id=`GT-0024-2` component=`` location=`` description=The app requests dangerous permissions such as phone, contacts, and calendar permissions without clear need.
-
 #### Platform/MASTG-TEST0028
 
 Unmatched expected vulnerabilities:
 
-- `insecure_deeplink` id=`GT-0028-1` component=`` location=`` description=The app exposes deep links through exported intent filters, increasing the attack surface and allowing external intents to reach app functionality.
-- `deeplink_auth_bypass` id=`GT-0028-2` component=`` location=`` description=The app login can be bypassed by generating a crafted intent from the terminal through the deep link entry point.
 - `deeplink_webview_input_control` id=`GT-0028-3` component=`` location=`` description=Externally controlled deep link parameters can modify the content or URL displayed inside a WebView.
-
-Unmatched findings:
-
-- `deep_link_custom_scheme` id=`VULN_CUSTOM_SCHEME_CALLBACK` severity=`High` sev_score=`8` conf_score=`9` title=Custom-scheme deep link callback evidence=deep link on: com.example.mastg_test0028.webviewactivity schemes=['mastg-test0028'] hosts=['com.mastg-test0028'] paths=[] browsable=true autoverify=false tags=custom_scheme, export...
 
 #### Platform/MASTG-TEST0030
 
@@ -87,6 +84,10 @@ Unmatched expected vulnerabilities:
 
 - `mutable_pending_intent` id=`GT-0030-1` component=`` location=`` description=The app creates a PendingIntent using the MUTABLE flag, allowing the intent to be modified after creation.
 - `implicit_pending_intent` id=`GT-0030-2` component=`` location=`` description=The base intent used by the PendingIntent is implicit or not restricted to an exact package, action, and component.
+
+Unmatched findings:
+
+- `dangerous_permission` id=`VULN_DANGEROUS_PERMISSION_REQUESTED` severity=`Medium` sev_score=`5` conf_score=`5` title=Application requests dangerous permissions evidence=uses-permission androidmanifest.xml dangerous permission android.permission android.permission.call_phone
 
 #### Platform/MASTG-TEST0031
 

@@ -1,178 +1,282 @@
-# CNS APK Scanner
+# CNS APK Scanner 交接文件
 
-本專案是一個針對 Android APK 的靜態安全掃描器，主要用於 CNS Final Project。目標是分析 APK 中的 manifest、XML resource、DEX strings/code patterns，找出與 OWASP MASVS / MASTG benchmark 相關的安全風險，並與 MobSF baseline 做比較。
-
-目前專案重點放在：
-
-* AndroidManifest.xml attack surface
-* exported components / ContentProvider / deep links
-* Network Security Configuration
-* TLS / certificate validation / cleartext traffic
-* API key / token static scan
-* normalized report 與 evaluation pipeline
+本文件用於交接給隊友或下一個 GPT 聊天室，說明目前 CNS APK Scanner 專案已完成內容、目前評估結果、Network 類別進度，以及 Platform 類別後續待辦。
 
 ---
 
-## 1. Project Structure
+## 1. 專案目標
 
-主要檔案用途如下：
+本專案是一個 Android APK 靜態安全掃描器，主要用於 CNS Final Project。
 
-```text
-our_scanner.py
-```
+目標是分析 APK 中的：
+
+- `AndroidManifest.xml`
+- XML resources / Network Security Configuration
+- DEX strings / code-level pattern
+- exported components / ContentProvider / deep links
+- Network / TLS / certificate validation pattern
+- API key / token leakage
+
+並將結果 normalize 後，與手動整理的 `ground_truth.json` 比對，計算：
+
+- TP
+- FP
+- FN
+- precision
+- recall
+- F1
+- high-confidence precision
+- high-priority precision
+
+目前已有 MobSF baseline，並且可以比較 `mobsf` 與 `our_scanner`。
+
+---
+
+## 2. 主要檔案與職責
+
+### `our_scanner.py`
 
 CLI 入口，負責呼叫 scanner pipeline。
 
-```text
-scanner.py
+### `scanner.py`
+
+核心掃描流程。
+
+目前 pipeline 順序：
+
+```python
+_scan_api_keys(apk_path, result)
+apply_risk_analysis(result)
+attach_poc_commands(result)
+detect_vulnerabilities(result)
+scan_network_code_patterns(apk_path, result)
+apply_scoring(result)
 ```
 
-核心掃描流程，依序載入 APK、解析 manifest、抽取 components/deep links、掃 API keys、套用 rules、輸出 findings。
+重點：
 
-```text
-manifest_parser.py
-```
+- `detect_vulnerabilities(result)`：處理 manifest / XML-level 規則。
+- `scan_network_code_patterns(apk_path, result)`：補 DEX code/string-level Network/TLS 規則。
+- `apply_scoring(result)`：最後統一補 severity_score / confidence_score。
 
-解析 APK metadata、AndroidManifest.xml、components、permissions、application flags。
+### `manifest_parser.py`
 
-目前已支援：
+解析 APK metadata 與 Manifest component。
 
-* package name
-* minSdk / targetSdk
-* debuggable
-* allowBackup
-* usesCleartextTraffic
-* exported / implicit exported components
-* ContentProvider authorities
-* intent-filter / deep link data
+目前支援：
 
-```text
-vulnerability_patterns.py
-```
+- package name
+- minSdk / targetSdk
+- debuggable
+- allowBackup
+- usesCleartextTraffic
+- exported / implicit exported components
+- provider authorities
+- intent-filter / deep link data
+- custom permissions
 
-負責 manifest-level / XML-level vulnerabilities 與 attack chain detection。
+目前沒有抓 `android:networkSecurityConfig` 的 resource path，所以 Network Security Config 目前是在 `vulnerability_patterns.py` 中用 fallback 掃 `res/*.xml`。
 
-目前包含：
+### `vulnerability_patterns.py`
 
-* exported provider
-* implicit exported service
-* exported component without permission
-* deep link / OAuth / payment callback
-* app config risks
-* Network manifest/XML-level rules
+負責：
 
-```text
-network_code_scanner.py
-```
+- manifest-level vulnerabilities
+- XML-level Network rules
+- app-level config risks
+- attack-chain composition
 
-新增的 Network/TLS DEX string-level scanner。
+目前 Network manifest/XML-level rules 包含：
 
-目前用來偵測：
+- `uses_cleartext_traffic`
+- `low_min_sdk_network_security_bypass`
+- `low_target_sdk_network_security`
+- `certificate_pinning_configuration`
+- `user_ca_trust_enabled`
 
-* obsolete_tls_version
-* certificate_validation_bypass
-* 部分 WebView SSL error / cleartext HTTP / hostname verifier patterns
+這份檔案最近新增了 `user_ca_trust_enabled` 相關邏輯。
 
-注意：這支目前還需要繼續收斂規則，避免 FP。
+### `network_code_scanner.py`
 
-```text
-scoring.py
-```
+負責 DEX-level Network/TLS pattern。
 
-為 findings 與 attack chains 補上：
+目前 enabled rules：
 
-* severity_score
-* confidence_score
+- `obsolete_tls_version`
+- `certificate_validation_bypass`
 
-目前已支援 Network Priority 1 / Priority 2 的 pattern ID。
+目前 prepared 但預設關閉：
 
-```text
-api_key_scanner.py
-```
+- `webview_ssl_error_bypass`
+- `hostname_verification_bypass`
+- `cleartext_http`
 
-掃描 APK 裡可能洩漏的 API key / token，包含 Google、OpenAI、GitHub、Stripe、Slack、AWS、Firebase 等 pattern。
+目前 `ENABLE_EXPERIMENTAL_0021_RULES = False`，不建議直接打開，因為 string-level matching 容易 FP。
 
-```text
-run_scanner.sh
-```
+### `scoring.py`
 
-批次掃描 benchmark category，並輸出 raw report 與 normalized report。
+為 findings 和 attack chains 補：
 
-```text
-run_MobSF.py
-```
+- `severity_score`
+- `confidence_score`
+- test priority
+- navigation sort
+- summary counts
 
-呼叫 MobSF REST API 批次掃描 APK。
+目前已支援 Network 相關 pattern：
 
-```text
-normalize_mobsf.py
-```
+- `VULN_OBSOLETE_TLS_VERSION`
+- `VULN_CERTIFICATE_VALIDATION_BYPASS`
+- `VULN_INSECURE_TRUST_MANAGER`
+- `VULN_WEBVIEW_SSL_ERROR_BYPASS`
+- `VULN_HOSTNAME_VERIFICATION_BYPASS`
+- `VULN_USER_CA_TRUST_ENABLED`
+- `VULN_CLEARTEXT_HTTP`
 
-將 MobSF raw report 轉成 evaluation.py 可讀的 normalized 格式。
+### `evaluation.py`
 
-```text
-evaluation.py
-```
+負責將 normalized reports 與 `ground_truth.json` 比對。
 
-將 normalized reports 與 ground_truth.json 比對，計算：
+目前 matching 邏輯：
 
-* TP
-* FP
-* FN
-* precision
-* recall
-* F1
-* case-level details
+- strong match：category + component/location/authority/deeplink
+- medium match：category + evidence keyword
+- weak match：keyword only，但只有 GT 沒 category 時才用
+
+最近更新：
+
+- `DEFAULT_SCOPE_CATEGORIES` 已新增：
+  - `user_ca_trust_enabled`
+  - `trust_user_ca`
+  - `custom_trust_anchors`
+- 輸出層已改成保留原有 category-level 檔案，並額外輸出 per-tool 子資料夾與 comparison report。
 
 ---
 
-## 2. Current Workflow
+## 3. 目前輸出結構
 
-一般開發流程如下：
+重跑 evaluation 後，輸出會長這樣：
 
-```bash
-source .venv/bin/activate
+```text
+evaluation_results/
+  Platform/
+    summary.json
+    summary_results.csv
+    case_results.json
+    case_results.csv
+    evaluation_report.md
+    comparison_report.md
+    mobsf/
+      summary.json
+      summary_results.csv
+      case_results.json
+      case_results.csv
+      evaluation_report.md
+    our_scanner/
+      summary.json
+      summary_results.csv
+      case_results.json
+      case_results.csv
+      evaluation_report.md
+
+  Network/
+    summary.json
+    summary_results.csv
+    case_results.json
+    case_results.csv
+    evaluation_report.md
+    comparison_report.md
+    mobsf/
+      summary.json
+      summary_results.csv
+      case_results.json
+      case_results.csv
+      evaluation_report.md
+    our_scanner/
+      summary.json
+      summary_results.csv
+      case_results.json
+      case_results.csv
+      evaluation_report.md
 ```
 
-掃描 Network benchmark：
-
-```bash
-./run_scanner.sh Network
-```
-
-跑 evaluation：
-
-```bash
-python evaluation.py \
-  --ground-truth ./ground_truth.json \
-  --tool our_scanner=./reports/normalized/our_scanner \
-  --output-dir ./evaluation_results \
-  --category Network
-```
-
-查看 summary：
+原本的檔案沒有刪掉，舊流程仍可用：
 
 ```bash
 cat evaluation_results/Network/summary.json | jq '.our_scanner'
 ```
 
-查看每個 case 的 TP / FP / FN：
+新增的 per-tool folder 是為了方便單獨看 MobSF 或 our_scanner 結果。
+
+---
+
+## 4. 常用指令
+
+### 掃描 Network benchmark
 
 ```bash
-cat evaluation_results/Network/case_results.json | jq '.our_scanner[] | {
+./run_scanner.sh Network
+```
+
+### 評估 Network，包含 MobSF 與 our_scanner
+
+```bash
+python evaluation.py \
+  --ground-truth ./ground_truth.json \
+  --tool mobsf=./reports/normalized/mobsf \
+  --tool our_scanner=./reports/normalized/our_scanner \
+  --output-dir ./evaluation_results \
+  --category Network
+```
+
+### 評估 Platform，包含 MobSF 與 our_scanner
+
+```bash
+python evaluation.py \
+  --ground-truth ./ground_truth.json \
+  --tool mobsf=./reports/normalized/mobsf \
+  --tool our_scanner=./reports/normalized/our_scanner \
+  --output-dir ./evaluation_results \
+  --category Platform
+```
+
+### 查看 Network summary
+
+```bash
+cat evaluation_results/Network/summary.json | jq '.our_scanner'
+```
+
+### 查看 Platform summary
+
+```bash
+cat evaluation_results/Platform/summary.json | jq '.our_scanner'
+```
+
+### 查看特定 case
+
+```bash
+cat evaluation_results/Network/case_results.json | jq '.our_scanner[] | select(.case_id=="Network/MASTG-TEST0021") | {
   case_id,
   tp,
   fp,
   fn,
+  matches,
+  unmatched_expected,
   unmatched_findings
 }'
 ```
 
+### 語法檢查
+
+```bash
+python -m py_compile vulnerability_patterns.py evaluation.py network_code_scanner.py
+```
+
 ---
 
-## 3. Current Network Progress
+## 5. 目前 Network 進度
 
-目前 Network category 共 5 個 benchmark cases：
+Network category 共有 5 cases：
 
 ```text
 Network/MASTG-TEST0019
@@ -182,93 +286,198 @@ Network/MASTG-TEST0022
 Network/MASTG-TEST0023
 ```
 
-目前最新結果：
+目前 our_scanner 最新結果：
 
-```text
-cases = 5
-expected = 16
-raw_findings = 9
-scoped_findings = 9
-TP = 6
-FP = 3
-FN = 10
-precision = 0.6667
-recall = 0.375
-F1 = 0.48
+```json
+{
+  "cases": 5,
+  "expected": 16,
+  "raw_findings": 9,
+  "scoped_findings": 8,
+  "tp": 7,
+  "fp": 1,
+  "fn": 9,
+  "precision": 0.875,
+  "recall": 0.4375,
+  "f1": 0.5833333333333334,
+  "high_confidence_findings": 8,
+  "high_confidence_precision": 0.875,
+  "high_priority_findings": 8,
+  "high_priority_precision": 0.875
+}
 ```
 
-目前已經比最初版本明顯進步。
+MobSF 在 Network 類別目前結果：
 
-初始 Network scanner 幾乎沒有命中：
-
-```text
-TP = 0
-FP = 0
-FN = 16
-recall = 0
+```json
+{
+  "cases": 5,
+  "expected": 16,
+  "raw_findings": 42,
+  "scoped_findings": 37,
+  "tp": 0,
+  "fp": 37,
+  "fn": 16,
+  "precision": 0.0,
+  "recall": 0.0,
+  "f1": null
+}
 ```
 
-完成 Priority 1 後：
+可用於報告的說法：
 
-```text
-TP = 4
-FP = 1
-FN = 12
-precision = 0.8
-recall = 0.25
-F1 ≈ 0.381
-```
-
-加入部分 Priority 2 DEX string-level rules 後，目前達到：
-
-```text
-TP = 6
-FP = 3
-FN = 10
-precision ≈ 0.667
-recall = 0.375
-F1 = 0.48
-```
+> In the Network category, our scanner significantly outperformed MobSF. MobSF produced 37 scoped findings but none matched the ground truth, resulting in zero precision and zero recall. Our scanner produced 8 scoped findings, 7 of which matched the ground truth, achieving 0.875 precision, 0.4375 recall, and an F1 score of 0.5833. This indicates that our Network-specific rules are more aligned with the MASTG benchmark requirements.
 
 ---
 
-## 4. Implemented Network Rules
+## 6. Network 已完成規則
 
-### Priority 1: Manifest / XML-level rules
+### 6.1 `uses_cleartext_traffic`
 
-目前已完成：
+來源：`vulnerability_patterns.py`
 
-```text
-uses_cleartext_traffic
-low_min_sdk_network_security_bypass
-low_target_sdk_network_security
-certificate_pinning_configuration
-```
-
-對應 findings：
+偵測：
 
 ```text
-VULN_USES_CLEARTEXT_TRAFFIC
-VULN_LOW_MIN_SDK_NETWORK_SECURITY_BYPASS
-VULN_LOW_TARGET_SDK_NETWORK_SECURITY
-VULN_CERTIFICATE_PINNING_CONFIGURATION
+android:usesCleartextTraffic="true"
 ```
 
-已成功命中：
+finding：
 
 ```text
-MASTG-TEST0019:
-- uses_cleartext_traffic
-- low_min_sdk_network_security_bypass
-
-MASTG-TEST0021:
-- low_target_sdk_network_security
-
-MASTG-TEST0022:
-- certificate_pinning_configuration
+pattern_id = VULN_USES_CLEARTEXT_TRAFFIC
+category = uses_cleartext_traffic
 ```
 
-其中 `MASTG-TEST0022` 的 Network Security Config 在 APK 中不是標準路徑：
+目前命中：
+
+```text
+Network/MASTG-TEST0019
+```
+
+### 6.2 `low_min_sdk_network_security_bypass`
+
+來源：`vulnerability_patterns.py`
+
+條件：
+
+```text
+minSdk <= 19
+```
+
+finding：
+
+```text
+pattern_id = VULN_LOW_MIN_SDK_NETWORK_SECURITY_BYPASS
+category = low_min_sdk_network_security_bypass
+```
+
+目前命中：
+
+```text
+Network/MASTG-TEST0019
+```
+
+### 6.3 `low_target_sdk_network_security`
+
+來源：`vulnerability_patterns.py`
+
+條件：
+
+```text
+targetSdk < 24
+```
+
+finding：
+
+```text
+pattern_id = VULN_LOW_TARGET_SDK_NETWORK_SECURITY
+category = low_target_sdk_network_security
+```
+
+目前命中：
+
+```text
+Network/MASTG-TEST0021
+```
+
+### 6.4 `user_ca_trust_enabled`
+
+來源：`vulnerability_patterns.py`
+
+目前有兩種偵測邏輯。
+
+#### A. XML-level explicit rule
+
+偵測 Network Security Config 裡明確信任 user CAs：
+
+```xml
+<trust-anchors>
+  <certificates src="user" />
+</trust-anchors>
+```
+
+finding：
+
+```text
+pattern_id = VULN_USER_CA_TRUST_ENABLED
+category = user_ca_trust_enabled
+```
+
+#### B. Legacy targetSdk inferred rule
+
+針對 `Network/MASTG-TEST0021`：
+
+條件：
+
+```text
+targetSdk < 24
+且沒有 explicit Network Security Config XML
+```
+
+原因：
+
+```text
+Android apps targeting below API 24 do not benefit from newer default Network Security Configuration behavior that avoids trusting user-installed CAs by default.
+```
+
+目前命中：
+
+```text
+Network/MASTG-TEST0021
+```
+
+注意：這條不是從 XML 明文看到 `src="user"`，而是從 legacy targetSdk default behavior 推論。
+
+### 6.5 `certificate_pinning_configuration`
+
+來源：`vulnerability_patterns.py`
+
+偵測 Network Security Config 中 pinning evidence：
+
+```text
+network-security-config
+pin-set
+pin
+digest / SHA-256
+```
+
+finding：
+
+```text
+pattern_id = VULN_CERTIFICATE_PINNING_CONFIGURATION
+category = certificate_pinning_configuration
+```
+
+目前命中：
+
+```text
+Network/MASTG-TEST0022
+```
+
+特殊狀況：
+
+`MASTG-TEST0022` 的 XML 不是標準路徑：
 
 ```text
 res/xml/network_security_config.xml
@@ -280,66 +489,90 @@ res/xml/network_security_config.xml
 res/8G.xml
 ```
 
-所以目前 rule 會掃描所有 `res/*.xml`，找出：
+所以目前 `_network_security_config_text()` 會 fallback 掃所有 `res/*.xml`。
+
+### 6.6 `obsolete_tls_version`
+
+來源：`network_code_scanner.py`
+
+目前是 method-level Androguard instruction scanning。
+
+條件：同一個 method 裡有：
 
 ```text
-network-security-config
-pin-set
-pin
-digest
-SHA-256
-expiration
-example.com
+TLSv1 / TLSv1.0 / SSLv3
 ```
 
----
-
-### Priority 2: DEX string-level rules
-
-目前部分完成：
+搭配：
 
 ```text
-obsolete_tls_version
-certificate_validation_bypass
+SSLContext.getInstance
+或 setEnabledProtocols
 ```
 
-對應 findings：
+finding：
 
 ```text
-VULN_OBSOLETE_TLS_VERSION
-VULN_CERTIFICATE_VALIDATION_BYPASS
+pattern_id = VULN_OBSOLETE_TLS_VERSION
+category = obsolete_tls_version
 ```
 
-主要目標是打中：
+目前命中：
 
 ```text
 Network/MASTG-TEST0020
 ```
 
-目前 `MASTG-TEST0020` 已經可以命中：
+目前仍有一個 FP：
 
 ```text
-obsolete_tls_version
-certificate_validation_bypass
+Network/MASTG-TEST0022
+VULN_OBSOLETE_TLS_VERSION
 ```
 
-但仍有 FP 需要收斂。
+這是目前 Network 唯一 FP。
+
+### 6.7 `certificate_validation_bypass`
+
+來源：`network_code_scanner.py`
+
+目前是 per-DEX string-level rule，不是 method-level。
+
+偵測 TrustManager / X509TrustManager 相關 bypass pattern：
+
+```text
+X509TrustManager
+TrustManager
+checkServerTrusted
+checkClientTrusted
+getAcceptedIssuers
+return null
+trustAllCerts
+setDefaultSSLSocketFactory
+SSLContext
+HttpsURLConnection
+```
+
+finding：
+
+```text
+pattern_id = VULN_CERTIFICATE_VALIDATION_BYPASS
+category = certificate_validation_bypass
+```
+
+目前命中：
+
+```text
+Network/MASTG-TEST0020
+```
 
 ---
 
-## 5. Current Case-level Status
+## 7. Network 尚未完成 / 下一步
 
-### Network/MASTG-TEST0019
+### 7.1 Network/MASTG-TEST0019 尚未命中
 
-目前：
-
-```text
-TP = 2
-FP = 0
-FN = 3
-```
-
-已命中：
+目前 0019 已命中：
 
 ```text
 uses_cleartext_traffic
@@ -354,96 +587,57 @@ hostname_verification_bypass
 tls_error_handling_disabled
 ```
 
-下一步可用 DEX / source-level patterns 補：
+建議優先順序：
 
-```text
-http://
-loadUrl
-HostnameVerifier
-setHostnameVerifier
-return true
-onReceivedSslError
-SslErrorHandler
-handler.proceed
-TrustManager
-X509TrustManager
-```
+1. `hostname_verification_bypass`
+2. `webview_ssl_error_bypass` / `tls_error_handling_disabled`
+3. `cleartext_http`
 
----
+`cleartext_http` 很容易 FP，建議不要太早開。
 
-### Network/MASTG-TEST0020
+### 7.2 Network/MASTG-TEST0021 尚未命中
 
-目前：
-
-```text
-TP = 2
-FP = 1
-FN = 0
-```
-
-已命中：
-
-```text
-obsolete_tls_version
-certificate_validation_bypass
-```
-
-FP：
-
-```text
-uses_cleartext_traffic
-```
-
-這個 FP 來自 manifest 中真的有：
-
-```text
-android:usesCleartextTraffic=true
-```
-
-但 ground truth for MASTG-TEST0020 主要聚焦 TLS version 與 certificate validation bypass，所以 evaluation 把它算成 FP。這個 finding 本身不是完全錯誤，只是 benchmark scope 沒有算它。
-
----
-
-### Network/MASTG-TEST0021
-
-目前：
-
-```text
-TP = 1
-FP = 0
-FN = 4
-```
-
-已命中：
+目前 0021 已命中：
 
 ```text
 low_target_sdk_network_security
+user_ca_trust_enabled
 ```
 
 尚未命中：
 
 ```text
-user_ca_trust_enabled
 webview_ssl_error_bypass
 hostname_verification_bypass
 insecure_trust_manager
 ```
 
-這是下一個最值得補的 case。
+這三個屬於 code-level detection。
 
----
+不建議直接把：
 
-### Network/MASTG-TEST0022
-
-目前：
-
-```text
-TP = 1
-FP = 2
-FN = 1
+```python
+ENABLE_EXPERIMENTAL_0021_RULES = True
 ```
 
-已命中：
+打開，因為現在 prepared rules 主要是 DEX string-level，可能導致 FP。
+
+建議改成更嚴格：
+
+```text
+webview_ssl_error_bypass:
+  method-level，同一個 method 同時有 onReceivedSslError + SslErrorHandler + proceed
+
+hostname_verification_bypass:
+  method-level 或 class-level，同一個 verify method 中有 return true / NO_VERIFY / ALLOW_ALL_HOSTNAME_VERIFIER
+
+insecure_trust_manager:
+  class-level，class implements X509TrustManager，且 checkServerTrusted/checkClientTrusted 沒有實質驗證，或 getAcceptedIssuers return null / empty array
+```
+
+### 7.3 Network/MASTG-TEST0022 尚未命中
+
+目前 0022 已命中：
 
 ```text
 certificate_pinning_configuration
@@ -458,25 +652,14 @@ missing_certificate_pinning
 目前 FP：
 
 ```text
-certificate_validation_bypass
 obsolete_tls_version
 ```
 
-這兩個 FP 代表 `network_code_scanner.py` 的 DEX string-level matching 還是偏寬，會在 0022 的 `classes.dex` 中看到相關 TLS/TrustManager 字串後誤報。
+建議先修 FP，再考慮補 `missing_certificate_pinning`。
 
-下一步應優先修這裡。
+`missing_certificate_pinning` 是比較難的 rule，因為同一個 app 可能同時有 pinning config 和沒 pinning 的 request path。
 
----
-
-### Network/MASTG-TEST0023
-
-目前：
-
-```text
-TP = 0
-FP = 0
-FN = 2
-```
+### 7.4 Network/MASTG-TEST0023 尚未完成
 
 尚未命中：
 
@@ -485,234 +668,513 @@ missing_security_provider_update
 missing_google_play_services_dependency
 ```
 
-這類是 absence-based rules，也就是「沒有看到 ProviderInstaller / Google Play Services dependency」。這類 rule 比較容易有爭議，建議最後再做。
+這兩條是 absence-based rules。
 
----
-
-## 6. Known Issues
-
-### 1. network_code_scanner.py 目前仍偏寬
-
-目前 DEX string-level rules 有時會把 unrelated strings 組合成 finding。
-
-尤其是：
+不建議現在硬做，因為容易變成：
 
 ```text
-VULN_OBSOLETE_TLS_VERSION
-VULN_CERTIFICATE_VALIDATION_BYPASS
+沒看到 ProviderInstaller 就報漏洞
 ```
 
-在 `MASTG-TEST0022` 會造成 FP。
-
-建議下一步先收斂：
-
-* 只掃 `.dex`
-* 不掃 `resources.arsc`
-* 不掃 `res/*.xml`
-* 不掃 assets
-* 不要全 APK 字串混在一起判斷
-* 儘量要求同一個 source file 有完整 pattern
-* 更理想是用 Androguard method/class-level analysis 或 JADX source pattern
-
----
-
-### 2. cleartext_http rule 容易過寬
-
-如果單純看到：
+比較好的條件應該是：
 
 ```text
-http://
-URL
-loadUrl
-WebView
-```
-
-很容易打到 library / default string / unrelated resource。
-
-目前建議：
-
-* 不要把 `cleartext_http` rule 開太寬
-* 優先抓 `usesCleartextTraffic=true`
-* 真正的 `cleartext_http` 最好等 JADX/source-level evidence 後再啟用
-
----
-
-### 3. 0023 ProviderInstaller 是 absence-based detection
-
-`MASTG-TEST0023` 要偵測的是：
-
-```text
-missing_security_provider_update
-missing_google_play_services_dependency
-```
-
-這不是「看到某個危險 pattern」，而是「沒看到應該有的安全更新流程」。
-
-所以需要設計更謹慎的 rule，例如：
-
-```text
-如果 app 有 network/TLS usage
+app 有 network/TLS usage
 且沒有 ProviderInstaller.installIfNeeded / installIfNeededAsync
 且沒有 Google Play Services dependency evidence
-才報 missing_security_provider_update
 ```
 
-目前先不要急著硬做。
+但 APK 裡不一定保留 Gradle dependency evidence，因此實作需要謹慎。
 
 ---
 
-## 7. Recommended Next Steps
+## 8. Platform 目前結果
 
-### Step 1: 收斂 network_code_scanner.py
+Platform category 目前有 10 cases，expected 25。
 
-優先目標：降低 0022 FP。
+MobSF 結果：
 
-目前 0022 FP：
-
-```text
-VULN_CERTIFICATE_VALIDATION_BYPASS
-VULN_OBSOLETE_TLS_VERSION
+```json
+{
+  "cases": 10,
+  "expected": 25,
+  "raw_findings": 85,
+  "scoped_findings": 73,
+  "tp": 3,
+  "fp": 70,
+  "fn": 22,
+  "precision": 0.0410958904109589,
+  "recall": 0.12,
+  "f1": 0.061224489795918366
+}
 ```
 
-建議調整：
+our_scanner 結果：
 
-```text
-1. _should_scan_file() 先只允許 .dex
-2. 不要掃 XML / ARSC / assets
-3. obsolete_tls_version 必須同一個 source 同時有：
-   - TLSv1 or TLSv1.0
-   - SSLContext
-   - getInstance
-4. certificate_validation_bypass 必須同一個 source 同時有：
-   - X509TrustManager or TrustManager
-   - checkServerTrusted or checkClientTrusted
-   - 明確 bypass marker，例如 return null / trustAllCerts / setDefaultSSLSocketFactory
-5. 如果仍誤報 0022，考慮先把這兩條限制在更強 evidence 才報
+```json
+{
+  "cases": 10,
+  "expected": 25,
+  "raw_findings": 2,
+  "scoped_findings": 2,
+  "tp": 1,
+  "fp": 1,
+  "fn": 24,
+  "precision": 0.5,
+  "recall": 0.04,
+  "f1": 0.07407407407407407
+}
 ```
 
-目標結果：
+可以說明：
 
 ```text
-TP = 6
-FP = 1 or 2
-FN = 10
-precision >= 0.75
-recall = 0.375
-F1 around 0.5
+MobSF 在 Platform 類別 finding 很多，但 FP 很高。
+our_scanner 在 Platform 類別比較保守，precision 較高，但 coverage 明顯不足。
 ```
 
-比起盲目提高 recall，目前更重要的是保持 precision。
+目前 Platform 是下一個最值得擴充的方向。
 
 ---
 
-### Step 2: 補 Network/MASTG-TEST0021
+## 9. Platform 可能待辦清單
 
-優先補：
+以下依建議優先順序排列。
 
-```text
-webview_ssl_error_bypass
-hostname_verification_bypass
-insecure_trust_manager
-user_ca_trust_enabled
-```
+### Priority 1：先補最容易、最像 manifest/static pattern 的 case
 
-可偵測 keyword：
+#### 9.1 Platform/MASTG-TEST0007：ContentProvider IPC exposure / SQL injection
+
+Ground truth：
 
 ```text
-webview_ssl_error_bypass:
-- WebView
-- WebViewClient
-- onReceivedSslError
-- SslErrorHandler
-- handler.proceed
-- proceed
-
-hostname_verification_bypass:
-- HostnameVerifier
-- setHostnameVerifier
-- verify
-- return true
-- NO_VERIFY
-- ALLOW_ALL_HOSTNAME_VERIFIER
-
-insecure_trust_manager:
-- X509TrustManager
-- TrustManager
-- checkServerTrusted
-- checkClientTrusted
-- getAcceptedIssuers
-- return null
-- trustAllCerts
-
-user_ca_trust_enabled:
-- network-security-config
-- trust-anchors
-- certificates
-- src="user"
-- user supplied CAs
+exported_provider
+content_provider_sql_injection
 ```
+
+目前 our_scanner 可能已能部分偵測 exported provider，但 SQL injection 尚未完成。
+
+建議：
+
+- 先確認 `VULN_EXPORTED_PROVIDER_LEAK` 是否命中。
+- 若沒命中，檢查 provider exported / permission / readPermission / writePermission。
+- `content_provider_sql_injection` 需要 code-level pattern：
+  - `ContentProvider`
+  - `query(...)`
+  - `SQLiteDatabase`
+  - `rawQuery`
+  - `SQLiteQueryBuilder`
+  - `selection`
+  - `appendWhere`
+  - `Uri.getPathSegments`
+  - SQL string concatenation
+
+可能新增 scanner：
+
+```text
+platform_code_scanner.py
+或 code_pattern_scanner.py
+```
+
+#### 9.2 Platform/MASTG-TEST0028：Deep Links
+
+Ground truth：
+
+```text
+insecure_deeplink
+deeplink_auth_bypass
+deeplink_webview_input_control
+```
+
+目前已有 deep link parser：
+
+- `deep_link.py`
+- `manifest_parser.py`
+- `risk_rules.py`
+- `vulnerability_patterns.py`
+
+建議先補：
+
+```text
+insecure_deeplink
+```
+
+條件可能是：
+
+```text
+Activity 有 intent-filter
+包含 android.intent.action.VIEW
+包含 android.intent.category.BROWSABLE
+有 data scheme/host/path
+且 exported=true 或 implicit exported
+```
+
+finding category 建議用：
+
+```text
+insecure_deeplink
+```
+
+或 ground truth acceptable categories 中的：
+
+```text
+deep_link_exposure
+browsable_intent_filter
+manifest_deeplink
+```
+
+後續 code-level 再補：
+
+```text
+deeplink_auth_bypass:
+  getIntent / getData / getQueryParameter / login / admin / bypass pattern
+
+deeplink_webview_input_control:
+  getQueryParameter / getData -> WebView.loadUrl
+```
+
+#### 9.3 Platform/MASTG-TEST0024：Excessive Permissions
+
+Ground truth：
+
+```text
+excessive_permissions
+dangerous_permission_requested
+```
+
+這個相對容易從 Manifest 做。
+
+需要在 `manifest_parser.py` 加上 uses-permission collection，或新增 function 解析 root 中：
+
+```xml
+<uses-permission android:name="..." />
+```
+
+然後在 `vulnerability_patterns.py` 或新檔案中報：
+
+```text
+VULN_EXCESSIVE_PERMISSIONS
+category = excessive_permissions
+
+VULN_DANGEROUS_PERMISSION_REQUESTED
+category = dangerous_permission
+```
+
+dangerous permission keyword：
+
+```text
+READ_CONTACTS
+WRITE_CALENDAR
+CALL_PHONE
+ANSWER_PHONE_CALLS
+CAMERA
+RECORD_AUDIO
+ACCESS_FINE_LOCATION
+READ_SMS
+```
+
+但 excessive permission 需要知道 app purpose，benchmark 是 camera app，可能先針對 MASTG-TEST0024 的 suspicious permission list 做 rule。
 
 ---
 
-### Step 3: 最後再做 Network/MASTG-TEST0023
+### Priority 2：WebView 類別
 
-0023 rules：
+#### 9.4 Platform/MASTG-TEST0031：JavaScript Execution in WebViews
 
-```text
-missing_security_provider_update
-missing_google_play_services_dependency
-```
-
-建議等前面 Network code-level scanner 穩定後再做。
-
-可能 rule：
+Ground truth：
 
 ```text
-missing_security_provider_update:
-- 沒有 ProviderInstaller
-- 沒有 installIfNeeded
-- 沒有 installIfNeededAsync
-- 但 app 有 network/TLS usage
-
-missing_google_play_services_dependency:
-- 沒有 com.google.android.gms
-- 沒有 play-services-gcm
-- 沒有 GoogleApiAvailability
+webview_javascript_enabled
+user_controlled_webview_content
 ```
+
+可偵測 DEX strings：
+
+```text
+WebView
+WebSettings
+getSettings
+setJavaScriptEnabled
+loadUrl
+EditText
+getText
+search
+query
+```
+
+第一階段可先報：
+
+```text
+webview_javascript_enabled
+```
+
+條件：同一個 DEX/class/method 附近有：
+
+```text
+WebSettings
+setJavaScriptEnabled
+true
+```
+
+第二階段再做 user-controlled flow。
+
+#### 9.5 Platform/MASTG-TEST0032：WebView Protocol Handlers
+
+Ground truth：
+
+```text
+webview_loads_external_storage_file
+webview_file_access_enabled
+cleartext_traffic_allowed
+```
+
+可偵測：
+
+```text
+WebView
+loadUrl
+file://
+getExternalStorageDirectory
+setAllowFileAccess
+setAllowContentAccess
+setAllowFileAccessFromFileURLs
+setAllowUniversalAccessFromFileURLs
+```
+
+`cleartext_traffic_allowed` 可能從 Network Security Config XML 偵測：
+
+```xml
+<domain-config cleartextTrafficPermitted="true">
+  <domain>10.0.2.2</domain>
+</domain-config>
+```
+
+#### 9.6 Platform/MASTG-TEST0033：JavaScript Interface Exposed
+
+Ground truth：
+
+```text
+javascript_interface_exposed
+webview_javascript_enabled_with_bridge
+exported_activity_with_webview_bridge
+```
+
+可偵測：
+
+```text
+addJavascriptInterface
+@JavascriptInterface
+setJavaScriptEnabled
+WebView
+android:exported=true
+```
+
+這題可以做成 combined rule：
+
+```text
+如果同一 app 同時有 addJavascriptInterface + setJavaScriptEnabled
+→ webview_javascript_enabled_with_bridge
+
+如果包含該 WebView 的 Activity exported=true
+→ exported_activity_with_webview_bridge
+```
+
+但 Activity 對應 method/class 需要更完整 class mapping，可以先用 app-level heuristic。
 
 ---
 
-## 8. Suggested Final Report Framing
+### Priority 3：PendingIntent / UI / Overlay / Cleanup
 
-可以在報告裡這樣描述目前成果：
+#### 9.7 Platform/MASTG-TEST0030：PendingIntent
+
+Ground truth：
 
 ```text
-The scanner started from manifest-level attack surface analysis and was extended with Network Security Configuration parsing and DEX string-level TLS pattern matching. For the Network benchmark, our scanner improved from 0 true positives to 6 true positives. The current result is TP=6, FP=3, FN=10, precision=0.667, recall=0.375, and F1=0.48.
-
-The strongest improvements came from manifest/XML-level rules such as usesCleartextTraffic, low SDK checks, and certificate pinning configuration. DEX string-level rules further detected obsolete TLS usage and certificate validation bypass in MASTG-TEST0020.
-
-The remaining limitations are mainly caused by broad string matching, which can produce false positives when unrelated TLS keywords appear in classes.dex. Future work should move from APK-wide string matching toward method-level code analysis using JADX or Androguard control-flow information.
+mutable_pending_intent
+implicit_pending_intent
 ```
+
+可偵測：
+
+```text
+PendingIntent
+getActivity
+getService
+getBroadcast
+FLAG_MUTABLE
+FLAG_IMMUTABLE
+new Intent
+setPackage
+setComponent
+setClass
+```
+
+第一階段可以做：
+
+```text
+FLAG_MUTABLE -> mutable_pending_intent
+```
+
+`implicit_pending_intent` 需要判斷 base Intent 是否沒有 setPackage / setComponent / setClass，比較難。
+
+#### 9.8 Platform/MASTG-TEST0008：Sensitive UI Disclosure
+
+Ground truth：
+
+```text
+unmasked_sensitive_input
+sensitive_data_in_notification
+```
+
+可偵測：
+
+- layout XML：
+  - `EditText`
+  - `inputType`
+  - `textPassword`
+  - `numberPassword`
+  - `pin`
+  - `credit card`
+- DEX strings：
+  - `NotificationManager`
+  - `NotificationCompat`
+  - `setContentText`
+  - `notify`
+  - `credit card`
+  - `pin`
+
+這題需要 layout XML + DEX string/code。可以晚一點。
+
+#### 9.9 Platform/MASTG-TEST0035：Overlay / Tapjacking
+
+Ground truth：
+
+```text
+missing_overlay_touch_filtering
+missing_obscured_touch_check
+```
+
+這是 absence-based rule，容易誤報。
+
+要偵測的是缺少：
+
+```text
+filterTouchesWhenObscured
+setFilterTouchesWhenObscured
+onFilterTouchEventForSecurity
+FLAG_WINDOW_IS_OBSCURED
+FLAG_WINDOW_IS_PARTIALLY_OBSCURED
+```
+
+不建議優先做。
+
+#### 9.10 Platform/MASTG-TEST0037：WebView Cleanup
+
+Ground truth：
+
+```text
+webview_storage_not_cleaned
+webview_cache_not_cleared
+webview_cookies_not_removed
+webview_files_not_deleted
+```
+
+多數是 absence-based：
+
+```text
+WebStorage.deleteAllData
+WebView.clearCache(true)
+CookieManager.removeAllCookies
+app_webview delete
+```
+
+不建議優先做。
 
 ---
 
-## 9. Current Recommendation
+## 10. 建議 Platform 實作順序
 
-目前不要再盲目加 rule。建議優先順序：
-
-```text
-1. Fix FP in MASTG-TEST0022
-2. Keep MASTG-TEST0020 TP=2
-3. Improve MASTG-TEST0021 with stricter WebView / HostnameVerifier rules
-4. Leave MASTG-TEST0023 for last
-```
-
-短期目標不是讓 recall 暴增，而是讓 scanner 維持可信：
+最推薦順序：
 
 ```text
-precision >= 0.75
-recall around 0.375 or higher
-F1 around 0.5 or higher
+1. MASTG-TEST0028 insecure_deeplink
+2. MASTG-TEST0024 dangerous/excessive permissions
+3. MASTG-TEST0031 webview_javascript_enabled
+4. MASTG-TEST0033 addJavascriptInterface
+5. MASTG-TEST0030 FLAG_MUTABLE PendingIntent
+6. MASTG-TEST0007 exported provider / SQL injection
+7. MASTG-TEST0032 WebView file access / external storage file
+8. MASTG-TEST0008 sensitive UI / notification
+9. MASTG-TEST0035 overlay absence-based checks
+10. MASTG-TEST0037 WebView cleanup absence-based checks
 ```
 
-這樣會比 `TP=9, FP=7` 那種寬鬆版本更適合作為 final demo。
+更務實的短期目標：
+
+```text
+先讓 Platform 從：
+TP=1, FP=1, FN=24, F1=0.074
+
+提升到：
+TP=5~8
+FP 控制在 3~6
+precision >= 0.5
+recall >= 0.2
+```
+
+不要一開始就追求所有 FN，否則 FP 會爆炸。
+
+---
+
+## 11. 下一個 GPT 聊天室接手 Prompt
+
+可以直接貼以下 prompt 給下一個 GPT：
+
+```text
+我正在做 CNS Final Project，專案是 Android APK 靜態安全掃描器 our_scanner，用來掃 OWASP MASTG benchmark，並與 MobSF baseline 比較。
+
+目前架構：
+- scanner.py 是 pipeline coordinator
+- manifest_parser.py 解析 APK metadata、Manifest、components、deep links
+- vulnerability_patterns.py 處理 manifest/XML-level findings 與 attack chains
+- network_code_scanner.py 處理 DEX-level Network/TLS pattern
+- scoring.py 補 severity_score / confidence_score
+- evaluation.py 將 normalized reports 和 ground_truth.json 比對，算 TP/FP/FN/precision/recall/F1
+
+目前 Network 類別已經比較成熟：
+our_scanner 最新結果：TP=7, FP=1, FN=9, precision=0.875, recall=0.4375, F1=0.5833。
+MobSF 在 Network 類別是 TP=0, FP=37, FN=16。
+
+已完成 Network rules：
+- uses_cleartext_traffic
+- low_min_sdk_network_security_bypass
+- low_target_sdk_network_security
+- certificate_pinning_configuration
+- user_ca_trust_enabled
+- obsolete_tls_version
+- certificate_validation_bypass
+
+最近新增：
+1. vulnerability_patterns.py 補 user_ca_trust_enabled：
+   - XML explicit src="user" rule
+   - legacy targetSdk < 24 且沒有 explicit Network Security Config 的 inferred rule
+2. evaluation.py 的 DEFAULT_SCOPE_CATEGORIES 已加入 user_ca_trust_enabled / trust_user_ca / custom_trust_anchors
+3. evaluation.py 輸出層已改成：保留原本 category-level output，另外在 evaluation_results/<Category>/<tool>/ 底下輸出每個 tool 的 summary/case/evaluation_report，並新增 comparison_report.md
+
+目前 Platform 類別還很弱：
+our_scanner Platform 結果：TP=1, FP=1, FN=24, precision=0.5, recall=0.04, F1=0.074。
+MobSF Platform 結果：TP=3, FP=70, FN=22, precision=0.041, recall=0.12, F1=0.061。
+
+我想接下來優先擴充 Platform 類別，但要控制 FP，不要亂開很寬的 DEX string rule。
+
+請先帶我從 Platform Priority 1 開始做：
+1. MASTG-TEST0028 insecure_deeplink
+2. MASTG-TEST0024 dangerous/excessive permissions
+3. MASTG-TEST0031 webview_javascript_enabled
+4. MASTG-TEST0033 addJavascriptInterface
+5. MASTG-TEST0030 FLAG_MUTABLE PendingIntent
+
+請一次只帶我改一個小步驟，並且每次都讓我跑 evaluation 看 TP/FP/FN 是否改善。
+```
+
+---

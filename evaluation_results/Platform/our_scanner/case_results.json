@@ -202,73 +202,167 @@
     "test_id": "MASTG-TEST-0024",
     "title": "Testing for App Permissions",
     "expected_count": 2,
-    "raw_finding_count": 0,
-    "scoped_finding_count": 0,
-    "tp": 0,
+    "raw_finding_count": 2,
+    "scoped_finding_count": 2,
+    "tp": 2,
     "fp": 0,
-    "fn": 2,
-    "precision": null,
-    "recall": 0.0,
-    "f1": null,
-    "top5_precision": null,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0,
+    "f1": 1.0,
+    "top5_precision": 1.0,
     "high_confidence_finding_count": 0,
     "high_confidence_precision": null,
-    "high_priority_finding_count": 0,
-    "high_priority_precision": null,
+    "high_priority_finding_count": 2,
+    "high_priority_precision": 1.0,
     "severity_score_mae": null,
     "confidence_score_mae": null,
-    "matches": [],
-    "unmatched_expected": [
+    "matches": [
       {
-        "id": "GT-0024-1",
-        "category": "excessive_permissions",
-        "must_detect": true,
-        "severity": "medium",
-        "description": "The camera app requests permissions that are not necessary for its core functionality of taking photos and saving them to internal storage.",
-        "acceptable_scanner_categories": [
-          "excessive_permissions",
-          "unnecessary_permissions",
-          "overprivileged_app",
-          "permission_overreach",
-          "manifest_permission"
-        ],
-        "evidence_keywords": [
-          "uses-permission",
-          "internet",
-          "accept_handover",
-          "answer_phone_calls",
-          "call_phone",
-          "write_calendar",
-          "read_contacts",
-          "bluetooth_admin"
-        ],
-        "source": "README.md Implementation and Static Analysis"
+        "gt_id": "GT-0024-1",
+        "gt_category": "excessive_permissions",
+        "finding_id": "VULN_EXCESSIVE_PERMISSIONS",
+        "finding_category": "excessive_permissions",
+        "finding_title": "Application requests excessive permissions",
+        "finding_severity": "Medium",
+        "finding_severity_score": 5,
+        "finding_confidence_score": 5,
+        "match_info": {
+          "match_type": "medium",
+          "category": true,
+          "component": false,
+          "location": false,
+          "authority": false,
+          "deeplink": false,
+          "keyword_hits": 8,
+          "keyword_total": 8
+        },
+        "ground_truth": {
+          "id": "GT-0024-1",
+          "category": "excessive_permissions",
+          "must_detect": true,
+          "severity": "medium",
+          "description": "The camera app requests permissions that are not necessary for its core functionality of taking photos and saving them to internal storage.",
+          "acceptable_scanner_categories": [
+            "excessive_permissions",
+            "unnecessary_permissions",
+            "overprivileged_app",
+            "permission_overreach",
+            "manifest_permission"
+          ],
+          "evidence_keywords": [
+            "uses-permission",
+            "internet",
+            "accept_handover",
+            "answer_phone_calls",
+            "call_phone",
+            "write_calendar",
+            "read_contacts",
+            "bluetooth_admin"
+          ],
+          "source": "README.md Implementation and Static Analysis"
+        },
+        "finding": {
+          "pattern_id": "VULN_EXCESSIVE_PERMISSIONS",
+          "title": "Application requests excessive permissions",
+          "severity": "Medium",
+          "description": "The application requests permissions that appear unrelated to the benchmark app's core camera functionality, increasing privacy and abuse risk.",
+          "severity_score": 5,
+          "confidence_score": 5,
+          "test_priority": "P2",
+          "category": "excessive_permissions",
+          "location": "AndroidManifest.xml",
+          "evidence": [
+            "uses-permission",
+            "AndroidManifest.xml",
+            "excessive permissions",
+            "android.permission.ACCEPT_HANDOVER",
+            "android.permission.ANSWER_PHONE_CALLS",
+            "android.permission.BLUETOOTH_ADMIN",
+            "android.permission.CALL_PHONE",
+            "android.permission.INTERNET",
+            "android.permission.READ_CONTACTS",
+            "android.permission.WRITE_CALENDAR"
+          ],
+          "related_components": [],
+          "related_deep_links": [],
+          "cwe": "CWE-250",
+          "owasp_masvs": "MSTG-PLATFORM-1",
+          "source": "our_scanner"
+        }
       },
       {
-        "id": "GT-0024-2",
-        "category": "dangerous_permission_requested",
-        "must_detect": true,
-        "severity": "medium",
-        "description": "The app requests dangerous permissions such as phone, contacts, and calendar permissions without clear need.",
-        "acceptable_scanner_categories": [
-          "dangerous_permission",
-          "sensitive_permission",
-          "privacy_sensitive_permission",
-          "permission_overreach",
-          "manifest_permission"
-        ],
-        "evidence_keywords": [
-          "read_contacts",
-          "write_calendar",
-          "call_phone",
-          "answer_phone_calls",
-          "dangerous",
-          "permission",
-          "android.permission"
-        ],
-        "source": "README.md Android Permissions and Permission Analysis"
+        "gt_id": "GT-0024-2",
+        "gt_category": "dangerous_permission_requested",
+        "finding_id": "VULN_DANGEROUS_PERMISSION_REQUESTED",
+        "finding_category": "dangerous_permission",
+        "finding_title": "Application requests dangerous permissions",
+        "finding_severity": "Medium",
+        "finding_severity_score": 5,
+        "finding_confidence_score": 5,
+        "match_info": {
+          "match_type": "medium",
+          "category": true,
+          "component": false,
+          "location": false,
+          "authority": false,
+          "deeplink": false,
+          "keyword_hits": 7,
+          "keyword_total": 7
+        },
+        "ground_truth": {
+          "id": "GT-0024-2",
+          "category": "dangerous_permission_requested",
+          "must_detect": true,
+          "severity": "medium",
+          "description": "The app requests dangerous permissions such as phone, contacts, and calendar permissions without clear need.",
+          "acceptable_scanner_categories": [
+            "dangerous_permission",
+            "sensitive_permission",
+            "privacy_sensitive_permission",
+            "permission_overreach",
+            "manifest_permission"
+          ],
+          "evidence_keywords": [
+            "read_contacts",
+            "write_calendar",
+            "call_phone",
+            "answer_phone_calls",
+            "dangerous",
+            "permission",
+            "android.permission"
+          ],
+          "source": "README.md Android Permissions and Permission Analysis"
+        },
+        "finding": {
+          "pattern_id": "VULN_DANGEROUS_PERMISSION_REQUESTED",
+          "title": "Application requests dangerous permissions",
+          "severity": "Medium",
+          "description": "The application requests Android dangerous permissions. These permissions can expose sensitive user data or privileged device actions if not justified.",
+          "severity_score": 5,
+          "confidence_score": 5,
+          "test_priority": "P2",
+          "category": "dangerous_permission",
+          "location": "AndroidManifest.xml",
+          "evidence": [
+            "uses-permission",
+            "AndroidManifest.xml",
+            "dangerous permission",
+            "android.permission",
+            "android.permission.ANSWER_PHONE_CALLS",
+            "android.permission.CALL_PHONE",
+            "android.permission.READ_CONTACTS",
+            "android.permission.WRITE_CALENDAR"
+          ],
+          "related_components": [],
+          "related_deep_links": [],
+          "cwe": "CWE-250",
+          "owasp_masvs": "MSTG-PLATFORM-1",
+          "source": "our_scanner"
+        }
       }
     ],
+    "unmatched_expected": [],
     "unmatched_findings": []
   },
   {
@@ -276,75 +370,181 @@
     "test_id": "MASTG-TEST-0028",
     "title": "Testing Deep Links",
     "expected_count": 3,
-    "raw_finding_count": 1,
-    "scoped_finding_count": 1,
-    "tp": 0,
-    "fp": 1,
-    "fn": 3,
-    "precision": 0.0,
-    "recall": 0.0,
-    "f1": null,
-    "top5_precision": 0.0,
-    "high_confidence_finding_count": 1,
-    "high_confidence_precision": 0.0,
-    "high_priority_finding_count": 1,
-    "high_priority_precision": 0.0,
+    "raw_finding_count": 3,
+    "scoped_finding_count": 2,
+    "tp": 2,
+    "fp": 0,
+    "fn": 1,
+    "precision": 1.0,
+    "recall": 0.6666666666666666,
+    "f1": 0.8,
+    "top5_precision": 1.0,
+    "high_confidence_finding_count": 0,
+    "high_confidence_precision": null,
+    "high_priority_finding_count": 2,
+    "high_priority_precision": 1.0,
     "severity_score_mae": null,
     "confidence_score_mae": null,
-    "matches": [],
+    "matches": [
+      {
+        "gt_id": "GT-0028-1",
+        "gt_category": "insecure_deeplink",
+        "finding_id": "VULN_INSECURE_DEEPLINK",
+        "finding_category": "insecure_deeplink",
+        "finding_title": "Externally reachable deep link handler",
+        "finding_severity": "High",
+        "finding_severity_score": 7,
+        "finding_confidence_score": 5,
+        "match_info": {
+          "match_type": "medium",
+          "category": true,
+          "component": false,
+          "location": false,
+          "authority": false,
+          "deeplink": false,
+          "keyword_hits": 6,
+          "keyword_total": 9
+        },
+        "ground_truth": {
+          "id": "GT-0028-1",
+          "category": "insecure_deeplink",
+          "must_detect": true,
+          "severity": "high",
+          "description": "The app exposes deep links through exported intent filters, increasing the attack surface and allowing external intents to reach app functionality.",
+          "acceptable_scanner_categories": [
+            "insecure_deeplink",
+            "deep_link_exposure",
+            "exported_activity",
+            "browsable_intent_filter",
+            "manifest_deeplink"
+          ],
+          "evidence_keywords": [
+            "intent-filter",
+            "android.intent.action.view",
+            "android.intent.category.browsable",
+            "android.intent.category.default",
+            "data",
+            "scheme",
+            "host",
+            "path",
+            "deeplink"
+          ],
+          "source": "README.md Check for Deep Link Usage"
+        },
+        "finding": {
+          "pattern_id": "VULN_INSECURE_DEEPLINK",
+          "title": "Externally reachable deep link handler",
+          "severity": "High",
+          "description": "An Activity exposes a browsable deep link intent-filter that can be invoked by external apps. This increases the attack surface and may allow crafted Intents to reach app functionality.",
+          "severity_score": 7,
+          "confidence_score": 5,
+          "test_priority": "P1",
+          "category": "insecure_deeplink",
+          "location": "AndroidManifest.xml",
+          "evidence": [
+            "Deep link on: com.example.mastg_test0028.WebViewActivity",
+            "schemes=['mastg-test0028']",
+            "hosts=['com.mastg-test0028']",
+            "paths=[]",
+            "browsable=True",
+            "autoVerify=False",
+            "tags=EXPORTED_HANDLER",
+            "Test: adb shell am start -a android.intent.action.VIEW -d \"mastg-test0028://com.mastg-test0028/?test=1\" -n com.example.mastg_test0028/.WebViewActivity"
+          ],
+          "related_components": [
+            "com.example.mastg_test0028.WebViewActivity"
+          ],
+          "related_deep_links": [
+            "com.example.mastg_test0028.WebViewActivity"
+          ],
+          "cwe": "CWE-926",
+          "owasp_masvs": "MSTG-PLATFORM-3",
+          "source": "our_scanner"
+        }
+      },
+      {
+        "gt_id": "GT-0028-2",
+        "gt_category": "deeplink_auth_bypass",
+        "finding_id": "VULN_INSECURE_DEEPLINK",
+        "finding_category": "insecure_deeplink",
+        "finding_title": "Externally reachable browsable deep link",
+        "finding_severity": "High",
+        "finding_severity_score": 7,
+        "finding_confidence_score": 5,
+        "match_info": {
+          "match_type": "medium",
+          "category": true,
+          "component": false,
+          "location": false,
+          "authority": false,
+          "deeplink": false,
+          "keyword_hits": 3,
+          "keyword_total": 9
+        },
+        "ground_truth": {
+          "id": "GT-0028-2",
+          "category": "deeplink_auth_bypass",
+          "must_detect": true,
+          "severity": "high",
+          "description": "The app login can be bypassed by generating a crafted intent from the terminal through the deep link entry point.",
+          "acceptable_scanner_categories": [
+            "deeplink_auth_bypass",
+            "authentication_bypass",
+            "insecure_deeplink",
+            "exported_activity_abuse",
+            "intent_injection"
+          ],
+          "evidence_keywords": [
+            "login",
+            "bypass",
+            "intent",
+            "getintent",
+            "getdata",
+            "uri",
+            "admin",
+            "1234",
+            "deeplink"
+          ],
+          "source": "README.md Implementation and Check the Handler Method"
+        },
+        "finding": {
+          "pattern_id": "VULN_INSECURE_DEEPLINK",
+          "title": "Externally reachable browsable deep link",
+          "severity": "High",
+          "description": "The app exposes a browsable deep link through an exported intent-filter. External apps or adb commands can invoke this Activity with crafted URI data.",
+          "severity_score": 7,
+          "confidence_score": 5,
+          "test_priority": "P1",
+          "category": "insecure_deeplink",
+          "location": "AndroidManifest.xml",
+          "evidence": [
+            "Deep link on: com.example.mastg_test0028.WebViewActivity",
+            "intent-filter",
+            "android.intent.action.VIEW",
+            "android.intent.category.BROWSABLE",
+            "android.intent.category.DEFAULT",
+            "schemes=['mastg-test0028']",
+            "hosts=['com.mastg-test0028']",
+            "paths=[]",
+            "browsable=True",
+            "autoVerify=False",
+            "deeplink",
+            "exported handler",
+            "Test: adb shell am start -a android.intent.action.VIEW -d \"mastg-test0028://com.mastg-test0028/?test=1\" -n com.example.mastg_test0028/.WebViewActivity"
+          ],
+          "related_components": [
+            "com.example.mastg_test0028.WebViewActivity"
+          ],
+          "related_deep_links": [
+            "com.example.mastg_test0028.WebViewActivity"
+          ],
+          "cwe": "CWE-926",
+          "owasp_masvs": "MSTG-PLATFORM-3",
+          "source": "our_scanner"
+        }
+      }
+    ],
     "unmatched_expected": [
-      {
-        "id": "GT-0028-1",
-        "category": "insecure_deeplink",
-        "must_detect": true,
-        "severity": "high",
-        "description": "The app exposes deep links through exported intent filters, increasing the attack surface and allowing external intents to reach app functionality.",
-        "acceptable_scanner_categories": [
-          "insecure_deeplink",
-          "deep_link_exposure",
-          "exported_activity",
-          "browsable_intent_filter",
-          "manifest_deeplink"
-        ],
-        "evidence_keywords": [
-          "intent-filter",
-          "android.intent.action.view",
-          "android.intent.category.browsable",
-          "android.intent.category.default",
-          "data",
-          "scheme",
-          "host",
-          "path",
-          "deeplink"
-        ],
-        "source": "README.md Check for Deep Link Usage"
-      },
-      {
-        "id": "GT-0028-2",
-        "category": "deeplink_auth_bypass",
-        "must_detect": true,
-        "severity": "high",
-        "description": "The app login can be bypassed by generating a crafted intent from the terminal through the deep link entry point.",
-        "acceptable_scanner_categories": [
-          "deeplink_auth_bypass",
-          "authentication_bypass",
-          "insecure_deeplink",
-          "exported_activity_abuse",
-          "intent_injection"
-        ],
-        "evidence_keywords": [
-          "login",
-          "bypass",
-          "intent",
-          "getintent",
-          "getdata",
-          "uri",
-          "admin",
-          "1234",
-          "deeplink"
-        ],
-        "source": "README.md Implementation and Check the Handler Method"
-      },
       {
         "id": "GT-0028-3",
         "category": "deeplink_webview_input_control",
@@ -371,57 +571,26 @@
         "source": "README.md Implementation and Check the Handler Method"
       }
     ],
-    "unmatched_findings": [
-      {
-        "pattern_id": "VULN_CUSTOM_SCHEME_CALLBACK",
-        "title": "Custom-scheme deep link callback",
-        "severity": "High",
-        "description": "The app uses a non-http(s) custom URL scheme for a deep link callback. Other apps may register the same scheme and intercept redirect parameters.",
-        "severity_score": 8,
-        "confidence_score": 9,
-        "test_priority": "P1",
-        "category": "deep_link_custom_scheme",
-        "location": "AndroidManifest.xml",
-        "evidence": [
-          "Deep link on: com.example.mastg_test0028.WebViewActivity",
-          "schemes=['mastg-test0028']",
-          "hosts=['com.mastg-test0028']",
-          "paths=[]",
-          "browsable=True",
-          "autoVerify=False",
-          "tags=CUSTOM_SCHEME, EXPORTED_HANDLER",
-          "Test: adb shell am start -a android.intent.action.VIEW -d \"mastg-test0028://com.mastg-test0028/?test=1\" -n com.example.mastg_test0028/.WebViewActivity"
-        ],
-        "related_components": [
-          "com.example.mastg_test0028.WebViewActivity"
-        ],
-        "related_deep_links": [
-          "com.example.mastg_test0028.WebViewActivity"
-        ],
-        "cwe": "CWE-939",
-        "owasp_masvs": null,
-        "source": "our_scanner"
-      }
-    ]
+    "unmatched_findings": []
   },
   {
     "case_id": "Platform/MASTG-TEST0030",
     "test_id": "MASTG-TEST-0030",
     "title": "Testing for Vulnerable Implementation of PendingIntent",
     "expected_count": 2,
-    "raw_finding_count": 0,
-    "scoped_finding_count": 0,
+    "raw_finding_count": 1,
+    "scoped_finding_count": 1,
     "tp": 0,
-    "fp": 0,
+    "fp": 1,
     "fn": 2,
-    "precision": null,
+    "precision": 0.0,
     "recall": 0.0,
     "f1": null,
-    "top5_precision": null,
+    "top5_precision": 0.0,
     "high_confidence_finding_count": 0,
     "high_confidence_precision": null,
-    "high_priority_finding_count": 0,
-    "high_priority_precision": null,
+    "high_priority_finding_count": 1,
+    "high_priority_precision": 0.0,
     "severity_score_mae": null,
     "confidence_score_mae": null,
     "matches": [],
@@ -476,7 +645,31 @@
         "source": "README.md Static Analysis"
       }
     ],
-    "unmatched_findings": []
+    "unmatched_findings": [
+      {
+        "pattern_id": "VULN_DANGEROUS_PERMISSION_REQUESTED",
+        "title": "Application requests dangerous permissions",
+        "severity": "Medium",
+        "description": "The application requests Android dangerous permissions. These permissions can expose sensitive user data or privileged device actions if not justified.",
+        "severity_score": 5,
+        "confidence_score": 5,
+        "test_priority": "P2",
+        "category": "dangerous_permission",
+        "location": "AndroidManifest.xml",
+        "evidence": [
+          "uses-permission",
+          "AndroidManifest.xml",
+          "dangerous permission",
+          "android.permission",
+          "android.permission.CALL_PHONE"
+        ],
+        "related_components": [],
+        "related_deep_links": [],
+        "cwe": "CWE-250",
+        "owasp_masvs": "MSTG-PLATFORM-1",
+        "source": "our_scanner"
+      }
+    ]
   },
   {
     "case_id": "Platform/MASTG-TEST0031",
