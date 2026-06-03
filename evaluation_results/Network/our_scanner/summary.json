@@ -1,0 +1,18 @@
+{
+  "cases": 5,
+  "expected": 16,
+  "raw_findings": 9,
+  "scoped_findings": 8,
+  "tp": 7,
+  "fp": 1,
+  "fn": 9,
+  "precision": 0.875,
+  "recall": 0.4375,
+  "f1": 0.5833333333333334,
+  "high_confidence_findings": 8,
+  "high_confidence_precision": 0.875,
+  "high_priority_findings": 8,
+  "high_priority_precision": 0.875,
+  "severity_score_mae": null,
+  "confidence_score_mae": null
+}

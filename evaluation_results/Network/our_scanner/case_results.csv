@@ -1,9 +1,4 @@
 tool,case_id,test_id,expected_count,raw_finding_count,scoped_finding_count,tp,fp,fn,precision,recall,f1,top5_precision,high_confidence_finding_count,high_confidence_precision,high_priority_finding_count,high_priority_precision,severity_score_mae,confidence_score_mae
-mobsf,Network/MASTG-TEST0019,MASTG-TEST-0019,5,7,6,0,6,5,0.0000,0.0000,N/A,0.0000,4,0.0000,6,0.0000,N/A,N/A
-mobsf,Network/MASTG-TEST0020,MASTG-TEST-0020,2,6,5,0,5,2,0.0000,0.0000,N/A,0.0000,2,0.0000,5,0.0000,N/A,N/A
-mobsf,Network/MASTG-TEST0021,MASTG-TEST-0021,5,9,8,0,8,5,0.0000,0.0000,N/A,0.0000,5,0.0000,8,0.0000,N/A,N/A
-mobsf,Network/MASTG-TEST0022,MASTG-TEST-0022,2,12,11,0,11,2,0.0000,0.0000,N/A,0.0000,3,0.0000,10,0.0000,N/A,N/A
-mobsf,Network/MASTG-TEST0023,MASTG-TEST-0023,2,8,7,0,7,2,0.0000,0.0000,N/A,0.0000,3,0.0000,7,0.0000,N/A,N/A
 our_scanner,Network/MASTG-TEST0019,MASTG-TEST-0019,5,2,2,2,0,3,1.0000,0.4000,0.5714,1.0000,2,1.0000,2,1.0000,N/A,N/A
 our_scanner,Network/MASTG-TEST0020,MASTG-TEST-0020,2,3,3,2,1,0,0.6667,1.0000,0.8000,0.6667,3,0.6667,3,0.6667,N/A,N/A
 our_scanner,Network/MASTG-TEST0021,MASTG-TEST-0021,5,2,2,2,0,3,1.0000,0.4000,0.5714,1.0000,2,1.0000,2,1.0000,N/A,N/A

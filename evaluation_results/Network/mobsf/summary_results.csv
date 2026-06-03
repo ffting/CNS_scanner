@@ -1,3 +1,2 @@
 tool,cases,expected,raw_findings,scoped_findings,tp,fp,fn,precision,recall,f1,high_confidence_findings,high_confidence_precision,high_priority_findings,high_priority_precision,severity_score_mae,confidence_score_mae
-mobsf,10,25,85,73,3,70,22,0.0411,0.1200,0.0612,32,0.0625,70,0.0429,N/A,N/A
-our_scanner,10,25,2,2,1,1,24,0.5000,0.0400,0.0741,2,0.5000,2,0.5000,N/A,N/A
+mobsf,5,16,42,37,0,37,16,0.0000,0.0000,N/A,17,0.0000,36,0.0000,N/A,N/A

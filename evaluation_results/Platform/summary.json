@@ -12,8 +12,8 @@
     "f1": 0.061224489795918366,
     "high_confidence_findings": 32,
     "high_confidence_precision": 0.0625,
-    "high_priority_findings": 0,
-    "high_priority_precision": null,
+    "high_priority_findings": 70,
+    "high_priority_precision": 0.04285714285714286,
     "severity_score_mae": null,
     "confidence_score_mae": null
   },
