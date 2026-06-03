@@ -8,6 +8,7 @@
 - Top-k: `5`
 - High confidence threshold: `8`
 - High severity threshold: `8`
+- High-priority subset: Top-N navigation list (nav = priority_weight + severity×confidence, N=`10`)
 - Minimum severity score filter: `None`
 - Minimum confidence score filter: `None`
 
@@ -15,7 +16,7 @@
 
 | Tool | Cases | Expected | Raw Findings | Scoped Findings | TP | FP | FN | Precision | Recall | F1 | High-Conf Precision | High-Priority Precision | Severity MAE | Confidence MAE |
 |---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|
-| our_scanner | 5 | 16 | 9 | 9 | 6 | 3 | 10 | 0.6667 | 0.3750 | 0.4800 | 0.6667 | 0.5000 | N/A | N/A |
+| our_scanner | 5 | 16 | 9 | 8 | 7 | 1 | 9 | 0.8750 | 0.4375 | 0.5833 | 0.8750 | 0.8750 | N/A | N/A |
 
 ## Per-case Results
 
@@ -23,10 +24,10 @@
 
 | Case | Expected | Findings | TP | FP | FN | Precision | Recall | F1 | Top-5 Precision | High-Conf Precision | High-Priority Precision |
 |---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|
-| Network/MASTG-TEST0019 | 5 | 2 | 2 | 0 | 3 | 1.0000 | 0.4000 | 0.5714 | 1.0000 | 1.0000 | N/A |
-| Network/MASTG-TEST0020 | 2 | 3 | 2 | 1 | 0 | 0.6667 | 1.0000 | 0.8000 | 0.6667 | 0.6667 | 1.0000 |
-| Network/MASTG-TEST0021 | 5 | 1 | 1 | 0 | 4 | 1.0000 | 0.2000 | 0.3333 | 1.0000 | 1.0000 | N/A |
-| Network/MASTG-TEST0022 | 2 | 3 | 1 | 2 | 1 | 0.3333 | 0.5000 | 0.4000 | 0.3333 | 0.3333 | 0.0000 |
+| Network/MASTG-TEST0019 | 5 | 2 | 2 | 0 | 3 | 1.0000 | 0.4000 | 0.5714 | 1.0000 | 1.0000 | 1.0000 |
+| Network/MASTG-TEST0020 | 2 | 3 | 2 | 1 | 0 | 0.6667 | 1.0000 | 0.8000 | 0.6667 | 0.6667 | 0.6667 |
+| Network/MASTG-TEST0021 | 5 | 2 | 2 | 0 | 3 | 1.0000 | 0.4000 | 0.5714 | 1.0000 | 1.0000 | 1.0000 |
+| Network/MASTG-TEST0022 | 2 | 1 | 1 | 0 | 1 | 1.0000 | 0.5000 | 0.6667 | 1.0000 | 1.0000 | 1.0000 |
 | Network/MASTG-TEST0023 | 2 | 0 | 0 | 0 | 2 | N/A | 0.0000 | N/A | N/A | N/A | N/A |
 
 ## Matched Details
@@ -46,6 +47,7 @@
 #### Network/MASTG-TEST0021
 
 - GT `GT-0021-1` `low_target_sdk_network_security` matched by `VULN_LOW_TARGET_SDK_NETWORK_SECURITY` `low_target_sdk_network_security` score=(5, 10) type=`medium` title=Low targetSdk weakens Network Security Configuration defaults
+- GT `GT-0021-2` `user_ca_trust_enabled` matched by `VULN_USER_CA_TRUST_ENABLED` `user_ca_trust_enabled` score=(7, 9) type=`medium` title=User-installed CAs may be trusted by legacy targetSdk default
 
 #### Network/MASTG-TEST0022
 
@@ -75,7 +77,6 @@ Unmatched findings:
 
 Unmatched expected vulnerabilities:
 
-- `user_ca_trust_enabled` id=`GT-0021-2` component=`` location=`` description=The app may trust user-provided certificate authorities through insecure Network Security Configuration trust anchors, allowing malicious user-installed CAs to intercept TLS traffic.
 - `webview_ssl_error_bypass` id=`GT-0021-3` component=`` location=`` description=The app ignores TLS certificate errors in WebView by overriding onReceivedSslError and calling handler.proceed(), allowing the WebView to continue loading pages even when certificate validation fails.
 - `hostname_verification_bypass` id=`GT-0021-4` component=`` location=`` description=The app disables hostname verification by using a HostnameVerifier that always returns true, allowing TLS connections to succeed even when the server certificate does not match the requested hostname.
 - `insecure_trust_manager` id=`GT-0021-5` component=`` location=`` description=The app lacks proper certificate validation through TrustManager or may use an insecure TrustManager pattern that accepts certificates without checking whether they are trusted, expired, or self-signed.
@@ -85,11 +86,6 @@ Unmatched expected vulnerabilities:
 Unmatched expected vulnerabilities:
 
 - `missing_certificate_pinning` id=`GT-0022-1` component=`` location=`` description=The app includes a network request path that connects to www.example.com without certificate pinning, making the connection more exposed to interception if a malicious or user-installed CA is trusted.
-
-Unmatched findings:
-
-- `certificate_validation_bypass` id=`VULN_CERTIFICATE_VALIDATION_BYPASS` severity=`High` sev_score=`8` conf_score=`10` title=TLS certificate validation bypass pattern evidence=source: classes.dex trustmanager x509trustmanager checkclienttrusted checkservertrusted getacceptedissuers return null setdefaultsslsocketfactory self-signed expired certificates
-- `obsolete_tls_version` id=`VULN_OBSOLETE_TLS_VERSION` severity=`High` sev_score=`7` conf_score=`10` title=Obsolete TLS protocol version used evidence=source: classes.dex sslcontext getinstance tlsv1 tls 1.0 obsolete tls weak tls https
 
 #### Network/MASTG-TEST0023
 

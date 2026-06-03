@@ -90,21 +90,6 @@ sudo apt update
 sudo apt install jq
 ```
 
-或用 Python 查看：
-
-```bash
-python3 - <<'PY'
-import json
-from pathlib import Path
-
-path = Path("reports/normalized/our_scanner/Network/MASTG-TEST0019.json")
-data = json.loads(path.read_text(encoding="utf-8"))
-
-for v in data.get("vulnerabilities", []):
-    print(v.get("pattern_id"), "|", v.get("category"), "|", v.get("title"))
-PY
-```
-
 ## 執行 MobSF 掃描
 
 請先確認 MobSF server 已啟動，通常是：

@@ -215,6 +215,10 @@ DEFAULT_SCOPE_CATEGORIES = {
     "x509trustmanager",
     "ssl_certificate_validation_disabled",
 
+    "user_ca_trust_enabled",
+    "trust_user_ca",
+    "custom_trust_anchors",
+
     "obsolete_tls_version",
     "insecure_tls_version",
     "weak_tls",

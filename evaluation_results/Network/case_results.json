@@ -16,8 +16,8 @@
       "top5_precision": 1.0,
       "high_confidence_finding_count": 2,
       "high_confidence_precision": 1.0,
-      "high_priority_finding_count": 0,
-      "high_priority_precision": null,
+      "high_priority_finding_count": 2,
+      "high_priority_precision": 1.0,
       "severity_score_mae": null,
       "confidence_score_mae": null,
       "matches": [
@@ -72,6 +72,7 @@
             "description": "The application explicitly sets android:usesCleartextTraffic=\"true\", allowing cleartext HTTP traffic unless restricted elsewhere.",
             "severity_score": 7,
             "confidence_score": 10,
+            "test_priority": "P2",
             "category": "uses_cleartext_traffic",
             "location": "AndroidManifest.xml",
             "evidence": [
@@ -140,6 +141,7 @@
             "description": "The app supports old Android versions. On older platforms, expected Network Security Configuration protections and cleartext defaults may not apply.",
             "severity_score": 5,
             "confidence_score": 10,
+            "test_priority": "P2",
             "category": "low_min_sdk_network_security_bypass",
             "location": "AndroidManifest.xml",
             "evidence": [
@@ -258,8 +260,8 @@
       "top5_precision": 0.6666666666666666,
       "high_confidence_finding_count": 3,
       "high_confidence_precision": 0.6666666666666666,
-      "high_priority_finding_count": 1,
-      "high_priority_precision": 1.0,
+      "high_priority_finding_count": 3,
+      "high_priority_precision": 0.6666666666666666,
       "severity_score_mae": null,
       "confidence_score_mae": null,
       "matches": [
@@ -279,7 +281,7 @@
             "location": false,
             "authority": false,
             "deeplink": false,
-            "keyword_hits": 7,
+            "keyword_hits": 5,
             "keyword_total": 9
           },
           "ground_truth": {
@@ -314,20 +316,18 @@
             "pattern_id": "VULN_OBSOLETE_TLS_VERSION",
             "title": "Obsolete TLS protocol version used",
             "severity": "High",
-            "description": "The app appears to explicitly request an obsolete TLS protocol version such as TLSv1/TLS 1.0 through SSLContext or related TLS setup code.",
+            "description": "The app appears to explicitly request an obsolete TLS protocol version such as TLSv1/TLS 1.0/SSLv3 through SSLContext or related TLS setup code.",
             "severity_score": 7,
             "confidence_score": 10,
+            "test_priority": "P2",
             "category": "obsolete_tls_version",
-            "location": "classes.dex",
+            "location": "Lcom/example/mastg_test0020/MainActivity;->disableCertificateValidation()V",
             "evidence": [
-              "Source: classes.dex",
+              "Method: Lcom/example/mastg_test0020/MainActivity;->disableCertificateValidation()V",
+              "TLSv1",
               "SSLContext",
               "getInstance",
-              "TLSv1",
-              "TLS 1.0",
-              "obsolete TLS",
-              "weak TLS",
-              "HTTPS"
+              "Ljavax/net/ssl/SSLContext;->getInstance"
             ],
             "related_components": [],
             "related_deep_links": [],
@@ -352,7 +352,7 @@
             "location": false,
             "authority": false,
             "deeplink": false,
-            "keyword_hits": 9,
+            "keyword_hits": 6,
             "keyword_total": 11
           },
           "ground_truth": {
@@ -393,6 +393,7 @@
             "description": "The app contains TrustManager/X509TrustManager-related code patterns commonly used to bypass TLS certificate validation.",
             "severity_score": 8,
             "confidence_score": 10,
+            "test_priority": "P2",
             "category": "certificate_validation_bypass",
             "location": "classes.dex",
             "evidence": [
@@ -402,10 +403,9 @@
               "checkClientTrusted",
               "checkServerTrusted",
               "getAcceptedIssuers",
-              "return null",
               "setDefaultSSLSocketFactory",
-              "self-signed",
-              "expired certificates"
+              "SSLContext",
+              "HttpsURLConnection"
             ],
             "related_components": [],
             "related_deep_links": [],
@@ -424,6 +424,7 @@
           "description": "The application explicitly sets android:usesCleartextTraffic=\"true\", allowing cleartext HTTP traffic unless restricted elsewhere.",
           "severity_score": 7,
           "confidence_score": 10,
+          "test_priority": "P2",
           "category": "uses_cleartext_traffic",
           "location": "AndroidManifest.xml",
           "evidence": [
@@ -446,19 +447,19 @@
       "test_id": "MASTG-TEST-0021",
       "title": "Testing Endpoint Identify Verification",
       "expected_count": 5,
-      "raw_finding_count": 1,
-      "scoped_finding_count": 1,
-      "tp": 1,
+      "raw_finding_count": 2,
+      "scoped_finding_count": 2,
+      "tp": 2,
       "fp": 0,
-      "fn": 4,
+      "fn": 3,
       "precision": 1.0,
-      "recall": 0.2,
-      "f1": 0.33333333333333337,
+      "recall": 0.4,
+      "f1": 0.5714285714285715,
       "top5_precision": 1.0,
-      "high_confidence_finding_count": 1,
+      "high_confidence_finding_count": 2,
       "high_confidence_precision": 1.0,
-      "high_priority_finding_count": 0,
-      "high_priority_precision": null,
+      "high_priority_finding_count": 2,
+      "high_priority_precision": 1.0,
       "severity_score_mae": null,
       "confidence_score_mae": null,
       "matches": [
@@ -516,6 +517,7 @@
             "description": "Apps targeting below Android 7.0 do not benefit from newer default Network Security Configuration behavior that avoids trusting user-supplied CAs by default.",
             "severity_score": 5,
             "confidence_score": 10,
+            "test_priority": "P2",
             "category": "low_target_sdk_network_security",
             "location": "AndroidManifest.xml",
             "evidence": [
@@ -532,37 +534,83 @@
             "owasp_masvs": "MSTG-NETWORK-2",
             "source": "our_scanner"
           }
+        },
+        {
+          "gt_id": "GT-0021-2",
+          "gt_category": "user_ca_trust_enabled",
+          "finding_id": "VULN_USER_CA_TRUST_ENABLED",
+          "finding_category": "user_ca_trust_enabled",
+          "finding_title": "User-installed CAs may be trusted by legacy targetSdk default",
+          "finding_severity": "High",
+          "finding_severity_score": 7,
+          "finding_confidence_score": 9,
+          "match_info": {
+            "match_type": "medium",
+            "category": true,
+            "component": false,
+            "location": false,
+            "authority": false,
+            "deeplink": false,
+            "keyword_hits": 1,
+            "keyword_total": 9
+          },
+          "ground_truth": {
+            "id": "GT-0021-2",
+            "category": "user_ca_trust_enabled",
+            "must_detect": true,
+            "severity": "high",
+            "description": "The app may trust user-provided certificate authorities through insecure Network Security Configuration trust anchors, allowing malicious user-installed CAs to intercept TLS traffic.",
+            "acceptable_scanner_categories": [
+              "user_ca_trust_enabled",
+              "custom_trust_anchors",
+              "network_security_config",
+              "insecure_network_config",
+              "trust_user_ca",
+              "certificate_validation_bypass",
+              "insecure_tls"
+            ],
+            "evidence_keywords": [
+              "network-security-config",
+              "trust-anchors",
+              "certificates",
+              "src=\"user\"",
+              "user CAs",
+              "user supplied CAs",
+              "custom trust anchor",
+              "domain-config",
+              "base-config"
+            ],
+            "source": "README.md Static Analysis"
+          },
+          "finding": {
+            "pattern_id": "VULN_USER_CA_TRUST_ENABLED",
+            "title": "User-installed CAs may be trusted by legacy targetSdk default",
+            "severity": "High",
+            "description": "The app targets an Android API level below 24 and does not appear to define an explicit Network Security Configuration. Apps targeting older API levels may trust user-installed certificate authorities by default, weakening TLS endpoint identity verification.",
+            "severity_score": 7,
+            "confidence_score": 9,
+            "test_priority": "P2",
+            "category": "user_ca_trust_enabled",
+            "location": "AndroidManifest.xml",
+            "evidence": [
+              "targetSdkVersion=23",
+              "targetSdkVersion",
+              "23",
+              "lower than 24",
+              "Android 7.0",
+              "Network Security Configuration default behavior",
+              "user supplied CAs",
+              "user-installed certificate authorities"
+            ],
+            "related_components": [],
+            "related_deep_links": [],
+            "cwe": "CWE-295",
+            "owasp_masvs": "MSTG-NETWORK-2",
+            "source": "our_scanner"
+          }
         }
       ],
       "unmatched_expected": [
-        {
-          "id": "GT-0021-2",
-          "category": "user_ca_trust_enabled",
-          "must_detect": true,
-          "severity": "high",
-          "description": "The app may trust user-provided certificate authorities through insecure Network Security Configuration trust anchors, allowing malicious user-installed CAs to intercept TLS traffic.",
-          "acceptable_scanner_categories": [
-            "user_ca_trust_enabled",
-            "custom_trust_anchors",
-            "network_security_config",
-            "insecure_network_config",
-            "trust_user_ca",
-            "certificate_validation_bypass",
-            "insecure_tls"
-          ],
-          "evidence_keywords": [
-            "network-security-config",
-            "trust-anchors",
-            "certificates",
-            "src=\"user\"",
-            "user CAs",
-            "user supplied CAs",
-            "custom trust anchor",
-            "domain-config",
-            "base-config"
-          ],
-          "source": "README.md Static Analysis"
-        },
         {
           "id": "GT-0021-3",
           "category": "webview_ssl_error_bypass",
@@ -657,19 +705,19 @@
       "test_id": "MASTG-TEST-0022",
       "title": "Testing Custom Certificate Stores and Certificate Pinning",
       "expected_count": 2,
-      "raw_finding_count": 3,
-      "scoped_finding_count": 3,
+      "raw_finding_count": 2,
+      "scoped_finding_count": 1,
       "tp": 1,
-      "fp": 2,
+      "fp": 0,
       "fn": 1,
-      "precision": 0.3333333333333333,
+      "precision": 1.0,
       "recall": 0.5,
-      "f1": 0.4,
-      "top5_precision": 0.3333333333333333,
-      "high_confidence_finding_count": 3,
-      "high_confidence_precision": 0.3333333333333333,
+      "f1": 0.6666666666666666,
+      "top5_precision": 1.0,
+      "high_confidence_finding_count": 1,
+      "high_confidence_precision": 1.0,
       "high_priority_finding_count": 1,
-      "high_priority_precision": 0.0,
+      "high_priority_precision": 1.0,
       "severity_score_mae": null,
       "confidence_score_mae": null,
       "matches": [
@@ -727,6 +775,7 @@
             "description": "The app defines certificate pinning through Network Security Configuration. This is reported as review evidence for the benchmark, not necessarily as an insecure condition.",
             "severity_score": 3,
             "confidence_score": 10,
+            "test_priority": "P2",
             "category": "certificate_pinning_configuration",
             "location": "res/xml/network_security_config.xml",
             "evidence": [
@@ -778,60 +827,7 @@
           "source": "README.md Implementation and Static Analysis"
         }
       ],
-      "unmatched_findings": [
-        {
-          "pattern_id": "VULN_CERTIFICATE_VALIDATION_BYPASS",
-          "title": "TLS certificate validation bypass pattern",
-          "severity": "High",
-          "description": "The app contains TrustManager/X509TrustManager-related code patterns commonly used to bypass TLS certificate validation.",
-          "severity_score": 8,
-          "confidence_score": 10,
-          "category": "certificate_validation_bypass",
-          "location": "classes.dex",
-          "evidence": [
-            "Source: classes.dex",
-            "TrustManager",
-            "X509TrustManager",
-            "checkClientTrusted",
-            "checkServerTrusted",
-            "getAcceptedIssuers",
-            "return null",
-            "setDefaultSSLSocketFactory",
-            "self-signed",
-            "expired certificates"
-          ],
-          "related_components": [],
-          "related_deep_links": [],
-          "cwe": "CWE-295",
-          "owasp_masvs": "MSTG-NETWORK-3",
-          "source": "our_scanner"
-        },
-        {
-          "pattern_id": "VULN_OBSOLETE_TLS_VERSION",
-          "title": "Obsolete TLS protocol version used",
-          "severity": "High",
-          "description": "The app appears to explicitly request an obsolete TLS protocol version such as TLSv1/TLS 1.0 through SSLContext or related TLS setup code.",
-          "severity_score": 7,
-          "confidence_score": 10,
-          "category": "obsolete_tls_version",
-          "location": "classes.dex",
-          "evidence": [
-            "Source: classes.dex",
-            "SSLContext",
-            "getInstance",
-            "TLSv1",
-            "TLS 1.0",
-            "obsolete TLS",
-            "weak TLS",
-            "HTTPS"
-          ],
-          "related_components": [],
-          "related_deep_links": [],
-          "cwe": "CWE-326",
-          "owasp_masvs": "MSTG-NETWORK-2",
-          "source": "our_scanner"
-        }
-      ]
+      "unmatched_findings": []
     },
     {
       "case_id": "Network/MASTG-TEST0023",
