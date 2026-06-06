@@ -78,6 +78,7 @@ class AppMeta:
     debuggable: bool = False
     allow_backup: bool | None = None
     uses_cleartext_traffic: bool | None = None
+    uses_permissions: list[str] = field(default_factory=list)
 
 
 @dataclass

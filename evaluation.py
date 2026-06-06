@@ -121,7 +121,7 @@ DEFAULT_SCOPE_CATEGORIES = {
     "deep_link",
     "insecure_deep_link",
     "deep_link_oauth",
-    "deep_link_custom_scheme",
+    # "deep_link_custom_scheme",
     "deep_link_http",
     "deep_link_payment",
     "intent_filter",
@@ -131,6 +131,10 @@ DEFAULT_SCOPE_CATEGORIES = {
     "unvalidated_deep_link",
     "intent_redirection",
     "unsafe_uri_handling",
+     "insecure_deeplink",
+    "deep_link_exposure",
+    "browsable_intent_filter",
+    "manifest_deeplink",
 
     # Permission
     "dangerous_permission",
@@ -139,6 +143,12 @@ DEFAULT_SCOPE_CATEGORIES = {
     "least_privilege_violation",
     "custom_permission_weak_protection",
     "permission",
+    "excessive_permissions",
+    "dangerous_permission_requested",
+    "manifest_permission",
+    "permission_overreach",
+    "overprivileged_app",
+    "unnecessary_permissions",
 
     # PendingIntent
     "pending_intent",
@@ -214,6 +224,10 @@ DEFAULT_SCOPE_CATEGORIES = {
     "trust_all_certificates",
     "x509trustmanager",
     "ssl_certificate_validation_disabled",
+
+    "user_ca_trust_enabled",
+    "trust_user_ca",
+    "custom_trust_anchors",
 
     "obsolete_tls_version",
     "insecure_tls_version",
@@ -1296,6 +1310,133 @@ def write_markdown_report(
 
 
 
+
+def write_comparison_markdown_report(
+    path: Path,
+    tool_rows: dict[str, list[dict[str, Any]]],
+    summary_rows: dict[str, dict[str, Any]],
+) -> None:
+    """Write a compact cross-tool comparison report for one category.
+
+    This report is intentionally separate from evaluation_report.md:
+    - comparison_report.md focuses on MobSF vs our_scanner comparison.
+    - evaluation_report.md keeps the detailed matched/unmatched inspection view.
+    """
+
+    path.parent.mkdir(parents=True, exist_ok=True)
+
+    lines: list[str] = []
+
+    lines.append("# Tool Comparison Report")
+    lines.append("")
+    lines.append("## Overall Summary")
+    lines.append("")
+    lines.append(
+        "| Tool | Cases | Expected | Raw Findings | Scoped Findings | TP | FP | FN | "
+        "Precision | Recall | F1 | High-Conf Precision | High-Priority Precision |"
+    )
+    lines.append("|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|")
+
+    for tool, s in summary_rows.items():
+        lines.append(
+            f"| {tool} | {s['cases']} | {s['expected']} | "
+            f"{s['raw_findings']} | {s['scoped_findings']} | "
+            f"{s['tp']} | {s['fp']} | {s['fn']} | "
+            f"{fmt_float(s['precision'])} | {fmt_float(s['recall'])} | "
+            f"{fmt_float(s['f1'])} | {fmt_float(s['high_confidence_precision'])} | "
+            f"{fmt_float(s['high_priority_precision'])} |"
+        )
+
+    lines.append("")
+    lines.append("## Per-case Comparison")
+    lines.append("")
+
+    case_ids = sorted(
+        {
+            row["case_id"]
+            for rows in tool_rows.values()
+            for row in rows
+        }
+    )
+
+    rows_by_tool_case: dict[str, dict[str, dict[str, Any]]] = {
+        tool: {row["case_id"]: row for row in rows}
+        for tool, rows in tool_rows.items()
+    }
+
+    for case_id in case_ids:
+        lines.append(f"### {case_id}")
+        lines.append("")
+        lines.append("| Tool | Expected | Findings | TP | FP | FN | Precision | Recall | F1 |")
+        lines.append("|---|---:|---:|---:|---:|---:|---:|---:|---:|")
+
+        for tool in sorted(tool_rows.keys()):
+            row = rows_by_tool_case.get(tool, {}).get(case_id)
+            if row is None:
+                continue
+
+            lines.append(
+                f"| {tool} | {row['expected_count']} | {row['scoped_finding_count']} | "
+                f"{row['tp']} | {row['fp']} | {row['fn']} | "
+                f"{fmt_float(row['precision'])} | {fmt_float(row['recall'])} | "
+                f"{fmt_float(row['f1'])} |"
+            )
+
+        lines.append("")
+
+    lines.append("## Best Tool Per Case")
+    lines.append("")
+    lines.append("| Case | Best Tool | Reason |")
+    lines.append("|---|---|---|")
+
+    for case_id in case_ids:
+        candidates: list[tuple[float, int, int, int, str, dict[str, Any]]] = []
+
+        for tool in tool_rows.keys():
+            row = rows_by_tool_case.get(tool, {}).get(case_id)
+            if row is None:
+                continue
+
+            f1 = row["f1"] if row["f1"] is not None else -1.0
+            candidates.append(
+                (
+                    f1,
+                    row["tp"],
+                    -row["fp"],
+                    -row["fn"],
+                    tool,
+                    row,
+                )
+            )
+
+        if not candidates:
+            continue
+
+        candidates.sort(reverse=True)
+        _f1, _tp, _neg_fp, _neg_fn, best_tool, best_row = candidates[0]
+
+        reason = (
+            f"TP={best_row['tp']}, FP={best_row['fp']}, FN={best_row['fn']}, "
+            f"F1={fmt_float(best_row['f1'])}"
+        )
+
+        lines.append(f"| {case_id} | {best_tool} | {reason} |")
+
+    lines.append("")
+    lines.append("## Notes")
+    lines.append("")
+    lines.append(
+        "- Raw Findings means all findings loaded from each normalized report."
+    )
+    lines.append(
+        "- Scoped Findings means findings after category, third-party, and optional score filters."
+    )
+    lines.append(
+        "- TP/FP/FN are computed using the same matching logic as the detailed evaluation report."
+    )
+
+    path.write_text("\n".join(lines), encoding="utf-8")
+
 def get_case_category(case_id: str) -> str:
     """
     Return the top-level category from a case_id.
@@ -1397,6 +1538,10 @@ def write_category_outputs(
         category_output_dir = output_root / category
         category_output_dir.mkdir(parents=True, exist_ok=True)
 
+        # ---------------------------------------------------------------
+        # 1. Category-level combined outputs.
+        # These preserve the original output structure and logic.
+        # ---------------------------------------------------------------
         write_json(category_output_dir / "summary.json", category_summary)
         write_json(category_output_dir / "case_results.json", category_rows)
 
@@ -1411,6 +1556,13 @@ def write_category_outputs(
             top_k=top_k,
         )
 
+        write_comparison_markdown_report(
+            category_output_dir / "comparison_report.md",
+            tool_rows=category_rows,
+            summary_rows=category_summary,
+        )
+
+        # Keep the original combined detailed report.
         write_markdown_report(
             category_output_dir / "evaluation_report.md",
             tool_rows=category_rows,
@@ -1424,6 +1576,49 @@ def write_category_outputs(
             min_severity_score=min_severity_score,
             min_confidence_score=min_confidence_score,
         )
+
+        # ---------------------------------------------------------------
+        # 2. Per-tool outputs.
+        # These add evaluation_results/<Category>/<tool>/... without
+        # changing matching, filtering, scoring, or original combined files.
+        # ---------------------------------------------------------------
+        for tool, rows in category_rows.items():
+            if not rows:
+                continue
+
+            tool_output_dir = category_output_dir / tool
+            tool_output_dir.mkdir(parents=True, exist_ok=True)
+
+            tool_rows = {tool: rows}
+            tool_summary = {tool: aggregate_results(rows)}
+
+            write_json(tool_output_dir / "summary.json", tool_summary[tool])
+            write_json(tool_output_dir / "case_results.json", rows)
+
+            write_summary_csv(
+                tool_output_dir / "summary_results.csv",
+                tool_summary,
+            )
+
+            write_case_csv(
+                tool_output_dir / "case_results.csv",
+                tool_rows,
+                top_k=top_k,
+            )
+
+            write_markdown_report(
+                tool_output_dir / "evaluation_report.md",
+                tool_rows=tool_rows,
+                summary_rows=tool_summary,
+                top_k=top_k,
+                must_detect_only=must_detect_only,
+                ignore_third_party=ignore_third_party,
+                use_scope_filter=use_scope_filter,
+                high_conf_threshold=high_conf_threshold,
+                high_sev_threshold=high_sev_threshold,
+                min_severity_score=min_severity_score,
+                min_confidence_score=min_confidence_score,
+            )
 
         written_dirs.append(category_output_dir)
 

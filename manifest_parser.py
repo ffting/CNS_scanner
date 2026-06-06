@@ -187,6 +187,23 @@ def _collect_permissions(root: ET.Element) -> dict[str, str]:
 
     return perms
 
+def _collect_uses_permissions(root: ET.Element) -> list[str]:
+    """Collect permissions requested by this app via <uses-permission>."""
+
+    permissions: list[str] = []
+
+    for elem in root.iter():
+        if _tag_name(elem) != "uses-permission":
+            continue
+
+        name = _attr(elem, "name")
+        if not name:
+            continue
+
+        if name not in permissions:
+            permissions.append(name)
+
+    return permissions
 
 def _parse_application_flags(app_elem: ET.Element) -> tuple[bool, bool | None, bool | None]:
     debuggable = _attr(app_elem, "debuggable").lower() == "true"
@@ -267,6 +284,7 @@ def load_apk(apk_path: str) -> tuple[AppMeta, ET.Element, dict[str, str]]:
 
     root = ET.fromstring(manifest_xml)
     custom_permissions = _collect_permissions(root)
+    uses_permissions = _collect_uses_permissions(root)
 
     debuggable = False
     allow_backup: bool | None = None
@@ -287,6 +305,7 @@ def load_apk(apk_path: str) -> tuple[AppMeta, ET.Element, dict[str, str]]:
         debuggable=debuggable,
         allow_backup=allow_backup,
         uses_cleartext_traffic=uses_cleartext_traffic,
+        uses_permissions=uses_permissions,
     )
 
     return meta, root, custom_permissions
