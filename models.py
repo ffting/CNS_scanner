@@ -146,13 +146,14 @@ class ApiKeyFinding:
     Possible API key / token leak found in APK assets/resources/code strings.
 
     Notes:
-    - We store a redacted value to reduce accidental leakage in reports.
+    - `value` holds the full matched secret for local reports (json/md).
+    - `redacted` is a short preview for CLI / shared summaries.
     - 'verified' only means the token was accepted by a minimal provider API call.
-      Verification is optional and should only be used on keys you own.
     """
 
     provider: str  # e.g. github, stripe, slack, google, aws, generic
     kind: str  # api_key | token | secret
+    value: str  # full matched secret (local reports only; do not commit/share)
     redacted: str
     fingerprint: str  # short hash to dedupe without storing full key
     source: str  # file path inside APK, or "strings" for extracted strings

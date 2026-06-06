@@ -37,6 +37,15 @@ def _safe_join(items: list[str]) -> str:
     return ", ".join(items) if items else "-"
 
 
+def _api_key_display(key: object) -> str:
+    """Prefer full value for local reports; fall back to redacted preview."""
+
+    value = getattr(key, "value", None) or ""
+    if value.strip():
+        return value.strip()
+    return getattr(key, "redacted", "") or "-"
+
+
 def write_markdown(result: ScanResult, output_path: Path) -> None:
     """Write human-readable Markdown report."""
 
@@ -69,7 +78,7 @@ def write_markdown(result: ScanResult, output_path: Path) -> None:
     lines.extend(
         [
             "",
-            f"## Top {NAVIGATION_TOP_N} navigation targets (ASNav)",
+            f"## Top {NAVIGATION_TOP_N} navigation targets",
             "",
             "Sorted by `priority_weight + severity_score × confidence_score`.",
             "",
@@ -106,21 +115,36 @@ def write_markdown(result: ScanResult, output_path: Path) -> None:
             "Regex-only matches are warnings/candidates."
         )
         lines.append("")
+        lines.append(
+            "**Warning:** this section includes full matched secret values for local testing. "
+            "Do not commit or share reports containing live credentials."
+        )
+        lines.append("")
         lines.append(f"- Confirmed: **{len(confirmed)}**")
         lines.append(f"- Warnings: **{len(warnings)}**")
         lines.append("")
-        lines.append("| Provider | Kind | Redacted | Status | Source |")
-        lines.append("|----------|------|----------|----------|--------|")
+        lines.append("| Provider | Kind | Key | Len | Status | Source |")
+        lines.append("|----------|------|-----|----:|--------|--------|")
         for k in sorted(result.api_keys, key=lambda x: (x.provider, x.kind, x.source)):
             verified = "confirmed" if k.verified else "warning"
+            display = _api_key_display(k)
+            key_len = len(display) if display != "-" else 0
             lines.append(
-                f"| {k.provider} | {k.kind} | `{k.redacted}` | {verified} | `{k.source}` |"
+                f"| {k.provider} | {k.kind} | `{display}` | {key_len} | {verified} | `{k.source}` |"
             )
         lines.append("")
-        # Include details separately to keep table clean.
         for k in result.api_keys:
+            display = _api_key_display(k)
+            lines.append(f"#### `{k.provider}` / `{k.kind}` — `{display}`")
+            lines.append("")
+            lines.append(f"- **Fingerprint:** `{k.fingerprint}`")
+            lines.append(f"- **Confidence:** {k.confidence}")
+            lines.append(f"- **Source:** `{k.source}`")
+            if k.evidence:
+                lines.append(f"- **Evidence:** {k.evidence}")
             if k.verification_detail:
-                lines.append(f"- `{k.redacted}`: {k.verification_detail}")
+                lines.append(f"- **Verification:** {k.verification_detail}")
+            lines.append("")
 
     # ------------------------------------------------------------------
     # Vulnerability findings

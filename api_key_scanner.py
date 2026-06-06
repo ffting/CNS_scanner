@@ -224,6 +224,7 @@ def scan_apk_for_api_keys(apk_path: str, max_bytes_per_file: int = 5_000_000) ->
                     findings[fp] = ApiKeyFinding(
                         provider=pat.provider,
                         kind=pat.kind,
+                        value=val,
                         redacted=_redact(val),
                         fingerprint=fp,
                         source=name,
@@ -238,6 +239,7 @@ def scan_apk_for_api_keys(apk_path: str, max_bytes_per_file: int = 5_000_000) ->
                 findings[fp] = ApiKeyFinding(
                     provider="generic",
                     kind="secret",
+                    value=val,
                     redacted=_redact(val),
                     fingerprint=fp,
                     source=name,
@@ -360,6 +362,37 @@ def verify_full_tokens(
     def _http_json(url: str, headers: dict[str, str]) -> tuple[int, str]:
         return _http_request(url, headers, method="GET")
 
+    def _verify_google_geocoding_key(body: str, label: str) -> tuple[bool, str]:
+        """Accept only keys that can successfully call Geocoding (OK / ZERO_RESULTS)."""
+
+        body_l = body.lower()
+        invalid_markers = (
+            "api key not valid",
+            "the provided api key is invalid",
+            "invalid api key",
+        )
+        if any(m in body_l for m in invalid_markers):
+            return False, f"{label} rejected API key (invalid key response)."
+
+        try:
+            data = json.loads(body)
+        except json.JSONDecodeError:
+            return False, f"{label} verify error (non-JSON Geocoding response)."
+
+        if not isinstance(data, dict):
+            return False, f"{label} verify error (unexpected Geocoding payload)."
+
+        status = str(data.get("status", "") or "").upper()
+        error_message = str(data.get("error_message", "") or "").strip()
+
+        if status in ("OK", "ZERO_RESULTS"):
+            return True, f"{label} Geocoding API accepted key (status={status})."
+
+        if error_message:
+            return False, f"{label} Geocoding not usable (status={status}): {error_message}"
+
+        return False, f"{label} Geocoding not usable (status={status or 'unknown'})."
+
     for fp, provider, kind, val in tokens:
         if provider not in allow_providers:
             continue
@@ -431,25 +464,11 @@ def verify_full_tokens(
                 f"address=test&key={urllib.parse.quote(val)}"
             )
             code, body = _http_json(url, headers={"User-Agent": "our_scanner"})
-            body_l = body.lower()
-            invalid_markers = (
-                "api key not valid",
-                "the provided api key is invalid",
-                "invalid api key",
-            )
             label = "Firebase" if provider == "firebase" else "Google"
-            if any(m in body_l for m in invalid_markers):
-                results[fp] = (False, f"{label} rejected API key (invalid key response).")
-            elif code == 200 and '"status"' in body_l:
-                if "request_denied" in body_l and any(m in body_l for m in invalid_markers):
-                    results[fp] = (False, f"{label} rejected API key.")
-                else:
-                    results[fp] = (
-                        True,
-                        f"{label} recognized API key (Geocoding API; may need billing/API enable).",
-                    )
-            else:
+            if code != 200:
                 results[fp] = (False, f"{label} verify error (HTTP {code}).")
+            else:
+                results[fp] = _verify_google_geocoding_key(body, label)
             continue
 
         if provider == "anthropic" and kind == "api_key":
