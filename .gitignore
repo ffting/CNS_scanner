@@ -15,3 +15,10 @@ reports/
 .vscode/
 .DS_Store
 Thumbs.db
+
+# Latex
+*.aux
+*.fdb_latexmk
+*.fls
+*.log
+*.out
