@@ -1,6 +1,23 @@
 # Sample APKs
 
-APK files are not committed (see root `.gitignore`).
+Most APK files are not committed (see root `.gitignore`).
+
+## Secret leak demo (API key scanner)
+
+Build a test APK with **fake** hardcoded secrets (static hits only; no live verification):
+
+```bash
+cd ../test_apk
+python build_secret_test_apk.py
+```
+
+Then scan:
+
+```bash
+python our_scanner.py -f samples/secret-leak-demo.apk -o ./reports/secret-leak-demo
+```
+
+Expected: many `api_key` warnings (~15), `confirmed: 0`. See `test_apk/README.md`.
 
 ## OVAA (recommended test app)
 

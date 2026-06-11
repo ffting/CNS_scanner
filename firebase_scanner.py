@@ -101,6 +101,7 @@ def parse_google_services_json(content: bytes, source: str) -> list[ApiKeyFindin
             ApiKeyFinding(
                 provider="firebase",
                 kind="api_key",
+                value=key,
                 redacted=_redact(key),
                 fingerprint=fp,
                 source=source,
