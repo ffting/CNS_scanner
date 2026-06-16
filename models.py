@@ -77,6 +77,8 @@ class AppMeta:
     target_sdk: int | None = None
     debuggable: bool = False
     allow_backup: bool | None = None
+    uses_cleartext_traffic: bool | None = None
+    uses_permissions: list[str] = field(default_factory=list)
 
 
 @dataclass
@@ -92,6 +94,7 @@ class VulnerabilityFinding:
     # These are optional so old reports / old logic remain compatible.
     severity_score: int | None = None       # 1-10
     confidence_score: int | None = None     # 1-10
+    test_priority: str | None = None        # P0..P3 for navigation ranking
     category: str | None = None
     location: str | None = None
 
@@ -115,8 +118,11 @@ class AttackChainFinding:
     # Optional scores for report sorting / prioritization.
     severity_score: int | None = None       # 1-10
     confidence_score: int | None = None     # 1-10
+    test_priority: str | None = None        # P0..P3 for navigation ranking
 
     composed_of: list[str] = field(default_factory=list)
+    reasoning_steps: list[str] = field(default_factory=list)
+    poc_commands: list[str] = field(default_factory=list)
     evidence: list[str] = field(default_factory=list)
     related_components: list[str] = field(default_factory=list)
     related_deep_links: list[str] = field(default_factory=list)
@@ -128,8 +134,31 @@ class ScanResult:
     components: list[ComponentSurface] = field(default_factory=list)
     deep_links: list[DeepLink] = field(default_factory=list)
     custom_permissions: dict[str, str] = field(default_factory=dict)
-
+    api_keys: list["ApiKeyFinding"] = field(default_factory=list)
     vulnerabilities: list[VulnerabilityFinding] = field(default_factory=list)
     attack_chains: list[AttackChainFinding] = field(default_factory=list)
 
     summary: dict[str, Any] = field(default_factory=dict)
+
+
+@dataclass
+class ApiKeyFinding:
+    """
+    Possible API key / token leak found in APK assets/resources/code strings.
+
+    Notes:
+    - `value` holds the full matched secret for local reports (json/md).
+    - `redacted` is a short preview for CLI / shared summaries.
+    - 'verified' only means the token was accepted by a minimal provider API call.
+    """
+
+    provider: str  # e.g. github, stripe, slack, google, aws, generic
+    kind: str  # api_key | token | secret
+    value: str  # full matched secret (local reports only; do not commit/share)
+    redacted: str
+    fingerprint: str  # short hash to dedupe without storing full key
+    source: str  # file path inside APK, or "strings" for extracted strings
+    evidence: str | None = None
+    confidence: str = "Medium"  # High | Medium | Low
+    verified: bool = False
+    verification_detail: str | None = None

@@ -1,0 +1,914 @@
+[
+  {
+    "case_id": "Network/MASTG-TEST0019",
+    "test_id": "MASTG-TEST-0019",
+    "title": "Testing Data Encryption on the Network",
+    "expected_count": 5,
+    "raw_finding_count": 2,
+    "scoped_finding_count": 2,
+    "tp": 2,
+    "fp": 0,
+    "fn": 3,
+    "precision": 1.0,
+    "recall": 0.4,
+    "f1": 0.5714285714285715,
+    "top5_precision": 1.0,
+    "high_confidence_finding_count": 2,
+    "high_confidence_precision": 1.0,
+    "high_priority_finding_count": 2,
+    "high_priority_precision": 1.0,
+    "severity_score_mae": null,
+    "confidence_score_mae": null,
+    "matches": [
+      {
+        "gt_id": "GT-0019-2",
+        "gt_category": "uses_cleartext_traffic",
+        "finding_id": "VULN_USES_CLEARTEXT_TRAFFIC",
+        "finding_category": "uses_cleartext_traffic",
+        "finding_title": "Cleartext traffic explicitly enabled in manifest",
+        "finding_severity": "High",
+        "finding_severity_score": 7,
+        "finding_confidence_score": 10,
+        "match_info": {
+          "match_type": "medium",
+          "category": true,
+          "component": false,
+          "location": false,
+          "authority": false,
+          "deeplink": false,
+          "keyword_hits": 7,
+          "keyword_total": 7
+        },
+        "ground_truth": {
+          "id": "GT-0019-2",
+          "category": "uses_cleartext_traffic",
+          "must_detect": true,
+          "severity": "high",
+          "description": "The AndroidManifest.xml explicitly enables cleartext traffic by setting android:usesCleartextTraffic=\"true\" in the application tag.",
+          "acceptable_scanner_categories": [
+            "uses_cleartext_traffic",
+            "cleartext_traffic_enabled",
+            "manifest_cleartext",
+            "insecure_network_config",
+            "network_cleartext",
+            "android_manifest"
+          ],
+          "evidence_keywords": [
+            "android:usesCleartextTraffic",
+            "usesCleartextTraffic",
+            "true",
+            "cleartextTraffic",
+            "application",
+            "AndroidManifest.xml",
+            "cleartext"
+          ],
+          "source": "README.md Implementation and Static Analysis"
+        },
+        "finding": {
+          "pattern_id": "VULN_USES_CLEARTEXT_TRAFFIC",
+          "title": "Cleartext traffic explicitly enabled in manifest",
+          "severity": "High",
+          "description": "The application explicitly sets android:usesCleartextTraffic=\"true\", allowing cleartext HTTP traffic unless restricted elsewhere.",
+          "severity_score": 7,
+          "confidence_score": 10,
+          "test_priority": "P2",
+          "category": "uses_cleartext_traffic",
+          "location": "AndroidManifest.xml",
+          "evidence": [
+            "android:usesCleartextTraffic=true",
+            "AndroidManifest.xml",
+            "application",
+            "cleartext",
+            "cleartext traffic"
+          ],
+          "related_components": [],
+          "related_deep_links": [],
+          "cwe": "CWE-319",
+          "owasp_masvs": "MSTG-NETWORK-1",
+          "source": "our_scanner"
+        }
+      },
+      {
+        "gt_id": "GT-0019-5",
+        "gt_category": "low_min_sdk_network_security_bypass",
+        "finding_id": "VULN_LOW_MIN_SDK_NETWORK_SECURITY_BYPASS",
+        "finding_category": "low_min_sdk_network_security_bypass",
+        "finding_title": "Low minSdk may weaken network security defaults",
+        "finding_severity": "Medium",
+        "finding_severity_score": 5,
+        "finding_confidence_score": 10,
+        "match_info": {
+          "match_type": "medium",
+          "category": true,
+          "component": false,
+          "location": false,
+          "authority": false,
+          "deeplink": false,
+          "keyword_hits": 6,
+          "keyword_total": 8
+        },
+        "ground_truth": {
+          "id": "GT-0019-5",
+          "category": "low_min_sdk_network_security_bypass",
+          "must_detect": true,
+          "severity": "medium",
+          "description": "The app uses a low minimum SDK version, minSdk = 19, which can weaken or bypass protections expected from newer Android network security defaults.",
+          "acceptable_scanner_categories": [
+            "low_min_sdk",
+            "vulnerable_os_version",
+            "network_security_config_bypass",
+            "insecure_platform_version",
+            "manifest_sdk",
+            "android_manifest"
+          ],
+          "evidence_keywords": [
+            "minSdk",
+            "minSdkVersion",
+            "19",
+            "API level 19",
+            "Android 9",
+            "API level 28",
+            "Network Security Configuration",
+            "cleartext traffic"
+          ],
+          "source": "README.md Implementation and Static Analysis"
+        },
+        "finding": {
+          "pattern_id": "VULN_LOW_MIN_SDK_NETWORK_SECURITY_BYPASS",
+          "title": "Low minSdk may weaken network security defaults",
+          "severity": "Medium",
+          "description": "The app supports old Android versions. On older platforms, expected Network Security Configuration protections and cleartext defaults may not apply.",
+          "severity_score": 5,
+          "confidence_score": 10,
+          "test_priority": "P2",
+          "category": "low_min_sdk_network_security_bypass",
+          "location": "AndroidManifest.xml",
+          "evidence": [
+            "minSdkVersion=19",
+            "minSdk",
+            "19",
+            "API level 19",
+            "Network Security Configuration",
+            "cleartext traffic"
+          ],
+          "related_components": [],
+          "related_deep_links": [],
+          "cwe": "CWE-693",
+          "owasp_masvs": "MSTG-NETWORK-1",
+          "source": "our_scanner"
+        }
+      }
+    ],
+    "unmatched_expected": [
+      {
+        "id": "GT-0019-1",
+        "category": "cleartext_http",
+        "must_detect": true,
+        "severity": "high",
+        "description": "The app makes network requests to plain HTTP URLs instead of HTTPS, exposing transmitted data to interception or modification.",
+        "acceptable_scanner_categories": [
+          "cleartext_http",
+          "insecure_network",
+          "http_url",
+          "plaintext_traffic",
+          "network_cleartext",
+          "insecure_protocol",
+          "webview_http"
+        ],
+        "evidence_keywords": [
+          "http://",
+          "HTTP",
+          "plain HTTP",
+          "cleartext",
+          "WebView",
+          "loadUrl",
+          "URL",
+          "network request"
+        ],
+        "source": "README.md Implementation and Static Analysis"
+      },
+      {
+        "id": "GT-0019-3",
+        "category": "hostname_verification_bypass",
+        "must_detect": true,
+        "severity": "high",
+        "description": "The app skips hostname verification, which can allow man-in-the-middle attackers to present certificates for the wrong host.",
+        "acceptable_scanner_categories": [
+          "hostname_verification_bypass",
+          "insecure_hostname_verifier",
+          "ssl_hostname_verifier",
+          "tls_misconfiguration",
+          "insecure_ssl",
+          "insecure_tls"
+        ],
+        "evidence_keywords": [
+          "HostnameVerifier",
+          "verify",
+          "return true",
+          "setHostnameVerifier",
+          "getDefaultHostnameVerifier",
+          "hostname verification",
+          "SSLSocket",
+          "HttpsURLConnection"
+        ],
+        "source": "README.md Implementation and Static Analysis"
+      },
+      {
+        "id": "GT-0019-4",
+        "category": "tls_error_handling_disabled",
+        "must_detect": true,
+        "severity": "high",
+        "description": "The app disables TLS or SSL error handling, allowing connections to proceed even when certificate validation fails.",
+        "acceptable_scanner_categories": [
+          "tls_error_handling_disabled",
+          "ssl_error_ignored",
+          "webview_ssl_error_bypass",
+          "insecure_ssl",
+          "insecure_tls",
+          "certificate_validation_bypass"
+        ],
+        "evidence_keywords": [
+          "onReceivedSslError",
+          "SslErrorHandler",
+          "proceed",
+          "handler.proceed",
+          "SSL error",
+          "TLS error",
+          "certificate",
+          "TrustManager",
+          "X509TrustManager"
+        ],
+        "source": "README.md Implementation and Static Analysis"
+      }
+    ],
+    "unmatched_findings": []
+  },
+  {
+    "case_id": "Network/MASTG-TEST0020",
+    "test_id": "MASTG-TEST-0020",
+    "title": "Testing the TLS Settings",
+    "expected_count": 2,
+    "raw_finding_count": 3,
+    "scoped_finding_count": 3,
+    "tp": 2,
+    "fp": 1,
+    "fn": 0,
+    "precision": 0.6666666666666666,
+    "recall": 1.0,
+    "f1": 0.8,
+    "top5_precision": 0.6666666666666666,
+    "high_confidence_finding_count": 3,
+    "high_confidence_precision": 0.6666666666666666,
+    "high_priority_finding_count": 3,
+    "high_priority_precision": 0.6666666666666666,
+    "severity_score_mae": null,
+    "confidence_score_mae": null,
+    "matches": [
+      {
+        "gt_id": "GT-0020-1",
+        "gt_category": "obsolete_tls_version",
+        "finding_id": "VULN_OBSOLETE_TLS_VERSION",
+        "finding_category": "obsolete_tls_version",
+        "finding_title": "Obsolete TLS protocol version used",
+        "finding_severity": "High",
+        "finding_severity_score": 7,
+        "finding_confidence_score": 10,
+        "match_info": {
+          "match_type": "medium",
+          "category": true,
+          "component": false,
+          "location": false,
+          "authority": false,
+          "deeplink": false,
+          "keyword_hits": 5,
+          "keyword_total": 9
+        },
+        "ground_truth": {
+          "id": "GT-0020-1",
+          "category": "obsolete_tls_version",
+          "must_detect": true,
+          "severity": "high",
+          "description": "The app explicitly uses an outdated TLS protocol version, TLS 1.0, for HTTPS connections. Obsolete TLS versions are insecure and should be replaced with modern versions such as TLS 1.2 or TLS 1.3.",
+          "acceptable_scanner_categories": [
+            "obsolete_tls_version",
+            "insecure_tls_version",
+            "weak_tls",
+            "tls_misconfiguration",
+            "insecure_ssl",
+            "insecure_tls",
+            "ssl_context"
+          ],
+          "evidence_keywords": [
+            "SSLContext",
+            "getInstance",
+            "TLSv1",
+            "TLS 1.0",
+            "TLSv1.0",
+            "outdated TLS",
+            "obsolete TLS",
+            "weak TLS",
+            "HTTPS"
+          ],
+          "source": "README.md Implementation and Static Analysis"
+        },
+        "finding": {
+          "pattern_id": "VULN_OBSOLETE_TLS_VERSION",
+          "title": "Obsolete TLS protocol version used",
+          "severity": "High",
+          "description": "The app appears to explicitly request an obsolete TLS protocol version such as TLSv1/TLS 1.0/SSLv3 through SSLContext or related TLS setup code.",
+          "severity_score": 7,
+          "confidence_score": 10,
+          "test_priority": "P2",
+          "category": "obsolete_tls_version",
+          "location": "Lcom/example/mastg_test0020/MainActivity;->disableCertificateValidation()V",
+          "evidence": [
+            "Method: Lcom/example/mastg_test0020/MainActivity;->disableCertificateValidation()V",
+            "TLSv1",
+            "SSLContext",
+            "getInstance",
+            "Ljavax/net/ssl/SSLContext;->getInstance"
+          ],
+          "related_components": [],
+          "related_deep_links": [],
+          "cwe": "CWE-326",
+          "owasp_masvs": "MSTG-NETWORK-2",
+          "source": "our_scanner"
+        }
+      },
+      {
+        "gt_id": "GT-0020-2",
+        "gt_category": "certificate_validation_bypass",
+        "finding_id": "VULN_CERTIFICATE_VALIDATION_BYPASS",
+        "finding_category": "certificate_validation_bypass",
+        "finding_title": "TLS certificate validation bypass pattern",
+        "finding_severity": "High",
+        "finding_severity_score": 8,
+        "finding_confidence_score": 10,
+        "match_info": {
+          "match_type": "medium",
+          "category": true,
+          "component": false,
+          "location": false,
+          "authority": false,
+          "deeplink": false,
+          "keyword_hits": 6,
+          "keyword_total": 11
+        },
+        "ground_truth": {
+          "id": "GT-0020-2",
+          "category": "certificate_validation_bypass",
+          "must_detect": true,
+          "severity": "high",
+          "description": "The app disables SSL/TLS certificate validation by installing a custom TrustManager that trusts all certificates, including self-signed or expired certificates.",
+          "acceptable_scanner_categories": [
+            "certificate_validation_bypass",
+            "trust_all_certificates",
+            "insecure_trust_manager",
+            "x509trustmanager",
+            "ssl_certificate_validation_disabled",
+            "insecure_ssl",
+            "insecure_tls",
+            "tls_misconfiguration"
+          ],
+          "evidence_keywords": [
+            "TrustManager",
+            "X509TrustManager",
+            "trustAllCerts",
+            "checkClientTrusted",
+            "checkServerTrusted",
+            "getAcceptedIssuers",
+            "return null",
+            "setDefaultSSLSocketFactory",
+            "self-signed",
+            "expired certificates",
+            "disableCertificateValidation"
+          ],
+          "source": "README.md Implementation and Static Analysis"
+        },
+        "finding": {
+          "pattern_id": "VULN_CERTIFICATE_VALIDATION_BYPASS",
+          "title": "TLS certificate validation bypass pattern",
+          "severity": "High",
+          "description": "The app contains TrustManager/X509TrustManager-related code patterns commonly used to bypass TLS certificate validation.",
+          "severity_score": 8,
+          "confidence_score": 10,
+          "test_priority": "P2",
+          "category": "certificate_validation_bypass",
+          "location": "classes.dex",
+          "evidence": [
+            "Source: classes.dex",
+            "TrustManager",
+            "X509TrustManager",
+            "checkClientTrusted",
+            "checkServerTrusted",
+            "getAcceptedIssuers",
+            "setDefaultSSLSocketFactory",
+            "SSLContext",
+            "HttpsURLConnection"
+          ],
+          "related_components": [],
+          "related_deep_links": [],
+          "cwe": "CWE-295",
+          "owasp_masvs": "MSTG-NETWORK-3",
+          "source": "our_scanner"
+        }
+      }
+    ],
+    "unmatched_expected": [],
+    "unmatched_findings": [
+      {
+        "pattern_id": "VULN_USES_CLEARTEXT_TRAFFIC",
+        "title": "Cleartext traffic explicitly enabled in manifest",
+        "severity": "High",
+        "description": "The application explicitly sets android:usesCleartextTraffic=\"true\", allowing cleartext HTTP traffic unless restricted elsewhere.",
+        "severity_score": 7,
+        "confidence_score": 10,
+        "test_priority": "P2",
+        "category": "uses_cleartext_traffic",
+        "location": "AndroidManifest.xml",
+        "evidence": [
+          "android:usesCleartextTraffic=true",
+          "AndroidManifest.xml",
+          "application",
+          "cleartext",
+          "cleartext traffic"
+        ],
+        "related_components": [],
+        "related_deep_links": [],
+        "cwe": "CWE-319",
+        "owasp_masvs": "MSTG-NETWORK-1",
+        "source": "our_scanner"
+      }
+    ]
+  },
+  {
+    "case_id": "Network/MASTG-TEST0021",
+    "test_id": "MASTG-TEST-0021",
+    "title": "Testing Endpoint Identify Verification",
+    "expected_count": 5,
+    "raw_finding_count": 2,
+    "scoped_finding_count": 2,
+    "tp": 2,
+    "fp": 0,
+    "fn": 3,
+    "precision": 1.0,
+    "recall": 0.4,
+    "f1": 0.5714285714285715,
+    "top5_precision": 1.0,
+    "high_confidence_finding_count": 2,
+    "high_confidence_precision": 1.0,
+    "high_priority_finding_count": 2,
+    "high_priority_precision": 1.0,
+    "severity_score_mae": null,
+    "confidence_score_mae": null,
+    "matches": [
+      {
+        "gt_id": "GT-0021-1",
+        "gt_category": "low_target_sdk_network_security",
+        "finding_id": "VULN_LOW_TARGET_SDK_NETWORK_SECURITY",
+        "finding_category": "low_target_sdk_network_security",
+        "finding_title": "Low targetSdk weakens Network Security Configuration defaults",
+        "finding_severity": "Medium",
+        "finding_severity_score": 5,
+        "finding_confidence_score": 10,
+        "match_info": {
+          "match_type": "medium",
+          "category": true,
+          "component": false,
+          "location": false,
+          "authority": false,
+          "deeplink": false,
+          "keyword_hits": 7,
+          "keyword_total": 9
+        },
+        "ground_truth": {
+          "id": "GT-0021-1",
+          "category": "low_target_sdk_network_security",
+          "must_detect": true,
+          "severity": "medium",
+          "description": "The app targets Android API level 23, which is lower than 24. Apps targeting below Android 7.0 do not benefit from the newer default Network Security Configuration behavior that avoids trusting user-supplied CAs by default.",
+          "acceptable_scanner_categories": [
+            "low_target_sdk",
+            "target_sdk_too_low",
+            "insecure_platform_version",
+            "network_security_config_bypass",
+            "manifest_sdk",
+            "android_manifest",
+            "insecure_network_config"
+          ],
+          "evidence_keywords": [
+            "targetSdkVersion",
+            "targetSdk",
+            "23",
+            "API level 23",
+            "lower than 24",
+            "Android 7.0",
+            "Network Security Configuration",
+            "user supplied CAs",
+            "apktool.yml"
+          ],
+          "source": "README.md Implementation and Static Analysis"
+        },
+        "finding": {
+          "pattern_id": "VULN_LOW_TARGET_SDK_NETWORK_SECURITY",
+          "title": "Low targetSdk weakens Network Security Configuration defaults",
+          "severity": "Medium",
+          "description": "Apps targeting below Android 7.0 do not benefit from newer default Network Security Configuration behavior that avoids trusting user-supplied CAs by default.",
+          "severity_score": 5,
+          "confidence_score": 10,
+          "test_priority": "P2",
+          "category": "low_target_sdk_network_security",
+          "location": "AndroidManifest.xml",
+          "evidence": [
+            "targetSdkVersion=23",
+            "targetSdkVersion",
+            "23",
+            "lower than 24",
+            "Network Security Configuration",
+            "user supplied CAs"
+          ],
+          "related_components": [],
+          "related_deep_links": [],
+          "cwe": "CWE-295",
+          "owasp_masvs": "MSTG-NETWORK-2",
+          "source": "our_scanner"
+        }
+      },
+      {
+        "gt_id": "GT-0021-2",
+        "gt_category": "user_ca_trust_enabled",
+        "finding_id": "VULN_USER_CA_TRUST_ENABLED",
+        "finding_category": "user_ca_trust_enabled",
+        "finding_title": "User-installed CAs may be trusted by legacy targetSdk default",
+        "finding_severity": "High",
+        "finding_severity_score": 7,
+        "finding_confidence_score": 9,
+        "match_info": {
+          "match_type": "medium",
+          "category": true,
+          "component": false,
+          "location": false,
+          "authority": false,
+          "deeplink": false,
+          "keyword_hits": 1,
+          "keyword_total": 9
+        },
+        "ground_truth": {
+          "id": "GT-0021-2",
+          "category": "user_ca_trust_enabled",
+          "must_detect": true,
+          "severity": "high",
+          "description": "The app may trust user-provided certificate authorities through insecure Network Security Configuration trust anchors, allowing malicious user-installed CAs to intercept TLS traffic.",
+          "acceptable_scanner_categories": [
+            "user_ca_trust_enabled",
+            "custom_trust_anchors",
+            "network_security_config",
+            "insecure_network_config",
+            "trust_user_ca",
+            "certificate_validation_bypass",
+            "insecure_tls"
+          ],
+          "evidence_keywords": [
+            "network-security-config",
+            "trust-anchors",
+            "certificates",
+            "src=\"user\"",
+            "user CAs",
+            "user supplied CAs",
+            "custom trust anchor",
+            "domain-config",
+            "base-config"
+          ],
+          "source": "README.md Static Analysis"
+        },
+        "finding": {
+          "pattern_id": "VULN_USER_CA_TRUST_ENABLED",
+          "title": "User-installed CAs may be trusted by legacy targetSdk default",
+          "severity": "High",
+          "description": "The app targets an Android API level below 24 and does not appear to define an explicit Network Security Configuration. Apps targeting older API levels may trust user-installed certificate authorities by default, weakening TLS endpoint identity verification.",
+          "severity_score": 7,
+          "confidence_score": 9,
+          "test_priority": "P2",
+          "category": "user_ca_trust_enabled",
+          "location": "AndroidManifest.xml",
+          "evidence": [
+            "targetSdkVersion=23",
+            "targetSdkVersion",
+            "23",
+            "lower than 24",
+            "Android 7.0",
+            "Network Security Configuration default behavior",
+            "user supplied CAs",
+            "user-installed certificate authorities"
+          ],
+          "related_components": [],
+          "related_deep_links": [],
+          "cwe": "CWE-295",
+          "owasp_masvs": "MSTG-NETWORK-2",
+          "source": "our_scanner"
+        }
+      }
+    ],
+    "unmatched_expected": [
+      {
+        "id": "GT-0021-3",
+        "category": "webview_ssl_error_bypass",
+        "must_detect": true,
+        "severity": "high",
+        "description": "The app ignores TLS certificate errors in WebView by overriding onReceivedSslError and calling handler.proceed(), allowing the WebView to continue loading pages even when certificate validation fails.",
+        "acceptable_scanner_categories": [
+          "webview_ssl_error_bypass",
+          "ssl_error_ignored",
+          "tls_error_handling_disabled",
+          "certificate_validation_bypass",
+          "insecure_webview",
+          "insecure_ssl",
+          "insecure_tls"
+        ],
+        "evidence_keywords": [
+          "WebView",
+          "WebViewClient",
+          "onReceivedSslError",
+          "SslErrorHandler",
+          "SslError",
+          "handler.proceed",
+          "proceed",
+          "Ignore TLS certificate errors",
+          "TLS error",
+          "SSL error"
+        ],
+        "source": "README.md Implementation and Static Analysis"
+      },
+      {
+        "id": "GT-0021-4",
+        "category": "hostname_verification_bypass",
+        "must_detect": true,
+        "severity": "high",
+        "description": "The app disables hostname verification by using a HostnameVerifier that always returns true, allowing TLS connections to succeed even when the server certificate does not match the requested hostname.",
+        "acceptable_scanner_categories": [
+          "hostname_verification_bypass",
+          "insecure_hostname_verifier",
+          "allow_all_hostname_verifier",
+          "ssl_hostname_verifier",
+          "tls_misconfiguration",
+          "insecure_ssl",
+          "insecure_tls"
+        ],
+        "evidence_keywords": [
+          "HostnameVerifier",
+          "NO_VERIFY",
+          "verify",
+          "return true",
+          "SSLSession",
+          "ALLOW_ALL_HOSTNAME_VERIFIER",
+          "hostname verification",
+          "any hostname"
+        ],
+        "source": "README.md Implementation and Static Analysis"
+      },
+      {
+        "id": "GT-0021-5",
+        "category": "insecure_trust_manager",
+        "must_detect": true,
+        "severity": "high",
+        "description": "The app lacks proper certificate validation through TrustManager or may use an insecure TrustManager pattern that accepts certificates without checking whether they are trusted, expired, or self-signed.",
+        "acceptable_scanner_categories": [
+          "insecure_trust_manager",
+          "trust_all_certificates",
+          "certificate_validation_bypass",
+          "x509trustmanager",
+          "ssl_certificate_validation_disabled",
+          "tls_misconfiguration",
+          "insecure_ssl",
+          "insecure_tls"
+        ],
+        "evidence_keywords": [
+          "TrustManager",
+          "X509TrustManager",
+          "checkClientTrusted",
+          "checkServerTrusted",
+          "getAcceptedIssuers",
+          "trustAllCerts",
+          "context.init",
+          "certificate",
+          "self-signed",
+          "expired"
+        ],
+        "source": "README.md Static Analysis"
+      }
+    ],
+    "unmatched_findings": []
+  },
+  {
+    "case_id": "Network/MASTG-TEST0022",
+    "test_id": "MASTG-TEST-0022",
+    "title": "Testing Custom Certificate Stores and Certificate Pinning",
+    "expected_count": 2,
+    "raw_finding_count": 2,
+    "scoped_finding_count": 1,
+    "tp": 1,
+    "fp": 0,
+    "fn": 1,
+    "precision": 1.0,
+    "recall": 0.5,
+    "f1": 0.6666666666666666,
+    "top5_precision": 1.0,
+    "high_confidence_finding_count": 1,
+    "high_confidence_precision": 1.0,
+    "high_priority_finding_count": 1,
+    "high_priority_precision": 1.0,
+    "severity_score_mae": null,
+    "confidence_score_mae": null,
+    "matches": [
+      {
+        "gt_id": "GT-0022-2",
+        "gt_category": "certificate_pinning_configuration",
+        "finding_id": "VULN_CERTIFICATE_PINNING_CONFIGURATION",
+        "finding_category": "certificate_pinning_configuration",
+        "finding_title": "Certificate pinning configured in Network Security Configuration",
+        "finding_severity": "Low",
+        "finding_severity_score": 3,
+        "finding_confidence_score": 10,
+        "match_info": {
+          "match_type": "medium",
+          "category": true,
+          "component": false,
+          "location": false,
+          "authority": false,
+          "deeplink": false,
+          "keyword_hits": 9,
+          "keyword_total": 9
+        },
+        "ground_truth": {
+          "id": "GT-0022-2",
+          "category": "certificate_pinning_configuration",
+          "must_detect": true,
+          "severity": "info",
+          "description": "The app implements certificate pinning through Network Security Configuration. The scanner should identify the presence of pinning-related configuration such as pin-set entries and extract relevant evidence for review.",
+          "acceptable_scanner_categories": [
+            "certificate_pinning",
+            "ssl_pinning",
+            "pin_set",
+            "network_security_config",
+            "custom_certificate_store",
+            "certificate_pin",
+            "tls_pinning"
+          ],
+          "evidence_keywords": [
+            "network_security_config.xml",
+            "network-security-config",
+            "pin-set",
+            "pin",
+            "digest",
+            "SHA-256",
+            "expiration",
+            "certificate pinning",
+            "SSL Pinning"
+          ],
+          "source": "README.md Network Security Configuration"
+        },
+        "finding": {
+          "pattern_id": "VULN_CERTIFICATE_PINNING_CONFIGURATION",
+          "title": "Certificate pinning configured in Network Security Configuration",
+          "severity": "Low",
+          "description": "The app defines certificate pinning through Network Security Configuration. This is reported as review evidence for the benchmark, not necessarily as an insecure condition.",
+          "severity_score": 3,
+          "confidence_score": 10,
+          "test_priority": "P2",
+          "category": "certificate_pinning_configuration",
+          "location": "res/xml/network_security_config.xml",
+          "evidence": [
+            "network_security_config.xml or compiled XML path: res/8G.xml",
+            "network-security-config",
+            "pin-set",
+            "pin",
+            "digest",
+            "SHA-256",
+            "expiration",
+            "example.com",
+            "certificate pinning",
+            "SSL Pinning"
+          ],
+          "related_components": [],
+          "related_deep_links": [],
+          "cwe": null,
+          "owasp_masvs": "MSTG-NETWORK-4",
+          "source": "our_scanner"
+        }
+      }
+    ],
+    "unmatched_expected": [
+      {
+        "id": "GT-0022-1",
+        "category": "missing_certificate_pinning",
+        "must_detect": true,
+        "severity": "medium",
+        "description": "The app includes a network request path that connects to www.example.com without certificate pinning, making the connection more exposed to interception if a malicious or user-installed CA is trusted.",
+        "acceptable_scanner_categories": [
+          "missing_certificate_pinning",
+          "no_ssl_pinning",
+          "no_certificate_pinning",
+          "certificate_pinning_missing",
+          "ssl_pinning_missing",
+          "insecure_tls",
+          "network_security"
+        ],
+        "evidence_keywords": [
+          "No SSL Pinning",
+          "without pinning",
+          "www.example.com",
+          "certificate pinning",
+          "SSL Pinning",
+          "OK",
+          "Error",
+          "Toast"
+        ],
+        "source": "README.md Implementation and Static Analysis"
+      }
+    ],
+    "unmatched_findings": []
+  },
+  {
+    "case_id": "Network/MASTG-TEST0023",
+    "test_id": "MASTG-TEST-0023",
+    "title": "Testing the Security Provider",
+    "expected_count": 2,
+    "raw_finding_count": 0,
+    "scoped_finding_count": 0,
+    "tp": 0,
+    "fp": 0,
+    "fn": 2,
+    "precision": null,
+    "recall": 0.0,
+    "f1": null,
+    "top5_precision": null,
+    "high_confidence_finding_count": 0,
+    "high_confidence_precision": null,
+    "high_priority_finding_count": 0,
+    "high_priority_precision": null,
+    "severity_score_mae": null,
+    "confidence_score_mae": null,
+    "matches": [],
+    "unmatched_expected": [
+      {
+        "id": "GT-0023-1",
+        "category": "missing_security_provider_update",
+        "must_detect": true,
+        "severity": "medium",
+        "description": "The app does not update the Android security provider through Google Play Services ProviderInstaller. Without updating the provider, the app may continue using an outdated TLS/SSL implementation that is vulnerable to known SSL/TLS issues.",
+        "acceptable_scanner_categories": [
+          "missing_security_provider_update",
+          "security_provider_not_updated",
+          "providerinstaller_missing",
+          "outdated_security_provider",
+          "google_play_services_missing",
+          "insecure_tls_provider",
+          "tls_misconfiguration"
+        ],
+        "evidence_keywords": [
+          "ProviderInstaller",
+          "installIfNeeded",
+          "installIfNeededAsync",
+          "GoogleApiAvailability",
+          "Google Play Services",
+          "play-services-gcm",
+          "com.google.android.gms",
+          "security provider",
+          "SSL exploits",
+          "TLS"
+        ],
+        "source": "README.md Implementation and Static Analysis"
+      },
+      {
+        "id": "GT-0023-2",
+        "category": "missing_google_play_services_dependency",
+        "must_detect": true,
+        "severity": "medium",
+        "description": "The app does not include the Google Play Services dependency required for using ProviderInstaller, such as com.google.android.gms:play-services-gcm. As a result, the app cannot perform the recommended security provider update checks.",
+        "acceptable_scanner_categories": [
+          "missing_google_play_services_dependency",
+          "google_play_services_missing",
+          "play_services_gcm_missing",
+          "providerinstaller_missing",
+          "missing_dependency",
+          "gradle_dependency_missing",
+          "security_provider_not_updated"
+        ],
+        "evidence_keywords": [
+          "com.google.android.gms:play-services-gcm",
+          "play-services-gcm",
+          "17.0.0",
+          "implementation",
+          "compile",
+          "dependencies",
+          "Gradle",
+          "build.gradle",
+          "GooglePlayServices",
+          "Google Play Services"
+        ],
+        "source": "README.md Implementation and Static Analysis"
+      }
+    ],
+    "unmatched_findings": []
+  }
+]

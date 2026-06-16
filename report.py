@@ -7,6 +7,7 @@ from dataclasses import asdict
 from pathlib import Path
 
 from models import ScanResult
+from test_plan import NAVIGATION_TOP_N, build_navigation_items
 
 
 def _result_to_dict(result: ScanResult) -> dict:
@@ -36,6 +37,15 @@ def _safe_join(items: list[str]) -> str:
     return ", ".join(items) if items else "-"
 
 
+def _api_key_display(key: object) -> str:
+    """Prefer full value for local reports; fall back to redacted preview."""
+
+    value = getattr(key, "value", None) or ""
+    if value.strip():
+        return value.strip()
+    return getattr(key, "redacted", "") or "-"
+
+
 def write_markdown(result: ScanResult, output_path: Path) -> None:
     """Write human-readable Markdown report."""
 
@@ -61,6 +71,80 @@ def write_markdown(result: ScanResult, output_path: Path) -> None:
 
     for key, val in result.summary.items():
         lines.append(f"- **{key}**: {val}")
+
+    nav_items = build_navigation_items(result)
+    top_nav = nav_items[:NAVIGATION_TOP_N]
+
+    lines.extend(
+        [
+            "",
+            f"## Top {NAVIGATION_TOP_N} navigation targets",
+            "",
+            "Sorted by `priority_weight + severity_score × confidence_score`.",
+            "",
+        ]
+    )
+
+    if not top_nav:
+        lines.append("_No navigation targets ranked._")
+    else:
+        lines.append("| # | P | Nav | Sev×Conf | Kind | Target |")
+        lines.append("|---:|---|---:|---|---|---|")
+        for idx, row in enumerate(top_nav, start=1):
+            lines.append(
+                f"| {idx} | {row.priority} | {row.nav_score} | "
+                f"{row.severity_score}×{row.confidence_score} | {row.kind} | {row.title} |"
+            )
+        lines.append("")
+        lines.append(
+            f"See also `{meta.package_name}_test_plan.md` when reports are written with `-o`."
+        )
+
+    # ------------------------------------------------------------------
+    # API keys / tokens
+    # ------------------------------------------------------------------
+    lines.extend(["", "## API keys / tokens", ""])
+    if not getattr(result, "api_keys", None):
+        lines.append("_No API keys/tokens matched by built-in patterns._")
+    else:
+        confirmed = [k for k in result.api_keys if k.verified]
+        warnings = [k for k in result.api_keys if not k.verified]
+
+        lines.append(
+            "Only **verified** keys are treated as confirmed findings. "
+            "Regex-only matches are warnings/candidates."
+        )
+        lines.append("")
+        lines.append(
+            "**Warning:** this section includes full matched secret values for local testing. "
+            "Do not commit or share reports containing live credentials."
+        )
+        lines.append("")
+        lines.append(f"- Confirmed: **{len(confirmed)}**")
+        lines.append(f"- Warnings: **{len(warnings)}**")
+        lines.append("")
+        lines.append("| Provider | Kind | Key | Len | Status | Source |")
+        lines.append("|----------|------|-----|----:|--------|--------|")
+        for k in sorted(result.api_keys, key=lambda x: (x.provider, x.kind, x.source)):
+            verified = "confirmed" if k.verified else "warning"
+            display = _api_key_display(k)
+            key_len = len(display) if display != "-" else 0
+            lines.append(
+                f"| {k.provider} | {k.kind} | `{display}` | {key_len} | {verified} | `{k.source}` |"
+            )
+        lines.append("")
+        for k in result.api_keys:
+            display = _api_key_display(k)
+            lines.append(f"#### `{k.provider}` / `{k.kind}` — `{display}`")
+            lines.append("")
+            lines.append(f"- **Fingerprint:** `{k.fingerprint}`")
+            lines.append(f"- **Confidence:** {k.confidence}")
+            lines.append(f"- **Source:** `{k.source}`")
+            if k.evidence:
+                lines.append(f"- **Evidence:** {k.evidence}")
+            if k.verification_detail:
+                lines.append(f"- **Verification:** {k.verification_detail}")
+            lines.append("")
 
     # ------------------------------------------------------------------
     # Vulnerability findings
@@ -156,6 +240,20 @@ def write_markdown(result: ScanResult, output_path: Path) -> None:
             lines.append("")
             lines.append(chain.narrative)
             lines.append("")
+
+            if chain.reasoning_steps:
+                lines.append("**3-step attack reasoning:**")
+                for step_i, step in enumerate(chain.reasoning_steps[:3], start=1):
+                    lines.append(f"{step_i}. {step}")
+                lines.append("")
+
+            if chain.poc_commands:
+                lines.append("**Suggested PoC (adb):**")
+                lines.append("```bash")
+                for cmd in chain.poc_commands:
+                    lines.append(cmd)
+                lines.append("```")
+                lines.append("")
 
             if chain.evidence:
                 lines.append("**Evidence:**")

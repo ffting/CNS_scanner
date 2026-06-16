@@ -16,8 +16,8 @@
       "top5_precision": 0.4,
       "high_confidence_finding_count": 4,
       "high_confidence_precision": 0.25,
-      "high_priority_finding_count": 0,
-      "high_priority_precision": null,
+      "high_priority_finding_count": 7,
+      "high_priority_precision": 0.2857142857142857,
       "severity_score_mae": null,
       "confidence_score_mae": null,
       "matches": [
@@ -348,8 +348,8 @@
       "top5_precision": 0.0,
       "high_confidence_finding_count": 2,
       "high_confidence_precision": 0.0,
-      "high_priority_finding_count": 0,
-      "high_priority_precision": null,
+      "high_priority_finding_count": 4,
+      "high_priority_precision": 0.0,
       "severity_score_mae": null,
       "confidence_score_mae": null,
       "matches": [],
@@ -457,35 +457,6 @@
           ]
         },
         {
-          "pattern_id": "MOBSF_ANDROID_API_API_NOTIFICATIONS",
-          "title": "Android Notifications",
-          "severity": "Low",
-          "description": "Android Notifications",
-          "severity_score": 2,
-          "confidence_score": 6,
-          "category": "android_api",
-          "location": "com/example/mastg_test0008/MainActivity.java",
-          "evidence": [
-            "rule=api_notifications",
-            "description=Android Notifications",
-            "com/example/mastg_test0008/MainActivity.java:4,14,35"
-          ],
-          "related_components": [],
-          "related_deep_links": [],
-          "cwe": null,
-          "owasp_masvs": null,
-          "source": "mobsf",
-          "raw": {
-            "files": {
-              "com/example/mastg_test0008/MainActivity.java": "4,14,35"
-            },
-            "metadata": {
-              "description": "Android Notifications",
-              "severity": "info"
-            }
-          }
-        },
-        {
           "pattern_id": "MOBSF_ANDROID_API_API_GET_SYSTEM_SERVICE",
           "title": "Get System Service",
           "severity": "Low",
@@ -513,6 +484,35 @@
               "severity": "info"
             }
           }
+        },
+        {
+          "pattern_id": "MOBSF_ANDROID_API_API_NOTIFICATIONS",
+          "title": "Android Notifications",
+          "severity": "Low",
+          "description": "Android Notifications",
+          "severity_score": 2,
+          "confidence_score": 6,
+          "category": "android_api",
+          "location": "com/example/mastg_test0008/MainActivity.java",
+          "evidence": [
+            "rule=api_notifications",
+            "description=Android Notifications",
+            "com/example/mastg_test0008/MainActivity.java:4,14,35"
+          ],
+          "related_components": [],
+          "related_deep_links": [],
+          "cwe": null,
+          "owasp_masvs": null,
+          "source": "mobsf",
+          "raw": {
+            "files": {
+              "com/example/mastg_test0008/MainActivity.java": "4,14,35"
+            },
+            "metadata": {
+              "description": "Android Notifications",
+              "severity": "info"
+            }
+          }
         }
       ]
     },
@@ -532,8 +532,8 @@
       "top5_precision": 0.0,
       "high_confidence_finding_count": 2,
       "high_confidence_precision": 0.0,
-      "high_priority_finding_count": 0,
-      "high_priority_precision": null,
+      "high_priority_finding_count": 6,
+      "high_priority_precision": 0.0,
       "severity_score_mae": null,
       "confidence_score_mae": null,
       "matches": [],
@@ -684,18 +684,18 @@
           }
         },
         {
-          "pattern_id": "MOBSF_ANDROID_API_API_START_ACTIVITY",
-          "title": "Starting Activity",
+          "pattern_id": "MOBSF_ANDROID_API_API_IPC",
+          "title": "Inter Process Communication",
           "severity": "Low",
-          "description": "Starting Activity",
+          "description": "Inter Process Communication",
           "severity_score": 2,
           "confidence_score": 6,
           "category": "android_api",
           "location": "com/example/mastg_test0024/MainActivity.java",
           "evidence": [
-            "rule=api_start_activity",
-            "description=Starting Activity",
-            "com/example/mastg_test0024/MainActivity.java:58"
+            "rule=api_ipc",
+            "description=Inter Process Communication",
+            "com/example/mastg_test0024/MainActivity.java:4,37,56,58,65"
           ],
           "related_components": [],
           "related_deep_links": [],
@@ -704,10 +704,10 @@
           "source": "mobsf",
           "raw": {
             "files": {
-              "com/example/mastg_test0024/MainActivity.java": "58"
+              "com/example/mastg_test0024/MainActivity.java": "4,37,56,58,65"
             },
             "metadata": {
-              "description": "Starting Activity",
+              "description": "Inter Process Communication",
               "severity": "info"
             }
           }
@@ -742,18 +742,18 @@
           }
         },
         {
-          "pattern_id": "MOBSF_ANDROID_API_API_IPC",
-          "title": "Inter Process Communication",
+          "pattern_id": "MOBSF_ANDROID_API_API_START_ACTIVITY",
+          "title": "Starting Activity",
           "severity": "Low",
-          "description": "Inter Process Communication",
+          "description": "Starting Activity",
           "severity_score": 2,
           "confidence_score": 6,
           "category": "android_api",
           "location": "com/example/mastg_test0024/MainActivity.java",
           "evidence": [
-            "rule=api_ipc",
-            "description=Inter Process Communication",
-            "com/example/mastg_test0024/MainActivity.java:4,37,56,58,65"
+            "rule=api_start_activity",
+            "description=Starting Activity",
+            "com/example/mastg_test0024/MainActivity.java:58"
           ],
           "related_components": [],
           "related_deep_links": [],
@@ -762,10 +762,10 @@
           "source": "mobsf",
           "raw": {
             "files": {
-              "com/example/mastg_test0024/MainActivity.java": "4,37,56,58,65"
+              "com/example/mastg_test0024/MainActivity.java": "58"
             },
             "metadata": {
-              "description": "Inter Process Communication",
+              "description": "Starting Activity",
               "severity": "info"
             }
           }
@@ -788,8 +788,8 @@
       "top5_precision": 0.0,
       "high_confidence_finding_count": 4,
       "high_confidence_precision": 0.0,
-      "high_priority_finding_count": 0,
-      "high_priority_precision": null,
+      "high_priority_finding_count": 9,
+      "high_priority_precision": 0.0,
       "severity_score_mae": null,
       "confidence_score_mae": null,
       "matches": [],
@@ -1062,18 +1062,19 @@
           }
         },
         {
-          "pattern_id": "MOBSF_ANDROID_API_API_START_ACTIVITY",
-          "title": "Starting Activity",
+          "pattern_id": "MOBSF_ANDROID_API_API_IPC",
+          "title": "Inter Process Communication",
           "severity": "Low",
-          "description": "Starting Activity",
+          "description": "Inter Process Communication",
           "severity_score": 2,
           "confidence_score": 6,
           "category": "android_api",
           "location": "com/example/mastg_test0028/MainActivity.java",
           "evidence": [
-            "rule=api_start_activity",
-            "description=Starting Activity",
-            "com/example/mastg_test0028/MainActivity.java:47"
+            "rule=api_ipc",
+            "description=Inter Process Communication",
+            "com/example/mastg_test0028/MainActivity.java:3,47",
+            "com/example/mastg_test0028/WebViewActivity.java:32"
           ],
           "related_components": [],
           "related_deep_links": [],
@@ -1082,10 +1083,11 @@
           "source": "mobsf",
           "raw": {
             "files": {
-              "com/example/mastg_test0028/MainActivity.java": "47"
+              "com/example/mastg_test0028/MainActivity.java": "3,47",
+              "com/example/mastg_test0028/WebViewActivity.java": "32"
             },
             "metadata": {
-              "description": "Starting Activity",
+              "description": "Inter Process Communication",
               "severity": "info"
             }
           }
@@ -1120,19 +1122,18 @@
           }
         },
         {
-          "pattern_id": "MOBSF_ANDROID_API_API_IPC",
-          "title": "Inter Process Communication",
+          "pattern_id": "MOBSF_ANDROID_API_API_START_ACTIVITY",
+          "title": "Starting Activity",
           "severity": "Low",
-          "description": "Inter Process Communication",
+          "description": "Starting Activity",
           "severity_score": 2,
           "confidence_score": 6,
           "category": "android_api",
           "location": "com/example/mastg_test0028/MainActivity.java",
           "evidence": [
-            "rule=api_ipc",
-            "description=Inter Process Communication",
-            "com/example/mastg_test0028/MainActivity.java:3,47",
-            "com/example/mastg_test0028/WebViewActivity.java:32"
+            "rule=api_start_activity",
+            "description=Starting Activity",
+            "com/example/mastg_test0028/MainActivity.java:47"
           ],
           "related_components": [],
           "related_deep_links": [],
@@ -1141,11 +1142,10 @@
           "source": "mobsf",
           "raw": {
             "files": {
-              "com/example/mastg_test0028/MainActivity.java": "3,47",
-              "com/example/mastg_test0028/WebViewActivity.java": "32"
+              "com/example/mastg_test0028/MainActivity.java": "47"
             },
             "metadata": {
-              "description": "Inter Process Communication",
+              "description": "Starting Activity",
               "severity": "info"
             }
           }
@@ -1168,8 +1168,8 @@
       "top5_precision": 0.0,
       "high_confidence_finding_count": 3,
       "high_confidence_precision": 0.0,
-      "high_priority_finding_count": 0,
-      "high_priority_precision": null,
+      "high_priority_finding_count": 7,
+      "high_priority_precision": 0.0,
       "severity_score_mae": null,
       "confidence_score_mae": null,
       "matches": [],
@@ -1308,18 +1308,18 @@
           ]
         },
         {
-          "pattern_id": "MOBSF_ANDROID_API_API_SEND_BROADCAST",
-          "title": "Sending Broadcast",
+          "pattern_id": "MOBSF_ANDROID_API_API_GET_SYSTEM_SERVICE",
+          "title": "Get System Service",
           "severity": "Low",
-          "description": "Sending Broadcast",
+          "description": "Get System Service",
           "severity_score": 2,
           "confidence_score": 6,
           "category": "android_api",
           "location": "com/example/mastg_test0030/MainActivity.java",
           "evidence": [
-            "rule=api_send_broadcast",
-            "description=Sending Broadcast",
-            "com/example/mastg_test0030/MainActivity.java:52"
+            "rule=api_get_system_service",
+            "description=Get System Service",
+            "com/example/mastg_test0030/MainActivity.java:46"
           ],
           "related_components": [],
           "related_deep_links": [],
@@ -1328,39 +1328,10 @@
           "source": "mobsf",
           "raw": {
             "files": {
-              "com/example/mastg_test0030/MainActivity.java": "52"
+              "com/example/mastg_test0030/MainActivity.java": "46"
             },
             "metadata": {
-              "description": "Sending Broadcast",
-              "severity": "info"
-            }
-          }
-        },
-        {
-          "pattern_id": "MOBSF_ANDROID_API_API_NOTIFICATIONS",
-          "title": "Android Notifications",
-          "severity": "Low",
-          "description": "Android Notifications",
-          "severity_score": 2,
-          "confidence_score": 6,
-          "category": "android_api",
-          "location": "com/example/mastg_test0030/MainActivity.java",
-          "evidence": [
-            "rule=api_notifications",
-            "description=Android Notifications",
-            "com/example/mastg_test0030/MainActivity.java:4,15,53"
-          ],
-          "related_components": [],
-          "related_deep_links": [],
-          "cwe": null,
-          "owasp_masvs": null,
-          "source": "mobsf",
-          "raw": {
-            "files": {
-              "com/example/mastg_test0030/MainActivity.java": "4,15,53"
-            },
-            "metadata": {
-              "description": "Android Notifications",
+              "description": "Get System Service",
               "severity": "info"
             }
           }
@@ -1395,18 +1366,18 @@
           }
         },
         {
-          "pattern_id": "MOBSF_ANDROID_API_API_GET_SYSTEM_SERVICE",
-          "title": "Get System Service",
+          "pattern_id": "MOBSF_ANDROID_API_API_NOTIFICATIONS",
+          "title": "Android Notifications",
           "severity": "Low",
-          "description": "Get System Service",
+          "description": "Android Notifications",
           "severity_score": 2,
           "confidence_score": 6,
           "category": "android_api",
           "location": "com/example/mastg_test0030/MainActivity.java",
           "evidence": [
-            "rule=api_get_system_service",
-            "description=Get System Service",
-            "com/example/mastg_test0030/MainActivity.java:46"
+            "rule=api_notifications",
+            "description=Android Notifications",
+            "com/example/mastg_test0030/MainActivity.java:4,15,53"
           ],
           "related_components": [],
           "related_deep_links": [],
@@ -1415,10 +1386,39 @@
           "source": "mobsf",
           "raw": {
             "files": {
-              "com/example/mastg_test0030/MainActivity.java": "46"
+              "com/example/mastg_test0030/MainActivity.java": "4,15,53"
             },
             "metadata": {
-              "description": "Get System Service",
+              "description": "Android Notifications",
+              "severity": "info"
+            }
+          }
+        },
+        {
+          "pattern_id": "MOBSF_ANDROID_API_API_SEND_BROADCAST",
+          "title": "Sending Broadcast",
+          "severity": "Low",
+          "description": "Sending Broadcast",
+          "severity_score": 2,
+          "confidence_score": 6,
+          "category": "android_api",
+          "location": "com/example/mastg_test0030/MainActivity.java",
+          "evidence": [
+            "rule=api_send_broadcast",
+            "description=Sending Broadcast",
+            "com/example/mastg_test0030/MainActivity.java:52"
+          ],
+          "related_components": [],
+          "related_deep_links": [],
+          "cwe": null,
+          "owasp_masvs": null,
+          "source": "mobsf",
+          "raw": {
+            "files": {
+              "com/example/mastg_test0030/MainActivity.java": "52"
+            },
+            "metadata": {
+              "description": "Sending Broadcast",
               "severity": "info"
             }
           }
@@ -1441,8 +1441,8 @@
       "top5_precision": 0.0,
       "high_confidence_finding_count": 3,
       "high_confidence_precision": 0.0,
-      "high_priority_finding_count": 0,
-      "high_priority_precision": null,
+      "high_priority_finding_count": 4,
+      "high_priority_precision": 0.0,
       "severity_score_mae": null,
       "confidence_score_mae": null,
       "matches": [],
@@ -1633,8 +1633,8 @@
       "top5_precision": 0.0,
       "high_confidence_finding_count": 3,
       "high_confidence_precision": 0.0,
-      "high_priority_finding_count": 0,
-      "high_priority_precision": null,
+      "high_priority_finding_count": 10,
+      "high_priority_precision": 0.0,
       "severity_score_mae": null,
       "confidence_score_mae": null,
       "matches": [],
@@ -1771,42 +1771,6 @@
           ]
         },
         {
-          "pattern_id": "MOBSF_CODE_ANDROID_WEBVIEW_ALLOW_FILE_FROM_URL",
-          "title": "Ensure that user controlled URLs never reaches the Webview. Enabling file access from URLs in WebView can leak sensitive information from the file system.",
-          "severity": "Medium",
-          "description": "Ensure that user controlled URLs never reaches the Webview. Enabling file access from URLs in WebView can leak sensitive information from the file system.",
-          "severity_score": 5,
-          "confidence_score": 7,
-          "category": "webview",
-          "location": "com/example/mastg_test0032/WebViewActivity.java",
-          "evidence": [
-            "rule=android_webview_allow_file_from_url",
-            "description=Ensure that user controlled URLs never reaches the Webview. Enabling file access from URLs in WebView can leak sensitive information from the file system.",
-            "cwe=CWE-200: Information Exposure",
-            "masvs=MSTG-PLATFORM-7",
-            "com/example/mastg_test0032/WebViewActivity.java:42,38"
-          ],
-          "related_components": [],
-          "related_deep_links": [],
-          "cwe": "CWE-200: Information Exposure",
-          "owasp_masvs": "MSTG-PLATFORM-7",
-          "source": "mobsf",
-          "raw": {
-            "files": {
-              "com/example/mastg_test0032/WebViewActivity.java": "42,38"
-            },
-            "metadata": {
-              "cvss": 6.1,
-              "cwe": "CWE-200: Information Exposure",
-              "owasp-mobile": "M1: Improper Platform Usage",
-              "masvs": "MSTG-PLATFORM-7",
-              "ref": "https://github.com/MobSF/owasp-mstg/blob/master/Document/0x05h-Testing-Platform-Interaction.md#static-analysis-6",
-              "description": "Ensure that user controlled URLs never reaches the Webview. Enabling file access from URLs in WebView can leak sensitive information from the file system.",
-              "severity": "warning"
-            }
-          }
-        },
-        {
           "pattern_id": "MOBSF_CODE_ANDROID_READ_WRITE_EXTERNAL",
           "title": "App can read/write to External Storage. Any App can read data written to External Storage.",
           "severity": "Medium",
@@ -1843,6 +1807,42 @@
           }
         },
         {
+          "pattern_id": "MOBSF_CODE_ANDROID_WEBVIEW_ALLOW_FILE_FROM_URL",
+          "title": "Ensure that user controlled URLs never reaches the Webview. Enabling file access from URLs in WebView can leak sensitive information from the file system.",
+          "severity": "Medium",
+          "description": "Ensure that user controlled URLs never reaches the Webview. Enabling file access from URLs in WebView can leak sensitive information from the file system.",
+          "severity_score": 5,
+          "confidence_score": 7,
+          "category": "webview",
+          "location": "com/example/mastg_test0032/WebViewActivity.java",
+          "evidence": [
+            "rule=android_webview_allow_file_from_url",
+            "description=Ensure that user controlled URLs never reaches the Webview. Enabling file access from URLs in WebView can leak sensitive information from the file system.",
+            "cwe=CWE-200: Information Exposure",
+            "masvs=MSTG-PLATFORM-7",
+            "com/example/mastg_test0032/WebViewActivity.java:42,38"
+          ],
+          "related_components": [],
+          "related_deep_links": [],
+          "cwe": "CWE-200: Information Exposure",
+          "owasp_masvs": "MSTG-PLATFORM-7",
+          "source": "mobsf",
+          "raw": {
+            "files": {
+              "com/example/mastg_test0032/WebViewActivity.java": "42,38"
+            },
+            "metadata": {
+              "cvss": 6.1,
+              "cwe": "CWE-200: Information Exposure",
+              "owasp-mobile": "M1: Improper Platform Usage",
+              "masvs": "MSTG-PLATFORM-7",
+              "ref": "https://github.com/MobSF/owasp-mstg/blob/master/Document/0x05h-Testing-Platform-Interaction.md#static-analysis-6",
+              "description": "Ensure that user controlled URLs never reaches the Webview. Enabling file access from URLs in WebView can leak sensitive information from the file system.",
+              "severity": "warning"
+            }
+          }
+        },
+        {
           "pattern_id": "MOBSF_CERTIFICATE_SIGNED_APPLICATION",
           "title": "Signed Application",
           "severity": "Low",
@@ -1865,37 +1865,6 @@
             "Application is signed with a code signing certificate",
             "Signed Application"
           ]
-        },
-        {
-          "pattern_id": "MOBSF_MANIFEST_HAS_NETWORK_SECURITY",
-          "title": "App has a Network Security Configuration[android:networkSecurityConfig=@xml/network_security_config]",
-          "severity": "Low",
-          "description": "The Network Security Configuration feature lets apps customize their network security settings in a safe, declarative configuration file without modifying app code. These settings can be configured for specific domains and for a specific app. ",
-          "severity_score": 2,
-          "confidence_score": 7,
-          "category": "manifest",
-          "location": "AndroidManifest.xml",
-          "evidence": [
-            "rule=has_network_security",
-            "title=App has a Network Security Configuration[android:networkSecurityConfig=@xml/network_security_config]",
-            "component=[\"@xml/network_security_config\"]",
-            "description=The Network Security Configuration feature lets apps customize their network security settings in a safe, declarative configuration file without modifying app code. These settings can be configured for specific domains and for a specific app. "
-          ],
-          "related_components": [],
-          "related_deep_links": [],
-          "cwe": null,
-          "owasp_masvs": null,
-          "source": "mobsf",
-          "raw": {
-            "rule": "has_network_security",
-            "title": "App has a Network Security Configuration[android:networkSecurityConfig=@xml/network_security_config]",
-            "severity": "info",
-            "description": "The Network Security Configuration feature lets apps customize their network security settings in a safe, declarative configuration file without modifying app code. These settings can be configured for specific domains and for a specific app. ",
-            "name": "App has a Network Security Configuration [android:networkSecurityConfig=@xml/network_security_config]",
-            "component": [
-              "@xml/network_security_config"
-            ]
-          }
         },
         {
           "pattern_id": "MOBSF_CODE_ANDROID_LOGGING",
@@ -1934,18 +1903,49 @@
           }
         },
         {
-          "pattern_id": "MOBSF_ANDROID_API_API_START_ACTIVITY",
-          "title": "Starting Activity",
+          "pattern_id": "MOBSF_MANIFEST_HAS_NETWORK_SECURITY",
+          "title": "App has a Network Security Configuration[android:networkSecurityConfig=@xml/network_security_config]",
           "severity": "Low",
-          "description": "Starting Activity",
+          "description": "The Network Security Configuration feature lets apps customize their network security settings in a safe, declarative configuration file without modifying app code. These settings can be configured for specific domains and for a specific app. ",
+          "severity_score": 2,
+          "confidence_score": 7,
+          "category": "manifest",
+          "location": "AndroidManifest.xml",
+          "evidence": [
+            "rule=has_network_security",
+            "title=App has a Network Security Configuration[android:networkSecurityConfig=@xml/network_security_config]",
+            "component=[\"@xml/network_security_config\"]",
+            "description=The Network Security Configuration feature lets apps customize their network security settings in a safe, declarative configuration file without modifying app code. These settings can be configured for specific domains and for a specific app. "
+          ],
+          "related_components": [],
+          "related_deep_links": [],
+          "cwe": null,
+          "owasp_masvs": null,
+          "source": "mobsf",
+          "raw": {
+            "rule": "has_network_security",
+            "title": "App has a Network Security Configuration[android:networkSecurityConfig=@xml/network_security_config]",
+            "severity": "info",
+            "description": "The Network Security Configuration feature lets apps customize their network security settings in a safe, declarative configuration file without modifying app code. These settings can be configured for specific domains and for a specific app. ",
+            "name": "App has a Network Security Configuration [android:networkSecurityConfig=@xml/network_security_config]",
+            "component": [
+              "@xml/network_security_config"
+            ]
+          }
+        },
+        {
+          "pattern_id": "MOBSF_ANDROID_API_API_IPC",
+          "title": "Inter Process Communication",
+          "severity": "Low",
+          "description": "Inter Process Communication",
           "severity_score": 2,
           "confidence_score": 6,
           "category": "android_api",
           "location": "com/example/mastg_test0032/MainActivity.java",
           "evidence": [
-            "rule=api_start_activity",
-            "description=Starting Activity",
-            "com/example/mastg_test0032/MainActivity.java:44"
+            "rule=api_ipc",
+            "description=Inter Process Communication",
+            "com/example/mastg_test0032/MainActivity.java:3,44"
           ],
           "related_components": [],
           "related_deep_links": [],
@@ -1954,10 +1954,10 @@
           "source": "mobsf",
           "raw": {
             "files": {
-              "com/example/mastg_test0032/MainActivity.java": "44"
+              "com/example/mastg_test0032/MainActivity.java": "3,44"
             },
             "metadata": {
-              "description": "Starting Activity",
+              "description": "Inter Process Communication",
               "severity": "info"
             }
           }
@@ -1992,18 +1992,18 @@
           }
         },
         {
-          "pattern_id": "MOBSF_ANDROID_API_API_IPC",
-          "title": "Inter Process Communication",
+          "pattern_id": "MOBSF_ANDROID_API_API_START_ACTIVITY",
+          "title": "Starting Activity",
           "severity": "Low",
-          "description": "Inter Process Communication",
+          "description": "Starting Activity",
           "severity_score": 2,
           "confidence_score": 6,
           "category": "android_api",
           "location": "com/example/mastg_test0032/MainActivity.java",
           "evidence": [
-            "rule=api_ipc",
-            "description=Inter Process Communication",
-            "com/example/mastg_test0032/MainActivity.java:3,44"
+            "rule=api_start_activity",
+            "description=Starting Activity",
+            "com/example/mastg_test0032/MainActivity.java:44"
           ],
           "related_components": [],
           "related_deep_links": [],
@@ -2012,10 +2012,10 @@
           "source": "mobsf",
           "raw": {
             "files": {
-              "com/example/mastg_test0032/MainActivity.java": "3,44"
+              "com/example/mastg_test0032/MainActivity.java": "44"
             },
             "metadata": {
-              "description": "Inter Process Communication",
+              "description": "Starting Activity",
               "severity": "info"
             }
           }
@@ -2038,8 +2038,8 @@
       "top5_precision": 0.2,
       "high_confidence_finding_count": 4,
       "high_confidence_precision": 0.25,
-      "high_priority_finding_count": 0,
-      "high_priority_precision": null,
+      "high_priority_finding_count": 10,
+      "high_priority_precision": 0.1,
       "severity_score_mae": null,
       "confidence_score_mae": null,
       "matches": [
@@ -2326,37 +2326,6 @@
           ]
         },
         {
-          "pattern_id": "MOBSF_MANIFEST_HAS_NETWORK_SECURITY",
-          "title": "App has a Network Security Configuration[android:networkSecurityConfig=@xml/network_security_config]",
-          "severity": "Low",
-          "description": "The Network Security Configuration feature lets apps customize their network security settings in a safe, declarative configuration file without modifying app code. These settings can be configured for specific domains and for a specific app. ",
-          "severity_score": 2,
-          "confidence_score": 7,
-          "category": "manifest",
-          "location": "AndroidManifest.xml",
-          "evidence": [
-            "rule=has_network_security",
-            "title=App has a Network Security Configuration[android:networkSecurityConfig=@xml/network_security_config]",
-            "component=[\"@xml/network_security_config\"]",
-            "description=The Network Security Configuration feature lets apps customize their network security settings in a safe, declarative configuration file without modifying app code. These settings can be configured for specific domains and for a specific app. "
-          ],
-          "related_components": [],
-          "related_deep_links": [],
-          "cwe": null,
-          "owasp_masvs": null,
-          "source": "mobsf",
-          "raw": {
-            "rule": "has_network_security",
-            "title": "App has a Network Security Configuration[android:networkSecurityConfig=@xml/network_security_config]",
-            "severity": "info",
-            "description": "The Network Security Configuration feature lets apps customize their network security settings in a safe, declarative configuration file without modifying app code. These settings can be configured for specific domains and for a specific app. ",
-            "name": "App has a Network Security Configuration [android:networkSecurityConfig=@xml/network_security_config]",
-            "component": [
-              "@xml/network_security_config"
-            ]
-          }
-        },
-        {
           "pattern_id": "MOBSF_CODE_ANDROID_LOGGING",
           "title": "The App logs information. Sensitive information should never be logged.",
           "severity": "Low",
@@ -2393,18 +2362,19 @@
           }
         },
         {
-          "pattern_id": "MOBSF_ANDROID_API_API_WEBVIEW",
-          "title": "WebView JavaScript Interface",
+          "pattern_id": "MOBSF_MANIFEST_HAS_NETWORK_SECURITY",
+          "title": "App has a Network Security Configuration[android:networkSecurityConfig=@xml/network_security_config]",
           "severity": "Low",
-          "description": "WebView JavaScript Interface",
+          "description": "The Network Security Configuration feature lets apps customize their network security settings in a safe, declarative configuration file without modifying app code. These settings can be configured for specific domains and for a specific app. ",
           "severity_score": 2,
-          "confidence_score": 6,
-          "category": "android_api",
-          "location": "com/example/mastg_test0033/SupportedWebView.java",
+          "confidence_score": 7,
+          "category": "manifest",
+          "location": "AndroidManifest.xml",
           "evidence": [
-            "rule=api_webview",
-            "description=WebView JavaScript Interface",
-            "com/example/mastg_test0033/SupportedWebView.java:6,7,17,27,32,32,33,33,37,5,6,7"
+            "rule=has_network_security",
+            "title=App has a Network Security Configuration[android:networkSecurityConfig=@xml/network_security_config]",
+            "component=[\"@xml/network_security_config\"]",
+            "description=The Network Security Configuration feature lets apps customize their network security settings in a safe, declarative configuration file without modifying app code. These settings can be configured for specific domains and for a specific app. "
           ],
           "related_components": [],
           "related_deep_links": [],
@@ -2412,28 +2382,30 @@
           "owasp_masvs": null,
           "source": "mobsf",
           "raw": {
-            "files": {
-              "com/example/mastg_test0033/SupportedWebView.java": "6,7,17,27,32,32,33,33,37,5,6,7"
-            },
-            "metadata": {
-              "description": "WebView JavaScript Interface",
-              "severity": "info"
-            }
+            "rule": "has_network_security",
+            "title": "App has a Network Security Configuration[android:networkSecurityConfig=@xml/network_security_config]",
+            "severity": "info",
+            "description": "The Network Security Configuration feature lets apps customize their network security settings in a safe, declarative configuration file without modifying app code. These settings can be configured for specific domains and for a specific app. ",
+            "name": "App has a Network Security Configuration [android:networkSecurityConfig=@xml/network_security_config]",
+            "component": [
+              "@xml/network_security_config"
+            ]
           }
         },
         {
-          "pattern_id": "MOBSF_ANDROID_API_API_START_ACTIVITY",
-          "title": "Starting Activity",
+          "pattern_id": "MOBSF_ANDROID_API_API_IPC",
+          "title": "Inter Process Communication",
           "severity": "Low",
-          "description": "Starting Activity",
+          "description": "Inter Process Communication",
           "severity_score": 2,
           "confidence_score": 6,
           "category": "android_api",
           "location": "com/example/mastg_test0033/MainActivity.java",
           "evidence": [
-            "rule=api_start_activity",
-            "description=Starting Activity",
-            "com/example/mastg_test0033/MainActivity.java:36"
+            "rule=api_ipc",
+            "description=Inter Process Communication",
+            "com/example/mastg_test0033/MainActivity.java:3,34,34",
+            "com/example/mastg_test0033/SupportedWebView.java:38"
           ],
           "related_components": [],
           "related_deep_links": [],
@@ -2442,39 +2414,11 @@
           "source": "mobsf",
           "raw": {
             "files": {
-              "com/example/mastg_test0033/MainActivity.java": "36"
+              "com/example/mastg_test0033/MainActivity.java": "3,34,34",
+              "com/example/mastg_test0033/SupportedWebView.java": "38"
             },
             "metadata": {
-              "description": "Starting Activity",
-              "severity": "info"
-            }
-          }
-        },
-        {
-          "pattern_id": "MOBSF_ANDROID_API_API_LOCAL_FILE_IO",
-          "title": "Local File I/O Operations",
-          "severity": "Low",
-          "description": "Local File I/O Operations",
-          "severity_score": 2,
-          "confidence_score": 6,
-          "category": "android_api",
-          "location": "com/example/mastg_test0033/MainActivity.java",
-          "evidence": [
-            "rule=api_local_file_io",
-            "description=Local File I/O Operations",
-            "com/example/mastg_test0033/MainActivity.java:12,13,13,14,50,50,51,52"
-          ],
-          "related_components": [],
-          "related_deep_links": [],
-          "cwe": null,
-          "owasp_masvs": null,
-          "source": "mobsf",
-          "raw": {
-            "files": {
-              "com/example/mastg_test0033/MainActivity.java": "12,13,13,14,50,50,51,52"
-            },
-            "metadata": {
-              "description": "Local File I/O Operations",
+              "description": "Inter Process Communication",
               "severity": "info"
             }
           }
@@ -2509,19 +2453,18 @@
           }
         },
         {
-          "pattern_id": "MOBSF_ANDROID_API_API_IPC",
-          "title": "Inter Process Communication",
+          "pattern_id": "MOBSF_ANDROID_API_API_LOCAL_FILE_IO",
+          "title": "Local File I/O Operations",
           "severity": "Low",
-          "description": "Inter Process Communication",
+          "description": "Local File I/O Operations",
           "severity_score": 2,
           "confidence_score": 6,
           "category": "android_api",
           "location": "com/example/mastg_test0033/MainActivity.java",
           "evidence": [
-            "rule=api_ipc",
-            "description=Inter Process Communication",
-            "com/example/mastg_test0033/MainActivity.java:3,34,34",
-            "com/example/mastg_test0033/SupportedWebView.java:38"
+            "rule=api_local_file_io",
+            "description=Local File I/O Operations",
+            "com/example/mastg_test0033/MainActivity.java:12,13,13,14,50,50,51,52"
           ],
           "related_components": [],
           "related_deep_links": [],
@@ -2530,11 +2473,68 @@
           "source": "mobsf",
           "raw": {
             "files": {
-              "com/example/mastg_test0033/MainActivity.java": "3,34,34",
-              "com/example/mastg_test0033/SupportedWebView.java": "38"
+              "com/example/mastg_test0033/MainActivity.java": "12,13,13,14,50,50,51,52"
             },
             "metadata": {
-              "description": "Inter Process Communication",
+              "description": "Local File I/O Operations",
+              "severity": "info"
+            }
+          }
+        },
+        {
+          "pattern_id": "MOBSF_ANDROID_API_API_START_ACTIVITY",
+          "title": "Starting Activity",
+          "severity": "Low",
+          "description": "Starting Activity",
+          "severity_score": 2,
+          "confidence_score": 6,
+          "category": "android_api",
+          "location": "com/example/mastg_test0033/MainActivity.java",
+          "evidence": [
+            "rule=api_start_activity",
+            "description=Starting Activity",
+            "com/example/mastg_test0033/MainActivity.java:36"
+          ],
+          "related_components": [],
+          "related_deep_links": [],
+          "cwe": null,
+          "owasp_masvs": null,
+          "source": "mobsf",
+          "raw": {
+            "files": {
+              "com/example/mastg_test0033/MainActivity.java": "36"
+            },
+            "metadata": {
+              "description": "Starting Activity",
+              "severity": "info"
+            }
+          }
+        },
+        {
+          "pattern_id": "MOBSF_ANDROID_API_API_WEBVIEW",
+          "title": "WebView JavaScript Interface",
+          "severity": "Low",
+          "description": "WebView JavaScript Interface",
+          "severity_score": 2,
+          "confidence_score": 6,
+          "category": "android_api",
+          "location": "com/example/mastg_test0033/SupportedWebView.java",
+          "evidence": [
+            "rule=api_webview",
+            "description=WebView JavaScript Interface",
+            "com/example/mastg_test0033/SupportedWebView.java:6,7,17,27,32,32,33,33,37,5,6,7"
+          ],
+          "related_components": [],
+          "related_deep_links": [],
+          "cwe": null,
+          "owasp_masvs": null,
+          "source": "mobsf",
+          "raw": {
+            "files": {
+              "com/example/mastg_test0033/SupportedWebView.java": "6,7,17,27,32,32,33,33,37,5,6,7"
+            },
+            "metadata": {
+              "description": "WebView JavaScript Interface",
               "severity": "info"
             }
           }
@@ -2557,8 +2557,8 @@
       "top5_precision": 0.0,
       "high_confidence_finding_count": 4,
       "high_confidence_precision": 0.0,
-      "high_priority_finding_count": 0,
-      "high_priority_precision": null,
+      "high_priority_finding_count": 8,
+      "high_priority_precision": 0.0,
       "severity_score_mae": null,
       "confidence_score_mae": null,
       "matches": [],
@@ -2756,18 +2756,18 @@
           }
         },
         {
-          "pattern_id": "MOBSF_ANDROID_API_API_START_ACTIVITY",
-          "title": "Starting Activity",
+          "pattern_id": "MOBSF_ANDROID_API_API_IPC",
+          "title": "Inter Process Communication",
           "severity": "Low",
-          "description": "Starting Activity",
+          "description": "Inter Process Communication",
           "severity_score": 2,
           "confidence_score": 6,
           "category": "android_api",
           "location": "com/example/mastg_test0035/MainActivity.java",
           "evidence": [
-            "rule=api_start_activity",
-            "description=Starting Activity",
-            "com/example/mastg_test0035/MainActivity.java:44"
+            "rule=api_ipc",
+            "description=Inter Process Communication",
+            "com/example/mastg_test0035/MainActivity.java:3,44"
           ],
           "related_components": [],
           "related_deep_links": [],
@@ -2776,10 +2776,10 @@
           "source": "mobsf",
           "raw": {
             "files": {
-              "com/example/mastg_test0035/MainActivity.java": "44"
+              "com/example/mastg_test0035/MainActivity.java": "3,44"
             },
             "metadata": {
-              "description": "Starting Activity",
+              "description": "Inter Process Communication",
               "severity": "info"
             }
           }
@@ -2814,18 +2814,18 @@
           }
         },
         {
-          "pattern_id": "MOBSF_ANDROID_API_API_IPC",
-          "title": "Inter Process Communication",
+          "pattern_id": "MOBSF_ANDROID_API_API_START_ACTIVITY",
+          "title": "Starting Activity",
           "severity": "Low",
-          "description": "Inter Process Communication",
+          "description": "Starting Activity",
           "severity_score": 2,
           "confidence_score": 6,
           "category": "android_api",
           "location": "com/example/mastg_test0035/MainActivity.java",
           "evidence": [
-            "rule=api_ipc",
-            "description=Inter Process Communication",
-            "com/example/mastg_test0035/MainActivity.java:3,44"
+            "rule=api_start_activity",
+            "description=Starting Activity",
+            "com/example/mastg_test0035/MainActivity.java:44"
           ],
           "related_components": [],
           "related_deep_links": [],
@@ -2834,10 +2834,10 @@
           "source": "mobsf",
           "raw": {
             "files": {
-              "com/example/mastg_test0035/MainActivity.java": "3,44"
+              "com/example/mastg_test0035/MainActivity.java": "44"
             },
             "metadata": {
-              "description": "Inter Process Communication",
+              "description": "Starting Activity",
               "severity": "info"
             }
           }
@@ -2860,8 +2860,8 @@
       "top5_precision": 0.0,
       "high_confidence_finding_count": 3,
       "high_confidence_precision": 0.0,
-      "high_priority_finding_count": 0,
-      "high_priority_precision": null,
+      "high_priority_finding_count": 5,
+      "high_priority_precision": 0.0,
       "severity_score_mae": null,
       "confidence_score_mae": null,
       "matches": [],
@@ -3043,35 +3043,6 @@
           ]
         },
         {
-          "pattern_id": "MOBSF_ANDROID_API_API_START_ACTIVITY",
-          "title": "Starting Activity",
-          "severity": "Low",
-          "description": "Starting Activity",
-          "severity_score": 2,
-          "confidence_score": 6,
-          "category": "android_api",
-          "location": "com/example/mastg_test0037/MainActivity.java",
-          "evidence": [
-            "rule=api_start_activity",
-            "description=Starting Activity",
-            "com/example/mastg_test0037/MainActivity.java:31"
-          ],
-          "related_components": [],
-          "related_deep_links": [],
-          "cwe": null,
-          "owasp_masvs": null,
-          "source": "mobsf",
-          "raw": {
-            "files": {
-              "com/example/mastg_test0037/MainActivity.java": "31"
-            },
-            "metadata": {
-              "description": "Starting Activity",
-              "severity": "info"
-            }
-          }
-        },
-        {
           "pattern_id": "MOBSF_ANDROID_API_API_IPC",
           "title": "Inter Process Communication",
           "severity": "Low",
@@ -3099,6 +3070,35 @@
               "severity": "info"
             }
           }
+        },
+        {
+          "pattern_id": "MOBSF_ANDROID_API_API_START_ACTIVITY",
+          "title": "Starting Activity",
+          "severity": "Low",
+          "description": "Starting Activity",
+          "severity_score": 2,
+          "confidence_score": 6,
+          "category": "android_api",
+          "location": "com/example/mastg_test0037/MainActivity.java",
+          "evidence": [
+            "rule=api_start_activity",
+            "description=Starting Activity",
+            "com/example/mastg_test0037/MainActivity.java:31"
+          ],
+          "related_components": [],
+          "related_deep_links": [],
+          "cwe": null,
+          "owasp_masvs": null,
+          "source": "mobsf",
+          "raw": {
+            "files": {
+              "com/example/mastg_test0037/MainActivity.java": "31"
+            },
+            "metadata": {
+              "description": "Starting Activity",
+              "severity": "info"
+            }
+          }
         }
       ]
     }
@@ -3109,48 +3109,94 @@
       "test_id": "MASTG-TEST-0007",
       "title": "Determining Whether Sensitive Stored Data Has Been Exposed via IPC Mechanisms",
       "expected_count": 2,
-      "raw_finding_count": 0,
-      "scoped_finding_count": 0,
-      "tp": 0,
+      "raw_finding_count": 1,
+      "scoped_finding_count": 1,
+      "tp": 1,
       "fp": 0,
-      "fn": 2,
-      "precision": null,
-      "recall": 0.0,
-      "f1": null,
-      "top5_precision": null,
-      "high_confidence_finding_count": 0,
-      "high_confidence_precision": null,
-      "high_priority_finding_count": 0,
-      "high_priority_precision": null,
+      "fn": 1,
+      "precision": 1.0,
+      "recall": 0.5,
+      "f1": 0.6666666666666666,
+      "top5_precision": 1.0,
+      "high_confidence_finding_count": 1,
+      "high_confidence_precision": 1.0,
+      "high_priority_finding_count": 1,
+      "high_priority_precision": 1.0,
       "severity_score_mae": null,
       "confidence_score_mae": null,
-      "matches": [],
-      "unmatched_expected": [
+      "matches": [
         {
-          "id": "GT-0007-1",
-          "category": "exported_provider",
-          "must_detect": true,
-          "severity": "high",
-          "description": "The app exposes a ContentProvider that allows other apps to access sensitive stored data through IPC.",
-          "acceptable_scanner_categories": [
-            "exported_provider",
-            "exported_component",
-            "content_provider_exposure",
-            "ipc_exposure",
-            "manifest_provider"
-          ],
-          "evidence_keywords": [
-            "content provider",
-            "provider",
-            "android:exported",
-            "exported=true",
-            "permission",
-            "android:permission",
-            "readPermission",
-            "writePermission"
-          ],
-          "source": "README.md Implementation and Static Analysis"
-        },
+          "gt_id": "GT-0007-1",
+          "gt_category": "exported_provider",
+          "finding_id": "VULN_EXPORTED_PROVIDER_LEAK",
+          "finding_category": "exported_provider",
+          "finding_title": "Exported ContentProvider with weak protection",
+          "finding_severity": "Critical",
+          "finding_severity_score": 9,
+          "finding_confidence_score": 10,
+          "match_info": {
+            "match_type": "medium",
+            "category": true,
+            "component": false,
+            "location": false,
+            "authority": false,
+            "deeplink": false,
+            "keyword_hits": 3,
+            "keyword_total": 8
+          },
+          "ground_truth": {
+            "id": "GT-0007-1",
+            "category": "exported_provider",
+            "must_detect": true,
+            "severity": "high",
+            "description": "The app exposes a ContentProvider that allows other apps to access sensitive stored data through IPC.",
+            "acceptable_scanner_categories": [
+              "exported_provider",
+              "exported_component",
+              "content_provider_exposure",
+              "ipc_exposure",
+              "manifest_provider"
+            ],
+            "evidence_keywords": [
+              "content provider",
+              "provider",
+              "android:exported",
+              "exported=true",
+              "permission",
+              "android:permission",
+              "readPermission",
+              "writePermission"
+            ],
+            "source": "README.md Implementation and Static Analysis"
+          },
+          "finding": {
+            "pattern_id": "VULN_EXPORTED_PROVIDER_LEAK",
+            "title": "Exported ContentProvider with weak protection",
+            "severity": "Critical",
+            "description": "A ContentProvider is reachable from other apps but lacks signature-level read/write protection. Attackers may read or tamper with app data via content:// URIs.",
+            "severity_score": 9,
+            "confidence_score": 10,
+            "test_priority": "P0",
+            "category": "exported_provider",
+            "location": "AndroidManifest.xml",
+            "evidence": [
+              "Component: com.example.mastg_test0007.MyContentProvider (provider)",
+              "exported=true",
+              "authorities=['com.example.mastg_test0007.provider']",
+              "provider permissions=(none)",
+              "tags=WEAK_PROVIDER_PROTECTION"
+            ],
+            "related_components": [
+              "com.example.mastg_test0007.MyContentProvider"
+            ],
+            "related_deep_links": [],
+            "cwe": "CWE-926",
+            "owasp_masvs": "MSTG-PLATFORM-2",
+            "source": "our_scanner"
+          }
+        }
+      ],
+      "unmatched_expected": [
         {
           "id": "GT-0007-2",
           "category": "content_provider_sql_injection",
@@ -3261,73 +3307,167 @@
       "test_id": "MASTG-TEST-0024",
       "title": "Testing for App Permissions",
       "expected_count": 2,
-      "raw_finding_count": 0,
-      "scoped_finding_count": 0,
-      "tp": 0,
+      "raw_finding_count": 2,
+      "scoped_finding_count": 2,
+      "tp": 2,
       "fp": 0,
-      "fn": 2,
-      "precision": null,
-      "recall": 0.0,
-      "f1": null,
-      "top5_precision": null,
+      "fn": 0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0,
+      "top5_precision": 1.0,
       "high_confidence_finding_count": 0,
       "high_confidence_precision": null,
-      "high_priority_finding_count": 0,
-      "high_priority_precision": null,
+      "high_priority_finding_count": 2,
+      "high_priority_precision": 1.0,
       "severity_score_mae": null,
       "confidence_score_mae": null,
-      "matches": [],
-      "unmatched_expected": [
+      "matches": [
         {
-          "id": "GT-0024-1",
-          "category": "excessive_permissions",
-          "must_detect": true,
-          "severity": "medium",
-          "description": "The camera app requests permissions that are not necessary for its core functionality of taking photos and saving them to internal storage.",
-          "acceptable_scanner_categories": [
-            "excessive_permissions",
-            "unnecessary_permissions",
-            "overprivileged_app",
-            "permission_overreach",
-            "manifest_permission"
-          ],
-          "evidence_keywords": [
-            "uses-permission",
-            "internet",
-            "accept_handover",
-            "answer_phone_calls",
-            "call_phone",
-            "write_calendar",
-            "read_contacts",
-            "bluetooth_admin"
-          ],
-          "source": "README.md Implementation and Static Analysis"
+          "gt_id": "GT-0024-1",
+          "gt_category": "excessive_permissions",
+          "finding_id": "VULN_EXCESSIVE_PERMISSIONS",
+          "finding_category": "excessive_permissions",
+          "finding_title": "Application requests excessive permissions",
+          "finding_severity": "Medium",
+          "finding_severity_score": 5,
+          "finding_confidence_score": 5,
+          "match_info": {
+            "match_type": "medium",
+            "category": true,
+            "component": false,
+            "location": false,
+            "authority": false,
+            "deeplink": false,
+            "keyword_hits": 8,
+            "keyword_total": 8
+          },
+          "ground_truth": {
+            "id": "GT-0024-1",
+            "category": "excessive_permissions",
+            "must_detect": true,
+            "severity": "medium",
+            "description": "The camera app requests permissions that are not necessary for its core functionality of taking photos and saving them to internal storage.",
+            "acceptable_scanner_categories": [
+              "excessive_permissions",
+              "unnecessary_permissions",
+              "overprivileged_app",
+              "permission_overreach",
+              "manifest_permission"
+            ],
+            "evidence_keywords": [
+              "uses-permission",
+              "internet",
+              "accept_handover",
+              "answer_phone_calls",
+              "call_phone",
+              "write_calendar",
+              "read_contacts",
+              "bluetooth_admin"
+            ],
+            "source": "README.md Implementation and Static Analysis"
+          },
+          "finding": {
+            "pattern_id": "VULN_EXCESSIVE_PERMISSIONS",
+            "title": "Application requests excessive permissions",
+            "severity": "Medium",
+            "description": "The application requests permissions that appear unrelated to the benchmark app's core camera functionality, increasing privacy and abuse risk.",
+            "severity_score": 5,
+            "confidence_score": 5,
+            "test_priority": "P2",
+            "category": "excessive_permissions",
+            "location": "AndroidManifest.xml",
+            "evidence": [
+              "uses-permission",
+              "AndroidManifest.xml",
+              "excessive permissions",
+              "android.permission.ACCEPT_HANDOVER",
+              "android.permission.ANSWER_PHONE_CALLS",
+              "android.permission.BLUETOOTH_ADMIN",
+              "android.permission.CALL_PHONE",
+              "android.permission.INTERNET",
+              "android.permission.READ_CONTACTS",
+              "android.permission.WRITE_CALENDAR"
+            ],
+            "related_components": [],
+            "related_deep_links": [],
+            "cwe": "CWE-250",
+            "owasp_masvs": "MSTG-PLATFORM-1",
+            "source": "our_scanner"
+          }
         },
         {
-          "id": "GT-0024-2",
-          "category": "dangerous_permission_requested",
-          "must_detect": true,
-          "severity": "medium",
-          "description": "The app requests dangerous permissions such as phone, contacts, and calendar permissions without clear need.",
-          "acceptable_scanner_categories": [
-            "dangerous_permission",
-            "sensitive_permission",
-            "privacy_sensitive_permission",
-            "permission_overreach",
-            "manifest_permission"
-          ],
-          "evidence_keywords": [
-            "read_contacts",
-            "write_calendar",
-            "call_phone",
-            "answer_phone_calls",
-            "dangerous",
-            "permission",
-            "android.permission"
-          ],
-          "source": "README.md Android Permissions and Permission Analysis"
+          "gt_id": "GT-0024-2",
+          "gt_category": "dangerous_permission_requested",
+          "finding_id": "VULN_DANGEROUS_PERMISSION_REQUESTED",
+          "finding_category": "dangerous_permission",
+          "finding_title": "Application requests dangerous permissions",
+          "finding_severity": "Medium",
+          "finding_severity_score": 5,
+          "finding_confidence_score": 5,
+          "match_info": {
+            "match_type": "medium",
+            "category": true,
+            "component": false,
+            "location": false,
+            "authority": false,
+            "deeplink": false,
+            "keyword_hits": 7,
+            "keyword_total": 7
+          },
+          "ground_truth": {
+            "id": "GT-0024-2",
+            "category": "dangerous_permission_requested",
+            "must_detect": true,
+            "severity": "medium",
+            "description": "The app requests dangerous permissions such as phone, contacts, and calendar permissions without clear need.",
+            "acceptable_scanner_categories": [
+              "dangerous_permission",
+              "sensitive_permission",
+              "privacy_sensitive_permission",
+              "permission_overreach",
+              "manifest_permission"
+            ],
+            "evidence_keywords": [
+              "read_contacts",
+              "write_calendar",
+              "call_phone",
+              "answer_phone_calls",
+              "dangerous",
+              "permission",
+              "android.permission"
+            ],
+            "source": "README.md Android Permissions and Permission Analysis"
+          },
+          "finding": {
+            "pattern_id": "VULN_DANGEROUS_PERMISSION_REQUESTED",
+            "title": "Application requests dangerous permissions",
+            "severity": "Medium",
+            "description": "The application requests Android dangerous permissions. These permissions can expose sensitive user data or privileged device actions if not justified.",
+            "severity_score": 5,
+            "confidence_score": 5,
+            "test_priority": "P2",
+            "category": "dangerous_permission",
+            "location": "AndroidManifest.xml",
+            "evidence": [
+              "uses-permission",
+              "AndroidManifest.xml",
+              "dangerous permission",
+              "android.permission",
+              "android.permission.ANSWER_PHONE_CALLS",
+              "android.permission.CALL_PHONE",
+              "android.permission.READ_CONTACTS",
+              "android.permission.WRITE_CALENDAR"
+            ],
+            "related_components": [],
+            "related_deep_links": [],
+            "cwe": "CWE-250",
+            "owasp_masvs": "MSTG-PLATFORM-1",
+            "source": "our_scanner"
+          }
         }
       ],
+      "unmatched_expected": [],
       "unmatched_findings": []
     },
     {
@@ -3335,75 +3475,181 @@
       "test_id": "MASTG-TEST-0028",
       "title": "Testing Deep Links",
       "expected_count": 3,
-      "raw_finding_count": 0,
-      "scoped_finding_count": 0,
-      "tp": 0,
+      "raw_finding_count": 3,
+      "scoped_finding_count": 2,
+      "tp": 2,
       "fp": 0,
-      "fn": 3,
-      "precision": null,
-      "recall": 0.0,
-      "f1": null,
-      "top5_precision": null,
+      "fn": 1,
+      "precision": 1.0,
+      "recall": 0.6666666666666666,
+      "f1": 0.8,
+      "top5_precision": 1.0,
       "high_confidence_finding_count": 0,
       "high_confidence_precision": null,
-      "high_priority_finding_count": 0,
-      "high_priority_precision": null,
+      "high_priority_finding_count": 2,
+      "high_priority_precision": 1.0,
       "severity_score_mae": null,
       "confidence_score_mae": null,
-      "matches": [],
+      "matches": [
+        {
+          "gt_id": "GT-0028-1",
+          "gt_category": "insecure_deeplink",
+          "finding_id": "VULN_INSECURE_DEEPLINK",
+          "finding_category": "insecure_deeplink",
+          "finding_title": "Externally reachable deep link handler",
+          "finding_severity": "High",
+          "finding_severity_score": 7,
+          "finding_confidence_score": 5,
+          "match_info": {
+            "match_type": "medium",
+            "category": true,
+            "component": false,
+            "location": false,
+            "authority": false,
+            "deeplink": false,
+            "keyword_hits": 6,
+            "keyword_total": 9
+          },
+          "ground_truth": {
+            "id": "GT-0028-1",
+            "category": "insecure_deeplink",
+            "must_detect": true,
+            "severity": "high",
+            "description": "The app exposes deep links through exported intent filters, increasing the attack surface and allowing external intents to reach app functionality.",
+            "acceptable_scanner_categories": [
+              "insecure_deeplink",
+              "deep_link_exposure",
+              "exported_activity",
+              "browsable_intent_filter",
+              "manifest_deeplink"
+            ],
+            "evidence_keywords": [
+              "intent-filter",
+              "android.intent.action.view",
+              "android.intent.category.browsable",
+              "android.intent.category.default",
+              "data",
+              "scheme",
+              "host",
+              "path",
+              "deeplink"
+            ],
+            "source": "README.md Check for Deep Link Usage"
+          },
+          "finding": {
+            "pattern_id": "VULN_INSECURE_DEEPLINK",
+            "title": "Externally reachable deep link handler",
+            "severity": "High",
+            "description": "An Activity exposes a browsable deep link intent-filter that can be invoked by external apps. This increases the attack surface and may allow crafted Intents to reach app functionality.",
+            "severity_score": 7,
+            "confidence_score": 5,
+            "test_priority": "P1",
+            "category": "insecure_deeplink",
+            "location": "AndroidManifest.xml",
+            "evidence": [
+              "Deep link on: com.example.mastg_test0028.WebViewActivity",
+              "schemes=['mastg-test0028']",
+              "hosts=['com.mastg-test0028']",
+              "paths=[]",
+              "browsable=True",
+              "autoVerify=False",
+              "tags=EXPORTED_HANDLER",
+              "Test: adb shell am start -a android.intent.action.VIEW -d \"mastg-test0028://com.mastg-test0028/?test=1\" -n com.example.mastg_test0028/.WebViewActivity"
+            ],
+            "related_components": [
+              "com.example.mastg_test0028.WebViewActivity"
+            ],
+            "related_deep_links": [
+              "com.example.mastg_test0028.WebViewActivity"
+            ],
+            "cwe": "CWE-926",
+            "owasp_masvs": "MSTG-PLATFORM-3",
+            "source": "our_scanner"
+          }
+        },
+        {
+          "gt_id": "GT-0028-2",
+          "gt_category": "deeplink_auth_bypass",
+          "finding_id": "VULN_INSECURE_DEEPLINK",
+          "finding_category": "insecure_deeplink",
+          "finding_title": "Externally reachable browsable deep link",
+          "finding_severity": "High",
+          "finding_severity_score": 7,
+          "finding_confidence_score": 5,
+          "match_info": {
+            "match_type": "medium",
+            "category": true,
+            "component": false,
+            "location": false,
+            "authority": false,
+            "deeplink": false,
+            "keyword_hits": 3,
+            "keyword_total": 9
+          },
+          "ground_truth": {
+            "id": "GT-0028-2",
+            "category": "deeplink_auth_bypass",
+            "must_detect": true,
+            "severity": "high",
+            "description": "The app login can be bypassed by generating a crafted intent from the terminal through the deep link entry point.",
+            "acceptable_scanner_categories": [
+              "deeplink_auth_bypass",
+              "authentication_bypass",
+              "insecure_deeplink",
+              "exported_activity_abuse",
+              "intent_injection"
+            ],
+            "evidence_keywords": [
+              "login",
+              "bypass",
+              "intent",
+              "getintent",
+              "getdata",
+              "uri",
+              "admin",
+              "1234",
+              "deeplink"
+            ],
+            "source": "README.md Implementation and Check the Handler Method"
+          },
+          "finding": {
+            "pattern_id": "VULN_INSECURE_DEEPLINK",
+            "title": "Externally reachable browsable deep link",
+            "severity": "High",
+            "description": "The app exposes a browsable deep link through an exported intent-filter. External apps or adb commands can invoke this Activity with crafted URI data.",
+            "severity_score": 7,
+            "confidence_score": 5,
+            "test_priority": "P1",
+            "category": "insecure_deeplink",
+            "location": "AndroidManifest.xml",
+            "evidence": [
+              "Deep link on: com.example.mastg_test0028.WebViewActivity",
+              "intent-filter",
+              "android.intent.action.VIEW",
+              "android.intent.category.BROWSABLE",
+              "android.intent.category.DEFAULT",
+              "schemes=['mastg-test0028']",
+              "hosts=['com.mastg-test0028']",
+              "paths=[]",
+              "browsable=True",
+              "autoVerify=False",
+              "deeplink",
+              "exported handler",
+              "Test: adb shell am start -a android.intent.action.VIEW -d \"mastg-test0028://com.mastg-test0028/?test=1\" -n com.example.mastg_test0028/.WebViewActivity"
+            ],
+            "related_components": [
+              "com.example.mastg_test0028.WebViewActivity"
+            ],
+            "related_deep_links": [
+              "com.example.mastg_test0028.WebViewActivity"
+            ],
+            "cwe": "CWE-926",
+            "owasp_masvs": "MSTG-PLATFORM-3",
+            "source": "our_scanner"
+          }
+        }
+      ],
       "unmatched_expected": [
-        {
-          "id": "GT-0028-1",
-          "category": "insecure_deeplink",
-          "must_detect": true,
-          "severity": "high",
-          "description": "The app exposes deep links through exported intent filters, increasing the attack surface and allowing external intents to reach app functionality.",
-          "acceptable_scanner_categories": [
-            "insecure_deeplink",
-            "deep_link_exposure",
-            "exported_activity",
-            "browsable_intent_filter",
-            "manifest_deeplink"
-          ],
-          "evidence_keywords": [
-            "intent-filter",
-            "android.intent.action.view",
-            "android.intent.category.browsable",
-            "android.intent.category.default",
-            "data",
-            "scheme",
-            "host",
-            "path",
-            "deeplink"
-          ],
-          "source": "README.md Check for Deep Link Usage"
-        },
-        {
-          "id": "GT-0028-2",
-          "category": "deeplink_auth_bypass",
-          "must_detect": true,
-          "severity": "high",
-          "description": "The app login can be bypassed by generating a crafted intent from the terminal through the deep link entry point.",
-          "acceptable_scanner_categories": [
-            "deeplink_auth_bypass",
-            "authentication_bypass",
-            "insecure_deeplink",
-            "exported_activity_abuse",
-            "intent_injection"
-          ],
-          "evidence_keywords": [
-            "login",
-            "bypass",
-            "intent",
-            "getintent",
-            "getdata",
-            "uri",
-            "admin",
-            "1234",
-            "deeplink"
-          ],
-          "source": "README.md Implementation and Check the Handler Method"
-        },
         {
           "id": "GT-0028-3",
           "category": "deeplink_webview_input_control",
@@ -3437,19 +3683,19 @@
       "test_id": "MASTG-TEST-0030",
       "title": "Testing for Vulnerable Implementation of PendingIntent",
       "expected_count": 2,
-      "raw_finding_count": 0,
-      "scoped_finding_count": 0,
+      "raw_finding_count": 1,
+      "scoped_finding_count": 1,
       "tp": 0,
-      "fp": 0,
+      "fp": 1,
       "fn": 2,
-      "precision": null,
+      "precision": 0.0,
       "recall": 0.0,
       "f1": null,
-      "top5_precision": null,
+      "top5_precision": 0.0,
       "high_confidence_finding_count": 0,
       "high_confidence_precision": null,
-      "high_priority_finding_count": 0,
-      "high_priority_precision": null,
+      "high_priority_finding_count": 1,
+      "high_priority_precision": 0.0,
       "severity_score_mae": null,
       "confidence_score_mae": null,
       "matches": [],
@@ -3504,7 +3750,31 @@
           "source": "README.md Static Analysis"
         }
       ],
-      "unmatched_findings": []
+      "unmatched_findings": [
+        {
+          "pattern_id": "VULN_DANGEROUS_PERMISSION_REQUESTED",
+          "title": "Application requests dangerous permissions",
+          "severity": "Medium",
+          "description": "The application requests Android dangerous permissions. These permissions can expose sensitive user data or privileged device actions if not justified.",
+          "severity_score": 5,
+          "confidence_score": 5,
+          "test_priority": "P2",
+          "category": "dangerous_permission",
+          "location": "AndroidManifest.xml",
+          "evidence": [
+            "uses-permission",
+            "AndroidManifest.xml",
+            "dangerous permission",
+            "android.permission",
+            "android.permission.CALL_PHONE"
+          ],
+          "related_components": [],
+          "related_deep_links": [],
+          "cwe": "CWE-250",
+          "owasp_masvs": "MSTG-PLATFORM-1",
+          "source": "our_scanner"
+        }
+      ]
     },
     {
       "case_id": "Platform/MASTG-TEST0031",

@@ -187,19 +187,41 @@ def _collect_permissions(root: ET.Element) -> dict[str, str]:
 
     return perms
 
+def _collect_uses_permissions(root: ET.Element) -> list[str]:
+    """Collect permissions requested by this app via <uses-permission>."""
 
-def _parse_application_flags(app_elem: ET.Element) -> tuple[bool, bool | None]:
+    permissions: list[str] = []
+
+    for elem in root.iter():
+        if _tag_name(elem) != "uses-permission":
+            continue
+
+        name = _attr(elem, "name")
+        if not name:
+            continue
+
+        if name not in permissions:
+            permissions.append(name)
+
+    return permissions
+
+def _parse_application_flags(app_elem: ET.Element) -> tuple[bool, bool | None, bool | None]:
     debuggable = _attr(app_elem, "debuggable").lower() == "true"
 
     backup_raw = _attr(app_elem, "allowBackup")
-
     if backup_raw == "":
         # Android default is true for many apps if not explicitly disabled.
         allow_backup: bool | None = True
     else:
         allow_backup = backup_raw.lower() == "true"
 
-    return debuggable, allow_backup
+    cleartext_raw = _attr(app_elem, "usesCleartextTraffic")
+    if cleartext_raw == "":
+        uses_cleartext_traffic: bool | None = None
+    else:
+        uses_cleartext_traffic = cleartext_raw.lower() == "true"
+
+    return debuggable, allow_backup, uses_cleartext_traffic
 
 
 def _format_component_name(package_name: str, name: str) -> str:
@@ -262,13 +284,15 @@ def load_apk(apk_path: str) -> tuple[AppMeta, ET.Element, dict[str, str]]:
 
     root = ET.fromstring(manifest_xml)
     custom_permissions = _collect_permissions(root)
+    uses_permissions = _collect_uses_permissions(root)
 
     debuggable = False
     allow_backup: bool | None = None
+    uses_cleartext_traffic: bool | None = None
 
     for elem in root.iter():
         if _tag_name(elem) == "application":
-            debuggable, allow_backup = _parse_application_flags(elem)
+            debuggable, allow_backup, uses_cleartext_traffic = _parse_application_flags(elem)
             break
 
     meta = AppMeta(
@@ -280,6 +304,8 @@ def load_apk(apk_path: str) -> tuple[AppMeta, ET.Element, dict[str, str]]:
         target_sdk=target_sdk,
         debuggable=debuggable,
         allow_backup=allow_backup,
+        uses_cleartext_traffic=uses_cleartext_traffic,
+        uses_permissions=uses_permissions,
     )
 
     return meta, root, custom_permissions

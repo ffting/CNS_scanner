@@ -16,8 +16,8 @@
       "top5_precision": 0.0,
       "high_confidence_finding_count": 4,
       "high_confidence_precision": 0.0,
-      "high_priority_finding_count": 0,
-      "high_priority_precision": null,
+      "high_priority_finding_count": 6,
+      "high_priority_precision": 0.0,
       "severity_score_mae": null,
       "confidence_score_mae": null,
       "matches": [],
@@ -214,34 +214,6 @@
           ]
         },
         {
-          "pattern_id": "MOBSF_MANIFEST_CLEAR_TEXT_TRAFFIC",
-          "title": "Clear text traffic is Enabled For App[android:usesCleartextTraffic=true]",
-          "severity": "High",
-          "description": "The app intends to use cleartext network traffic, such as cleartext HTTP, FTP stacks, DownloadManager, and MediaPlayer. The default value for apps that target API level 27 or lower is \"true\". Apps that target API level 28 or higher default to \"false\". The key reason for avoiding cleartext traffic is the lack of confidentiality, authenticity, and protections against tampering; a network attacker can eavesdrop on transmitted data and also modify it without being detected.",
-          "severity_score": 7,
-          "confidence_score": 7,
-          "category": "manifest",
-          "location": "AndroidManifest.xml",
-          "evidence": [
-            "rule=clear_text_traffic",
-            "title=Clear text traffic is Enabled For App[android:usesCleartextTraffic=true]",
-            "description=The app intends to use cleartext network traffic, such as cleartext HTTP, FTP stacks, DownloadManager, and MediaPlayer. The default value for apps that target API level 27 or lower is \"true\". Apps that target API level 28 or higher default to \"false\". The key reason for avoiding cleartext traffic is the lack of confidentiality, authenticity, and protections against tampering; a network attacker can eavesdrop on transmitted data and also modify it without being detected."
-          ],
-          "related_components": [],
-          "related_deep_links": [],
-          "cwe": null,
-          "owasp_masvs": null,
-          "source": "mobsf",
-          "raw": {
-            "rule": "clear_text_traffic",
-            "title": "Clear text traffic is Enabled For App[android:usesCleartextTraffic=true]",
-            "severity": "high",
-            "description": "The app intends to use cleartext network traffic, such as cleartext HTTP, FTP stacks, DownloadManager, and MediaPlayer. The default value for apps that target API level 27 or lower is \"true\". Apps that target API level 28 or higher default to \"false\". The key reason for avoiding cleartext traffic is the lack of confidentiality, authenticity, and protections against tampering; a network attacker can eavesdrop on transmitted data and also modify it without being detected.",
-            "name": "Clear text traffic is Enabled For App [android:usesCleartextTraffic=true]",
-            "component": []
-          }
-        },
-        {
           "pattern_id": "MOBSF_CODE_ANDROID_WEBVIEW_IGNORE_SSL",
           "title": "Insecure WebView Implementation. WebView ignores SSL Certificate errors and accept any SSL Certificate. This application is vulnerable to MITM attacks",
           "severity": "High",
@@ -275,6 +247,34 @@
               "description": "Insecure WebView Implementation. WebView ignores SSL Certificate errors and accept any SSL Certificate. This application is vulnerable to MITM attacks",
               "severity": "high"
             }
+          }
+        },
+        {
+          "pattern_id": "MOBSF_MANIFEST_CLEAR_TEXT_TRAFFIC",
+          "title": "Clear text traffic is Enabled For App[android:usesCleartextTraffic=true]",
+          "severity": "High",
+          "description": "The app intends to use cleartext network traffic, such as cleartext HTTP, FTP stacks, DownloadManager, and MediaPlayer. The default value for apps that target API level 27 or lower is \"true\". Apps that target API level 28 or higher default to \"false\". The key reason for avoiding cleartext traffic is the lack of confidentiality, authenticity, and protections against tampering; a network attacker can eavesdrop on transmitted data and also modify it without being detected.",
+          "severity_score": 7,
+          "confidence_score": 7,
+          "category": "manifest",
+          "location": "AndroidManifest.xml",
+          "evidence": [
+            "rule=clear_text_traffic",
+            "title=Clear text traffic is Enabled For App[android:usesCleartextTraffic=true]",
+            "description=The app intends to use cleartext network traffic, such as cleartext HTTP, FTP stacks, DownloadManager, and MediaPlayer. The default value for apps that target API level 27 or lower is \"true\". Apps that target API level 28 or higher default to \"false\". The key reason for avoiding cleartext traffic is the lack of confidentiality, authenticity, and protections against tampering; a network attacker can eavesdrop on transmitted data and also modify it without being detected."
+          ],
+          "related_components": [],
+          "related_deep_links": [],
+          "cwe": null,
+          "owasp_masvs": null,
+          "source": "mobsf",
+          "raw": {
+            "rule": "clear_text_traffic",
+            "title": "Clear text traffic is Enabled For App[android:usesCleartextTraffic=true]",
+            "severity": "high",
+            "description": "The app intends to use cleartext network traffic, such as cleartext HTTP, FTP stacks, DownloadManager, and MediaPlayer. The default value for apps that target API level 27 or lower is \"true\". Apps that target API level 28 or higher default to \"false\". The key reason for avoiding cleartext traffic is the lack of confidentiality, authenticity, and protections against tampering; a network attacker can eavesdrop on transmitted data and also modify it without being detected.",
+            "name": "Clear text traffic is Enabled For App [android:usesCleartextTraffic=true]",
+            "component": []
           }
         },
         {
@@ -343,8 +343,8 @@
       "top5_precision": 0.0,
       "high_confidence_finding_count": 2,
       "high_confidence_precision": 0.0,
-      "high_priority_finding_count": 0,
-      "high_priority_precision": null,
+      "high_priority_finding_count": 5,
+      "high_priority_precision": 0.0,
       "severity_score_mae": null,
       "confidence_score_mae": null,
       "matches": [],
@@ -497,35 +497,6 @@
           }
         },
         {
-          "pattern_id": "MOBSF_ANDROID_API_API_LOCAL_FILE_IO",
-          "title": "Local File I/O Operations",
-          "severity": "Low",
-          "description": "Local File I/O Operations",
-          "severity_score": 2,
-          "confidence_score": 6,
-          "category": "android_api",
-          "location": "com/example/mastg_test0020/MainActivity.java",
-          "evidence": [
-            "rule=api_local_file_io",
-            "description=Local File I/O Operations",
-            "com/example/mastg_test0020/MainActivity.java:13,14,14,15"
-          ],
-          "related_components": [],
-          "related_deep_links": [],
-          "cwe": null,
-          "owasp_masvs": null,
-          "source": "mobsf",
-          "raw": {
-            "files": {
-              "com/example/mastg_test0020/MainActivity.java": "13,14,14,15"
-            },
-            "metadata": {
-              "description": "Local File I/O Operations",
-              "severity": "info"
-            }
-          }
-        },
-        {
           "pattern_id": "MOBSF_ANDROID_API_API_HTTPS_CONNECTION",
           "title": "HTTPS Connection",
           "severity": "Low",
@@ -553,6 +524,35 @@
               "severity": "info"
             }
           }
+        },
+        {
+          "pattern_id": "MOBSF_ANDROID_API_API_LOCAL_FILE_IO",
+          "title": "Local File I/O Operations",
+          "severity": "Low",
+          "description": "Local File I/O Operations",
+          "severity_score": 2,
+          "confidence_score": 6,
+          "category": "android_api",
+          "location": "com/example/mastg_test0020/MainActivity.java",
+          "evidence": [
+            "rule=api_local_file_io",
+            "description=Local File I/O Operations",
+            "com/example/mastg_test0020/MainActivity.java:13,14,14,15"
+          ],
+          "related_components": [],
+          "related_deep_links": [],
+          "cwe": null,
+          "owasp_masvs": null,
+          "source": "mobsf",
+          "raw": {
+            "files": {
+              "com/example/mastg_test0020/MainActivity.java": "13,14,14,15"
+            },
+            "metadata": {
+              "description": "Local File I/O Operations",
+              "severity": "info"
+            }
+          }
         }
       ]
     },
@@ -572,8 +572,8 @@
       "top5_precision": 0.0,
       "high_confidence_finding_count": 5,
       "high_confidence_precision": 0.0,
-      "high_priority_finding_count": 0,
-      "high_priority_precision": null,
+      "high_priority_finding_count": 8,
+      "high_priority_precision": 0.0,
       "severity_score_mae": null,
       "confidence_score_mae": null,
       "matches": [],
@@ -757,6 +757,30 @@
           }
         },
         {
+          "pattern_id": "MOBSF_CERTIFICATE_APPLICATION_SIGNED_WITH_DEBUG_CERTIFICATE",
+          "title": "Application signed with debug certificate",
+          "severity": "High",
+          "description": "Application signed with a debug certificate. Production application must not be shipped with a debug certificate.",
+          "severity_score": 7,
+          "confidence_score": 8,
+          "category": "certificate",
+          "location": "APK signature",
+          "evidence": [
+            "title=Application signed with debug certificate",
+            "description=Application signed with a debug certificate. Production application must not be shipped with a debug certificate."
+          ],
+          "related_components": [],
+          "related_deep_links": [],
+          "cwe": null,
+          "owasp_masvs": null,
+          "source": "mobsf",
+          "raw": [
+            "high",
+            "Application signed with a debug certificate. Production application must not be shipped with a debug certificate.",
+            "Application signed with debug certificate"
+          ]
+        },
+        {
           "pattern_id": "MOBSF_MANIFEST_TASK_HIJACKING2",
           "title": "Activity (com.example.mastg_test0021.MainActivity) is vulnerable to StrandHogg 2.0",
           "severity": "High",
@@ -788,30 +812,6 @@
               "com.example.mastg_test0021.MainActivity"
             ]
           }
-        },
-        {
-          "pattern_id": "MOBSF_CERTIFICATE_APPLICATION_SIGNED_WITH_DEBUG_CERTIFICATE",
-          "title": "Application signed with debug certificate",
-          "severity": "High",
-          "description": "Application signed with a debug certificate. Production application must not be shipped with a debug certificate.",
-          "severity_score": 7,
-          "confidence_score": 8,
-          "category": "certificate",
-          "location": "APK signature",
-          "evidence": [
-            "title=Application signed with debug certificate",
-            "description=Application signed with a debug certificate. Production application must not be shipped with a debug certificate."
-          ],
-          "related_components": [],
-          "related_deep_links": [],
-          "cwe": null,
-          "owasp_masvs": null,
-          "source": "mobsf",
-          "raw": [
-            "high",
-            "Application signed with a debug certificate. Production application must not be shipped with a debug certificate.",
-            "Application signed with debug certificate"
-          ]
         },
         {
           "pattern_id": "MOBSF_CODE_ANDROID_WEBVIEW_IGNORE_SSL",
@@ -898,35 +898,6 @@
           ]
         },
         {
-          "pattern_id": "MOBSF_ANDROID_API_API_START_ACTIVITY",
-          "title": "Starting Activity",
-          "severity": "Low",
-          "description": "Starting Activity",
-          "severity_score": 2,
-          "confidence_score": 6,
-          "category": "android_api",
-          "location": "com/example/mastg_test0021/MainActivity.java",
-          "evidence": [
-            "rule=api_start_activity",
-            "description=Starting Activity",
-            "com/example/mastg_test0021/MainActivity.java:31"
-          ],
-          "related_components": [],
-          "related_deep_links": [],
-          "cwe": null,
-          "owasp_masvs": null,
-          "source": "mobsf",
-          "raw": {
-            "files": {
-              "com/example/mastg_test0021/MainActivity.java": "31"
-            },
-            "metadata": {
-              "description": "Starting Activity",
-              "severity": "info"
-            }
-          }
-        },
-        {
           "pattern_id": "MOBSF_ANDROID_API_API_IPC",
           "title": "Inter Process Communication",
           "severity": "Low",
@@ -954,6 +925,35 @@
               "severity": "info"
             }
           }
+        },
+        {
+          "pattern_id": "MOBSF_ANDROID_API_API_START_ACTIVITY",
+          "title": "Starting Activity",
+          "severity": "Low",
+          "description": "Starting Activity",
+          "severity_score": 2,
+          "confidence_score": 6,
+          "category": "android_api",
+          "location": "com/example/mastg_test0021/MainActivity.java",
+          "evidence": [
+            "rule=api_start_activity",
+            "description=Starting Activity",
+            "com/example/mastg_test0021/MainActivity.java:31"
+          ],
+          "related_components": [],
+          "related_deep_links": [],
+          "cwe": null,
+          "owasp_masvs": null,
+          "source": "mobsf",
+          "raw": {
+            "files": {
+              "com/example/mastg_test0021/MainActivity.java": "31"
+            },
+            "metadata": {
+              "description": "Starting Activity",
+              "severity": "info"
+            }
+          }
         }
       ]
     },
@@ -973,8 +973,8 @@
       "top5_precision": 0.0,
       "high_confidence_finding_count": 3,
       "high_confidence_precision": 0.0,
-      "high_priority_finding_count": 0,
-      "high_priority_precision": null,
+      "high_priority_finding_count": 10,
+      "high_priority_precision": 0.0,
       "severity_score_mae": null,
       "confidence_score_mae": null,
       "matches": [],
@@ -1119,37 +1119,6 @@
           ]
         },
         {
-          "pattern_id": "MOBSF_MANIFEST_HAS_NETWORK_SECURITY",
-          "title": "App has a Network Security Configuration[android:networkSecurityConfig=@xml/network_security_config]",
-          "severity": "Low",
-          "description": "The Network Security Configuration feature lets apps customize their network security settings in a safe, declarative configuration file without modifying app code. These settings can be configured for specific domains and for a specific app. ",
-          "severity_score": 2,
-          "confidence_score": 7,
-          "category": "manifest",
-          "location": "AndroidManifest.xml",
-          "evidence": [
-            "rule=has_network_security",
-            "title=App has a Network Security Configuration[android:networkSecurityConfig=@xml/network_security_config]",
-            "component=[\"@xml/network_security_config\"]",
-            "description=The Network Security Configuration feature lets apps customize their network security settings in a safe, declarative configuration file without modifying app code. These settings can be configured for specific domains and for a specific app. "
-          ],
-          "related_components": [],
-          "related_deep_links": [],
-          "cwe": null,
-          "owasp_masvs": null,
-          "source": "mobsf",
-          "raw": {
-            "rule": "has_network_security",
-            "title": "App has a Network Security Configuration[android:networkSecurityConfig=@xml/network_security_config]",
-            "severity": "info",
-            "description": "The Network Security Configuration feature lets apps customize their network security settings in a safe, declarative configuration file without modifying app code. These settings can be configured for specific domains and for a specific app. ",
-            "name": "App has a Network Security Configuration [android:networkSecurityConfig=@xml/network_security_config]",
-            "component": [
-              "@xml/network_security_config"
-            ]
-          }
-        },
-        {
           "pattern_id": "MOBSF_CODE_ANDROID_LOGGING",
           "title": "The App logs information. Sensitive information should never be logged.",
           "severity": "Low",
@@ -1186,21 +1155,19 @@
           }
         },
         {
-          "pattern_id": "MOBSF_ANDROID_API_API_TCP",
-          "title": "TCP Socket",
+          "pattern_id": "MOBSF_MANIFEST_HAS_NETWORK_SECURITY",
+          "title": "App has a Network Security Configuration[android:networkSecurityConfig=@xml/network_security_config]",
           "severity": "Low",
-          "description": "TCP Socket",
+          "description": "The Network Security Configuration feature lets apps customize their network security settings in a safe, declarative configuration file without modifying app code. These settings can be configured for specific domains and for a specific app. ",
           "severity_score": 2,
-          "confidence_score": 6,
-          "category": "android_api",
-          "location": "okio/DeprecatedOkio.java",
+          "confidence_score": 7,
+          "category": "manifest",
+          "location": "AndroidManifest.xml",
           "evidence": [
-            "rule=api_tcp",
-            "description=TCP Socket",
-            "okio/DeprecatedOkio.java:7,18,67,92,7",
-            "okio/Okio.java:10,85,101,10",
-            "okio/Okio__JvmOkioKt.java:11,26,48,50,50,56,58,58,11",
-            "okio/SocketAsyncTimeout.java:5,6,14,14,14,16,17,19,19,26,26,5,6"
+            "rule=has_network_security",
+            "title=App has a Network Security Configuration[android:networkSecurityConfig=@xml/network_security_config]",
+            "component=[\"@xml/network_security_config\"]",
+            "description=The Network Security Configuration feature lets apps customize their network security settings in a safe, declarative configuration file without modifying app code. These settings can be configured for specific domains and for a specific app. "
           ],
           "related_components": [],
           "related_deep_links": [],
@@ -1208,37 +1175,37 @@
           "owasp_masvs": null,
           "source": "mobsf",
           "raw": {
-            "files": {
-              "okio/DeprecatedOkio.java": "7,18,67,92,7",
-              "okio/Okio.java": "10,85,101,10",
-              "okio/Okio__JvmOkioKt.java": "11,26,48,50,50,56,58,58,11",
-              "okio/SocketAsyncTimeout.java": "5,6,14,14,14,16,17,19,19,26,26,5,6"
-            },
-            "metadata": {
-              "description": "TCP Socket",
-              "severity": "info"
-            }
+            "rule": "has_network_security",
+            "title": "App has a Network Security Configuration[android:networkSecurityConfig=@xml/network_security_config]",
+            "severity": "info",
+            "description": "The Network Security Configuration feature lets apps customize their network security settings in a safe, declarative configuration file without modifying app code. These settings can be configured for specific domains and for a specific app. ",
+            "name": "App has a Network Security Configuration [android:networkSecurityConfig=@xml/network_security_config]",
+            "component": [
+              "@xml/network_security_config"
+            ]
           }
         },
         {
-          "pattern_id": "MOBSF_ANDROID_API_API_MESSAGE_DIGEST",
-          "title": "Message Digest",
+          "pattern_id": "MOBSF_ANDROID_API_API_CRYPTO",
+          "title": "Crypto",
           "severity": "Low",
-          "description": "Message Digest",
+          "description": "Crypto",
           "severity_score": 2,
           "confidence_score": 6,
           "category": "android_api",
           "location": "okio/Buffer.java",
           "evidence": [
-            "rule=api_message_digest",
-            "description=Message Digest",
-            "okio/Buffer.java:14,521,521,14",
-            "okio/ByteString.java:16,164,164,16",
-            "okio/C0008SegmentedByteString.java:10,73,73,10",
-            "okio/HashingSink.java:6,19,19,26,64,80,80,121,138,6",
-            "okio/HashingSource.java:6,19,19,26,64,80,80,128,147,6",
-            "okio/Okio.java:12,49,57,12",
-            "okio/Okio__JvmOkioKt.java:14,26,126,132,14"
+            "rule=api_crypto",
+            "description=Crypto",
+            "okio/Buffer.java:521,15,16",
+            "okio/ByteString.java:164,18,19",
+            "okio/C0008SegmentedByteString.java:73,11,12",
+            "okio/CipherSink.java:5",
+            "okio/CipherSource.java:5",
+            "okio/HashingSink.java:80,7,8",
+            "okio/HashingSource.java:80,7,8",
+            "okio/Okio.java:13,14",
+            "okio/Okio__JvmOkioKt.java:17,18"
           ],
           "related_components": [],
           "related_deep_links": [],
@@ -1247,16 +1214,78 @@
           "source": "mobsf",
           "raw": {
             "files": {
-              "okio/Buffer.java": "14,521,521,14",
-              "okio/ByteString.java": "16,164,164,16",
-              "okio/C0008SegmentedByteString.java": "10,73,73,10",
-              "okio/HashingSink.java": "6,19,19,26,64,80,80,121,138,6",
-              "okio/HashingSource.java": "6,19,19,26,64,80,80,128,147,6",
-              "okio/Okio.java": "12,49,57,12",
-              "okio/Okio__JvmOkioKt.java": "14,26,126,132,14"
+              "okio/Buffer.java": "521,15,16",
+              "okio/ByteString.java": "164,18,19",
+              "okio/C0008SegmentedByteString.java": "73,11,12",
+              "okio/CipherSink.java": "5",
+              "okio/CipherSource.java": "5",
+              "okio/HashingSink.java": "80,7,8",
+              "okio/HashingSource.java": "80,7,8",
+              "okio/Okio.java": "13,14",
+              "okio/Okio__JvmOkioKt.java": "17,18"
             },
             "metadata": {
-              "description": "Message Digest",
+              "description": "Crypto",
+              "severity": "info"
+            }
+          }
+        },
+        {
+          "pattern_id": "MOBSF_ANDROID_API_API_HTTP_CONNECTION",
+          "title": "HTTP Connection",
+          "severity": "Low",
+          "description": "HTTP Connection",
+          "severity_score": 2,
+          "confidence_score": 6,
+          "category": "android_api",
+          "location": "com/example/mastg_test0022/MainActivity.java",
+          "evidence": [
+            "rule=api_http_connection",
+            "description=HTTP Connection",
+            "com/example/mastg_test0022/MainActivity.java:18,118,136,143,157,118"
+          ],
+          "related_components": [],
+          "related_deep_links": [],
+          "cwe": null,
+          "owasp_masvs": null,
+          "source": "mobsf",
+          "raw": {
+            "files": {
+              "com/example/mastg_test0022/MainActivity.java": "18,118,136,143,157,118"
+            },
+            "metadata": {
+              "description": "HTTP Connection",
+              "severity": "info"
+            }
+          }
+        },
+        {
+          "pattern_id": "MOBSF_ANDROID_API_API_JAVA_REFLECTION",
+          "title": "Java Reflection",
+          "severity": "Low",
+          "description": "Java Reflection",
+          "severity_score": 2,
+          "confidence_score": 6,
+          "category": "android_api",
+          "location": "okio/ByteString.java",
+          "evidence": [
+            "rule=api_java_reflection",
+            "description=Java Reflection",
+            "okio/ByteString.java:12",
+            "okio/FileSystem.java:279"
+          ],
+          "related_components": [],
+          "related_deep_links": [],
+          "cwe": null,
+          "owasp_masvs": null,
+          "source": "mobsf",
+          "raw": {
+            "files": {
+              "okio/ByteString.java": "12",
+              "okio/FileSystem.java": "279"
+            },
+            "metadata": {
+              "description": "Java Reflection",
               "severity": "info"
             }
           }
@@ -1347,86 +1376,24 @@
           }
         },
         {
-          "pattern_id": "MOBSF_ANDROID_API_API_JAVA_REFLECTION",
-          "title": "Java Reflection",
+          "pattern_id": "MOBSF_ANDROID_API_API_MESSAGE_DIGEST",
+          "title": "Message Digest",
           "severity": "Low",
-          "description": "Java Reflection",
-          "severity_score": 2,
-          "confidence_score": 6,
-          "category": "android_api",
-          "location": "okio/ByteString.java",
-          "evidence": [
-            "rule=api_java_reflection",
-            "description=Java Reflection",
-            "okio/ByteString.java:12",
-            "okio/FileSystem.java:279"
-          ],
-          "related_components": [],
-          "related_deep_links": [],
-          "cwe": null,
-          "owasp_masvs": null,
-          "source": "mobsf",
-          "raw": {
-            "files": {
-              "okio/ByteString.java": "12",
-              "okio/FileSystem.java": "279"
-            },
-            "metadata": {
-              "description": "Java Reflection",
-              "severity": "info"
-            }
-          }
-        },
-        {
-          "pattern_id": "MOBSF_ANDROID_API_API_HTTP_CONNECTION",
-          "title": "HTTP Connection",
-          "severity": "Low",
-          "description": "HTTP Connection",
-          "severity_score": 2,
-          "confidence_score": 6,
-          "category": "android_api",
-          "location": "com/example/mastg_test0022/MainActivity.java",
-          "evidence": [
-            "rule=api_http_connection",
-            "description=HTTP Connection",
-            "com/example/mastg_test0022/MainActivity.java:18,118,136,143,157,118"
-          ],
-          "related_components": [],
-          "related_deep_links": [],
-          "cwe": null,
-          "owasp_masvs": null,
-          "source": "mobsf",
-          "raw": {
-            "files": {
-              "com/example/mastg_test0022/MainActivity.java": "18,118,136,143,157,118"
-            },
-            "metadata": {
-              "description": "HTTP Connection",
-              "severity": "info"
-            }
-          }
-        },
-        {
-          "pattern_id": "MOBSF_ANDROID_API_API_CRYPTO",
-          "title": "Crypto",
-          "severity": "Low",
-          "description": "Crypto",
+          "description": "Message Digest",
           "severity_score": 2,
           "confidence_score": 6,
           "category": "android_api",
           "location": "okio/Buffer.java",
           "evidence": [
-            "rule=api_crypto",
-            "description=Crypto",
-            "okio/Buffer.java:521,15,16",
-            "okio/ByteString.java:164,18,19",
-            "okio/C0008SegmentedByteString.java:73,11,12",
-            "okio/CipherSink.java:5",
-            "okio/CipherSource.java:5",
-            "okio/HashingSink.java:80,7,8",
-            "okio/HashingSource.java:80,7,8",
-            "okio/Okio.java:13,14",
-            "okio/Okio__JvmOkioKt.java:17,18"
+            "rule=api_message_digest",
+            "description=Message Digest",
+            "okio/Buffer.java:14,521,521,14",
+            "okio/ByteString.java:16,164,164,16",
+            "okio/C0008SegmentedByteString.java:10,73,73,10",
+            "okio/HashingSink.java:6,19,19,26,64,80,80,121,138,6",
+            "okio/HashingSource.java:6,19,19,26,64,80,80,128,147,6",
+            "okio/Okio.java:12,49,57,12",
+            "okio/Okio__JvmOkioKt.java:14,26,126,132,14"
           ],
           "related_components": [],
           "related_deep_links": [],
@@ -1435,18 +1402,51 @@
           "source": "mobsf",
           "raw": {
             "files": {
-              "okio/Buffer.java": "521,15,16",
-              "okio/ByteString.java": "164,18,19",
-              "okio/C0008SegmentedByteString.java": "73,11,12",
-              "okio/CipherSink.java": "5",
-              "okio/CipherSource.java": "5",
-              "okio/HashingSink.java": "80,7,8",
-              "okio/HashingSource.java": "80,7,8",
-              "okio/Okio.java": "13,14",
-              "okio/Okio__JvmOkioKt.java": "17,18"
+              "okio/Buffer.java": "14,521,521,14",
+              "okio/ByteString.java": "16,164,164,16",
+              "okio/C0008SegmentedByteString.java": "10,73,73,10",
+              "okio/HashingSink.java": "6,19,19,26,64,80,80,121,138,6",
+              "okio/HashingSource.java": "6,19,19,26,64,80,80,128,147,6",
+              "okio/Okio.java": "12,49,57,12",
+              "okio/Okio__JvmOkioKt.java": "14,26,126,132,14"
             },
             "metadata": {
-              "description": "Crypto",
+              "description": "Message Digest",
+              "severity": "info"
+            }
+          }
+        },
+        {
+          "pattern_id": "MOBSF_ANDROID_API_API_TCP",
+          "title": "TCP Socket",
+          "severity": "Low",
+          "description": "TCP Socket",
+          "severity_score": 2,
+          "confidence_score": 6,
+          "category": "android_api",
+          "location": "okio/DeprecatedOkio.java",
+          "evidence": [
+            "rule=api_tcp",
+            "description=TCP Socket",
+            "okio/DeprecatedOkio.java:7,18,67,92,7",
+            "okio/Okio.java:10,85,101,10",
+            "okio/Okio__JvmOkioKt.java:11,26,48,50,50,56,58,58,11",
+            "okio/SocketAsyncTimeout.java:5,6,14,14,14,16,17,19,19,26,26,5,6"
+          ],
+          "related_components": [],
+          "related_deep_links": [],
+          "cwe": null,
+          "owasp_masvs": null,
+          "source": "mobsf",
+          "raw": {
+            "files": {
+              "okio/DeprecatedOkio.java": "7,18,67,92,7",
+              "okio/Okio.java": "10,85,101,10",
+              "okio/Okio__JvmOkioKt.java": "11,26,48,50,50,56,58,58,11",
+              "okio/SocketAsyncTimeout.java": "5,6,14,14,14,16,17,19,19,26,26,5,6"
+            },
+            "metadata": {
+              "description": "TCP Socket",
               "severity": "info"
             }
           }
@@ -1469,8 +1469,8 @@
       "top5_precision": 0.0,
       "high_confidence_finding_count": 3,
       "high_confidence_precision": 0.0,
-      "high_priority_finding_count": 0,
-      "high_priority_precision": null,
+      "high_priority_finding_count": 7,
+      "high_priority_precision": 0.0,
       "severity_score_mae": null,
       "confidence_score_mae": null,
       "matches": [],
@@ -1654,18 +1654,18 @@
           }
         },
         {
-          "pattern_id": "MOBSF_ANDROID_API_API_START_ACTIVITY",
-          "title": "Starting Activity",
+          "pattern_id": "MOBSF_ANDROID_API_API_IPC",
+          "title": "Inter Process Communication",
           "severity": "Low",
-          "description": "Starting Activity",
+          "description": "Inter Process Communication",
           "severity_score": 2,
           "confidence_score": 6,
           "category": "android_api",
           "location": "com/example/mastg_test0023/MainActivity.java",
           "evidence": [
-            "rule=api_start_activity",
-            "description=Starting Activity",
-            "com/example/mastg_test0023/MainActivity.java:46"
+            "rule=api_ipc",
+            "description=Inter Process Communication",
+            "com/example/mastg_test0023/MainActivity.java:3,46"
           ],
           "related_components": [],
           "related_deep_links": [],
@@ -1674,10 +1674,10 @@
           "source": "mobsf",
           "raw": {
             "files": {
-              "com/example/mastg_test0023/MainActivity.java": "46"
+              "com/example/mastg_test0023/MainActivity.java": "3,46"
             },
             "metadata": {
-              "description": "Starting Activity",
+              "description": "Inter Process Communication",
               "severity": "info"
             }
           }
@@ -1712,18 +1712,18 @@
           }
         },
         {
-          "pattern_id": "MOBSF_ANDROID_API_API_IPC",
-          "title": "Inter Process Communication",
+          "pattern_id": "MOBSF_ANDROID_API_API_START_ACTIVITY",
+          "title": "Starting Activity",
           "severity": "Low",
-          "description": "Inter Process Communication",
+          "description": "Starting Activity",
           "severity_score": 2,
           "confidence_score": 6,
           "category": "android_api",
           "location": "com/example/mastg_test0023/MainActivity.java",
           "evidence": [
-            "rule=api_ipc",
-            "description=Inter Process Communication",
-            "com/example/mastg_test0023/MainActivity.java:3,46"
+            "rule=api_start_activity",
+            "description=Starting Activity",
+            "com/example/mastg_test0023/MainActivity.java:46"
           ],
           "related_components": [],
           "related_deep_links": [],
@@ -1732,10 +1732,10 @@
           "source": "mobsf",
           "raw": {
             "files": {
-              "com/example/mastg_test0023/MainActivity.java": "3,46"
+              "com/example/mastg_test0023/MainActivity.java": "46"
             },
             "metadata": {
-              "description": "Inter Process Communication",
+              "description": "Starting Activity",
               "severity": "info"
             }
           }
@@ -1749,22 +1749,161 @@
       "test_id": "MASTG-TEST-0019",
       "title": "Testing Data Encryption on the Network",
       "expected_count": 5,
-      "raw_finding_count": 0,
-      "scoped_finding_count": 0,
-      "tp": 0,
+      "raw_finding_count": 2,
+      "scoped_finding_count": 2,
+      "tp": 2,
       "fp": 0,
-      "fn": 5,
-      "precision": null,
-      "recall": 0.0,
-      "f1": null,
-      "top5_precision": null,
-      "high_confidence_finding_count": 0,
-      "high_confidence_precision": null,
-      "high_priority_finding_count": 0,
-      "high_priority_precision": null,
+      "fn": 3,
+      "precision": 1.0,
+      "recall": 0.4,
+      "f1": 0.5714285714285715,
+      "top5_precision": 1.0,
+      "high_confidence_finding_count": 2,
+      "high_confidence_precision": 1.0,
+      "high_priority_finding_count": 2,
+      "high_priority_precision": 1.0,
       "severity_score_mae": null,
       "confidence_score_mae": null,
-      "matches": [],
+      "matches": [
+        {
+          "gt_id": "GT-0019-2",
+          "gt_category": "uses_cleartext_traffic",
+          "finding_id": "VULN_USES_CLEARTEXT_TRAFFIC",
+          "finding_category": "uses_cleartext_traffic",
+          "finding_title": "Cleartext traffic explicitly enabled in manifest",
+          "finding_severity": "High",
+          "finding_severity_score": 7,
+          "finding_confidence_score": 10,
+          "match_info": {
+            "match_type": "medium",
+            "category": true,
+            "component": false,
+            "location": false,
+            "authority": false,
+            "deeplink": false,
+            "keyword_hits": 7,
+            "keyword_total": 7
+          },
+          "ground_truth": {
+            "id": "GT-0019-2",
+            "category": "uses_cleartext_traffic",
+            "must_detect": true,
+            "severity": "high",
+            "description": "The AndroidManifest.xml explicitly enables cleartext traffic by setting android:usesCleartextTraffic=\"true\" in the application tag.",
+            "acceptable_scanner_categories": [
+              "uses_cleartext_traffic",
+              "cleartext_traffic_enabled",
+              "manifest_cleartext",
+              "insecure_network_config",
+              "network_cleartext",
+              "android_manifest"
+            ],
+            "evidence_keywords": [
+              "android:usesCleartextTraffic",
+              "usesCleartextTraffic",
+              "true",
+              "cleartextTraffic",
+              "application",
+              "AndroidManifest.xml",
+              "cleartext"
+            ],
+            "source": "README.md Implementation and Static Analysis"
+          },
+          "finding": {
+            "pattern_id": "VULN_USES_CLEARTEXT_TRAFFIC",
+            "title": "Cleartext traffic explicitly enabled in manifest",
+            "severity": "High",
+            "description": "The application explicitly sets android:usesCleartextTraffic=\"true\", allowing cleartext HTTP traffic unless restricted elsewhere.",
+            "severity_score": 7,
+            "confidence_score": 10,
+            "test_priority": "P2",
+            "category": "uses_cleartext_traffic",
+            "location": "AndroidManifest.xml",
+            "evidence": [
+              "android:usesCleartextTraffic=true",
+              "AndroidManifest.xml",
+              "application",
+              "cleartext",
+              "cleartext traffic"
+            ],
+            "related_components": [],
+            "related_deep_links": [],
+            "cwe": "CWE-319",
+            "owasp_masvs": "MSTG-NETWORK-1",
+            "source": "our_scanner"
+          }
+        },
+        {
+          "gt_id": "GT-0019-5",
+          "gt_category": "low_min_sdk_network_security_bypass",
+          "finding_id": "VULN_LOW_MIN_SDK_NETWORK_SECURITY_BYPASS",
+          "finding_category": "low_min_sdk_network_security_bypass",
+          "finding_title": "Low minSdk may weaken network security defaults",
+          "finding_severity": "Medium",
+          "finding_severity_score": 5,
+          "finding_confidence_score": 10,
+          "match_info": {
+            "match_type": "medium",
+            "category": true,
+            "component": false,
+            "location": false,
+            "authority": false,
+            "deeplink": false,
+            "keyword_hits": 6,
+            "keyword_total": 8
+          },
+          "ground_truth": {
+            "id": "GT-0019-5",
+            "category": "low_min_sdk_network_security_bypass",
+            "must_detect": true,
+            "severity": "medium",
+            "description": "The app uses a low minimum SDK version, minSdk = 19, which can weaken or bypass protections expected from newer Android network security defaults.",
+            "acceptable_scanner_categories": [
+              "low_min_sdk",
+              "vulnerable_os_version",
+              "network_security_config_bypass",
+              "insecure_platform_version",
+              "manifest_sdk",
+              "android_manifest"
+            ],
+            "evidence_keywords": [
+              "minSdk",
+              "minSdkVersion",
+              "19",
+              "API level 19",
+              "Android 9",
+              "API level 28",
+              "Network Security Configuration",
+              "cleartext traffic"
+            ],
+            "source": "README.md Implementation and Static Analysis"
+          },
+          "finding": {
+            "pattern_id": "VULN_LOW_MIN_SDK_NETWORK_SECURITY_BYPASS",
+            "title": "Low minSdk may weaken network security defaults",
+            "severity": "Medium",
+            "description": "The app supports old Android versions. On older platforms, expected Network Security Configuration protections and cleartext defaults may not apply.",
+            "severity_score": 5,
+            "confidence_score": 10,
+            "test_priority": "P2",
+            "category": "low_min_sdk_network_security_bypass",
+            "location": "AndroidManifest.xml",
+            "evidence": [
+              "minSdkVersion=19",
+              "minSdk",
+              "19",
+              "API level 19",
+              "Network Security Configuration",
+              "cleartext traffic"
+            ],
+            "related_components": [],
+            "related_deep_links": [],
+            "cwe": "CWE-693",
+            "owasp_masvs": "MSTG-NETWORK-1",
+            "source": "our_scanner"
+          }
+        }
+      ],
       "unmatched_expected": [
         {
           "id": "GT-0019-1",
@@ -1790,31 +1929,6 @@
             "loadUrl",
             "URL",
             "network request"
-          ],
-          "source": "README.md Implementation and Static Analysis"
-        },
-        {
-          "id": "GT-0019-2",
-          "category": "uses_cleartext_traffic",
-          "must_detect": true,
-          "severity": "high",
-          "description": "The AndroidManifest.xml explicitly enables cleartext traffic by setting android:usesCleartextTraffic=\"true\" in the application tag.",
-          "acceptable_scanner_categories": [
-            "uses_cleartext_traffic",
-            "cleartext_traffic_enabled",
-            "manifest_cleartext",
-            "insecure_network_config",
-            "network_cleartext",
-            "android_manifest"
-          ],
-          "evidence_keywords": [
-            "android:usesCleartextTraffic",
-            "usesCleartextTraffic",
-            "true",
-            "cleartextTraffic",
-            "application",
-            "AndroidManifest.xml",
-            "cleartext"
           ],
           "source": "README.md Implementation and Static Analysis"
         },
@@ -1870,32 +1984,6 @@
             "X509TrustManager"
           ],
           "source": "README.md Implementation and Static Analysis"
-        },
-        {
-          "id": "GT-0019-5",
-          "category": "low_min_sdk_network_security_bypass",
-          "must_detect": true,
-          "severity": "medium",
-          "description": "The app uses a low minimum SDK version, minSdk = 19, which can weaken or bypass protections expected from newer Android network security defaults.",
-          "acceptable_scanner_categories": [
-            "low_min_sdk",
-            "vulnerable_os_version",
-            "network_security_config_bypass",
-            "insecure_platform_version",
-            "manifest_sdk",
-            "android_manifest"
-          ],
-          "evidence_keywords": [
-            "minSdk",
-            "minSdkVersion",
-            "19",
-            "API level 19",
-            "Android 9",
-            "API level 28",
-            "Network Security Configuration",
-            "cleartext traffic"
-          ],
-          "source": "README.md Implementation and Static Analysis"
         }
       ],
       "unmatched_findings": []
@@ -1905,163 +1993,368 @@
       "test_id": "MASTG-TEST-0020",
       "title": "Testing the TLS Settings",
       "expected_count": 2,
-      "raw_finding_count": 0,
-      "scoped_finding_count": 0,
-      "tp": 0,
-      "fp": 0,
-      "fn": 2,
-      "precision": null,
-      "recall": 0.0,
-      "f1": null,
-      "top5_precision": null,
-      "high_confidence_finding_count": 0,
-      "high_confidence_precision": null,
-      "high_priority_finding_count": 0,
-      "high_priority_precision": null,
+      "raw_finding_count": 3,
+      "scoped_finding_count": 3,
+      "tp": 2,
+      "fp": 1,
+      "fn": 0,
+      "precision": 0.6666666666666666,
+      "recall": 1.0,
+      "f1": 0.8,
+      "top5_precision": 0.6666666666666666,
+      "high_confidence_finding_count": 3,
+      "high_confidence_precision": 0.6666666666666666,
+      "high_priority_finding_count": 3,
+      "high_priority_precision": 0.6666666666666666,
       "severity_score_mae": null,
       "confidence_score_mae": null,
-      "matches": [],
-      "unmatched_expected": [
+      "matches": [
         {
-          "id": "GT-0020-1",
-          "category": "obsolete_tls_version",
-          "must_detect": true,
-          "severity": "high",
-          "description": "The app explicitly uses an outdated TLS protocol version, TLS 1.0, for HTTPS connections. Obsolete TLS versions are insecure and should be replaced with modern versions such as TLS 1.2 or TLS 1.3.",
-          "acceptable_scanner_categories": [
-            "obsolete_tls_version",
-            "insecure_tls_version",
-            "weak_tls",
-            "tls_misconfiguration",
-            "insecure_ssl",
-            "insecure_tls",
-            "ssl_context"
-          ],
-          "evidence_keywords": [
-            "SSLContext",
-            "getInstance",
-            "TLSv1",
-            "TLS 1.0",
-            "TLSv1.0",
-            "outdated TLS",
-            "obsolete TLS",
-            "weak TLS",
-            "HTTPS"
-          ],
-          "source": "README.md Implementation and Static Analysis"
+          "gt_id": "GT-0020-1",
+          "gt_category": "obsolete_tls_version",
+          "finding_id": "VULN_OBSOLETE_TLS_VERSION",
+          "finding_category": "obsolete_tls_version",
+          "finding_title": "Obsolete TLS protocol version used",
+          "finding_severity": "High",
+          "finding_severity_score": 7,
+          "finding_confidence_score": 10,
+          "match_info": {
+            "match_type": "medium",
+            "category": true,
+            "component": false,
+            "location": false,
+            "authority": false,
+            "deeplink": false,
+            "keyword_hits": 5,
+            "keyword_total": 9
+          },
+          "ground_truth": {
+            "id": "GT-0020-1",
+            "category": "obsolete_tls_version",
+            "must_detect": true,
+            "severity": "high",
+            "description": "The app explicitly uses an outdated TLS protocol version, TLS 1.0, for HTTPS connections. Obsolete TLS versions are insecure and should be replaced with modern versions such as TLS 1.2 or TLS 1.3.",
+            "acceptable_scanner_categories": [
+              "obsolete_tls_version",
+              "insecure_tls_version",
+              "weak_tls",
+              "tls_misconfiguration",
+              "insecure_ssl",
+              "insecure_tls",
+              "ssl_context"
+            ],
+            "evidence_keywords": [
+              "SSLContext",
+              "getInstance",
+              "TLSv1",
+              "TLS 1.0",
+              "TLSv1.0",
+              "outdated TLS",
+              "obsolete TLS",
+              "weak TLS",
+              "HTTPS"
+            ],
+            "source": "README.md Implementation and Static Analysis"
+          },
+          "finding": {
+            "pattern_id": "VULN_OBSOLETE_TLS_VERSION",
+            "title": "Obsolete TLS protocol version used",
+            "severity": "High",
+            "description": "The app appears to explicitly request an obsolete TLS protocol version such as TLSv1/TLS 1.0/SSLv3 through SSLContext or related TLS setup code.",
+            "severity_score": 7,
+            "confidence_score": 10,
+            "test_priority": "P2",
+            "category": "obsolete_tls_version",
+            "location": "Lcom/example/mastg_test0020/MainActivity;->disableCertificateValidation()V",
+            "evidence": [
+              "Method: Lcom/example/mastg_test0020/MainActivity;->disableCertificateValidation()V",
+              "TLSv1",
+              "SSLContext",
+              "getInstance",
+              "Ljavax/net/ssl/SSLContext;->getInstance"
+            ],
+            "related_components": [],
+            "related_deep_links": [],
+            "cwe": "CWE-326",
+            "owasp_masvs": "MSTG-NETWORK-2",
+            "source": "our_scanner"
+          }
         },
         {
-          "id": "GT-0020-2",
-          "category": "certificate_validation_bypass",
-          "must_detect": true,
-          "severity": "high",
-          "description": "The app disables SSL/TLS certificate validation by installing a custom TrustManager that trusts all certificates, including self-signed or expired certificates.",
-          "acceptable_scanner_categories": [
-            "certificate_validation_bypass",
-            "trust_all_certificates",
-            "insecure_trust_manager",
-            "x509trustmanager",
-            "ssl_certificate_validation_disabled",
-            "insecure_ssl",
-            "insecure_tls",
-            "tls_misconfiguration"
-          ],
-          "evidence_keywords": [
-            "TrustManager",
-            "X509TrustManager",
-            "trustAllCerts",
-            "checkClientTrusted",
-            "checkServerTrusted",
-            "getAcceptedIssuers",
-            "return null",
-            "setDefaultSSLSocketFactory",
-            "self-signed",
-            "expired certificates",
-            "disableCertificateValidation"
-          ],
-          "source": "README.md Implementation and Static Analysis"
+          "gt_id": "GT-0020-2",
+          "gt_category": "certificate_validation_bypass",
+          "finding_id": "VULN_CERTIFICATE_VALIDATION_BYPASS",
+          "finding_category": "certificate_validation_bypass",
+          "finding_title": "TLS certificate validation bypass pattern",
+          "finding_severity": "High",
+          "finding_severity_score": 8,
+          "finding_confidence_score": 10,
+          "match_info": {
+            "match_type": "medium",
+            "category": true,
+            "component": false,
+            "location": false,
+            "authority": false,
+            "deeplink": false,
+            "keyword_hits": 6,
+            "keyword_total": 11
+          },
+          "ground_truth": {
+            "id": "GT-0020-2",
+            "category": "certificate_validation_bypass",
+            "must_detect": true,
+            "severity": "high",
+            "description": "The app disables SSL/TLS certificate validation by installing a custom TrustManager that trusts all certificates, including self-signed or expired certificates.",
+            "acceptable_scanner_categories": [
+              "certificate_validation_bypass",
+              "trust_all_certificates",
+              "insecure_trust_manager",
+              "x509trustmanager",
+              "ssl_certificate_validation_disabled",
+              "insecure_ssl",
+              "insecure_tls",
+              "tls_misconfiguration"
+            ],
+            "evidence_keywords": [
+              "TrustManager",
+              "X509TrustManager",
+              "trustAllCerts",
+              "checkClientTrusted",
+              "checkServerTrusted",
+              "getAcceptedIssuers",
+              "return null",
+              "setDefaultSSLSocketFactory",
+              "self-signed",
+              "expired certificates",
+              "disableCertificateValidation"
+            ],
+            "source": "README.md Implementation and Static Analysis"
+          },
+          "finding": {
+            "pattern_id": "VULN_CERTIFICATE_VALIDATION_BYPASS",
+            "title": "TLS certificate validation bypass pattern",
+            "severity": "High",
+            "description": "The app contains TrustManager/X509TrustManager-related code patterns commonly used to bypass TLS certificate validation.",
+            "severity_score": 8,
+            "confidence_score": 10,
+            "test_priority": "P2",
+            "category": "certificate_validation_bypass",
+            "location": "classes.dex",
+            "evidence": [
+              "Source: classes.dex",
+              "TrustManager",
+              "X509TrustManager",
+              "checkClientTrusted",
+              "checkServerTrusted",
+              "getAcceptedIssuers",
+              "setDefaultSSLSocketFactory",
+              "SSLContext",
+              "HttpsURLConnection"
+            ],
+            "related_components": [],
+            "related_deep_links": [],
+            "cwe": "CWE-295",
+            "owasp_masvs": "MSTG-NETWORK-3",
+            "source": "our_scanner"
+          }
         }
       ],
-      "unmatched_findings": []
+      "unmatched_expected": [],
+      "unmatched_findings": [
+        {
+          "pattern_id": "VULN_USES_CLEARTEXT_TRAFFIC",
+          "title": "Cleartext traffic explicitly enabled in manifest",
+          "severity": "High",
+          "description": "The application explicitly sets android:usesCleartextTraffic=\"true\", allowing cleartext HTTP traffic unless restricted elsewhere.",
+          "severity_score": 7,
+          "confidence_score": 10,
+          "test_priority": "P2",
+          "category": "uses_cleartext_traffic",
+          "location": "AndroidManifest.xml",
+          "evidence": [
+            "android:usesCleartextTraffic=true",
+            "AndroidManifest.xml",
+            "application",
+            "cleartext",
+            "cleartext traffic"
+          ],
+          "related_components": [],
+          "related_deep_links": [],
+          "cwe": "CWE-319",
+          "owasp_masvs": "MSTG-NETWORK-1",
+          "source": "our_scanner"
+        }
+      ]
     },
     {
       "case_id": "Network/MASTG-TEST0021",
       "test_id": "MASTG-TEST-0021",
       "title": "Testing Endpoint Identify Verification",
       "expected_count": 5,
-      "raw_finding_count": 0,
-      "scoped_finding_count": 0,
-      "tp": 0,
+      "raw_finding_count": 2,
+      "scoped_finding_count": 2,
+      "tp": 2,
       "fp": 0,
-      "fn": 5,
-      "precision": null,
-      "recall": 0.0,
-      "f1": null,
-      "top5_precision": null,
-      "high_confidence_finding_count": 0,
-      "high_confidence_precision": null,
-      "high_priority_finding_count": 0,
-      "high_priority_precision": null,
+      "fn": 3,
+      "precision": 1.0,
+      "recall": 0.4,
+      "f1": 0.5714285714285715,
+      "top5_precision": 1.0,
+      "high_confidence_finding_count": 2,
+      "high_confidence_precision": 1.0,
+      "high_priority_finding_count": 2,
+      "high_priority_precision": 1.0,
       "severity_score_mae": null,
       "confidence_score_mae": null,
-      "matches": [],
+      "matches": [
+        {
+          "gt_id": "GT-0021-1",
+          "gt_category": "low_target_sdk_network_security",
+          "finding_id": "VULN_LOW_TARGET_SDK_NETWORK_SECURITY",
+          "finding_category": "low_target_sdk_network_security",
+          "finding_title": "Low targetSdk weakens Network Security Configuration defaults",
+          "finding_severity": "Medium",
+          "finding_severity_score": 5,
+          "finding_confidence_score": 10,
+          "match_info": {
+            "match_type": "medium",
+            "category": true,
+            "component": false,
+            "location": false,
+            "authority": false,
+            "deeplink": false,
+            "keyword_hits": 7,
+            "keyword_total": 9
+          },
+          "ground_truth": {
+            "id": "GT-0021-1",
+            "category": "low_target_sdk_network_security",
+            "must_detect": true,
+            "severity": "medium",
+            "description": "The app targets Android API level 23, which is lower than 24. Apps targeting below Android 7.0 do not benefit from the newer default Network Security Configuration behavior that avoids trusting user-supplied CAs by default.",
+            "acceptable_scanner_categories": [
+              "low_target_sdk",
+              "target_sdk_too_low",
+              "insecure_platform_version",
+              "network_security_config_bypass",
+              "manifest_sdk",
+              "android_manifest",
+              "insecure_network_config"
+            ],
+            "evidence_keywords": [
+              "targetSdkVersion",
+              "targetSdk",
+              "23",
+              "API level 23",
+              "lower than 24",
+              "Android 7.0",
+              "Network Security Configuration",
+              "user supplied CAs",
+              "apktool.yml"
+            ],
+            "source": "README.md Implementation and Static Analysis"
+          },
+          "finding": {
+            "pattern_id": "VULN_LOW_TARGET_SDK_NETWORK_SECURITY",
+            "title": "Low targetSdk weakens Network Security Configuration defaults",
+            "severity": "Medium",
+            "description": "Apps targeting below Android 7.0 do not benefit from newer default Network Security Configuration behavior that avoids trusting user-supplied CAs by default.",
+            "severity_score": 5,
+            "confidence_score": 10,
+            "test_priority": "P2",
+            "category": "low_target_sdk_network_security",
+            "location": "AndroidManifest.xml",
+            "evidence": [
+              "targetSdkVersion=23",
+              "targetSdkVersion",
+              "23",
+              "lower than 24",
+              "Network Security Configuration",
+              "user supplied CAs"
+            ],
+            "related_components": [],
+            "related_deep_links": [],
+            "cwe": "CWE-295",
+            "owasp_masvs": "MSTG-NETWORK-2",
+            "source": "our_scanner"
+          }
+        },
+        {
+          "gt_id": "GT-0021-2",
+          "gt_category": "user_ca_trust_enabled",
+          "finding_id": "VULN_USER_CA_TRUST_ENABLED",
+          "finding_category": "user_ca_trust_enabled",
+          "finding_title": "User-installed CAs may be trusted by legacy targetSdk default",
+          "finding_severity": "High",
+          "finding_severity_score": 7,
+          "finding_confidence_score": 9,
+          "match_info": {
+            "match_type": "medium",
+            "category": true,
+            "component": false,
+            "location": false,
+            "authority": false,
+            "deeplink": false,
+            "keyword_hits": 1,
+            "keyword_total": 9
+          },
+          "ground_truth": {
+            "id": "GT-0021-2",
+            "category": "user_ca_trust_enabled",
+            "must_detect": true,
+            "severity": "high",
+            "description": "The app may trust user-provided certificate authorities through insecure Network Security Configuration trust anchors, allowing malicious user-installed CAs to intercept TLS traffic.",
+            "acceptable_scanner_categories": [
+              "user_ca_trust_enabled",
+              "custom_trust_anchors",
+              "network_security_config",
+              "insecure_network_config",
+              "trust_user_ca",
+              "certificate_validation_bypass",
+              "insecure_tls"
+            ],
+            "evidence_keywords": [
+              "network-security-config",
+              "trust-anchors",
+              "certificates",
+              "src=\"user\"",
+              "user CAs",
+              "user supplied CAs",
+              "custom trust anchor",
+              "domain-config",
+              "base-config"
+            ],
+            "source": "README.md Static Analysis"
+          },
+          "finding": {
+            "pattern_id": "VULN_USER_CA_TRUST_ENABLED",
+            "title": "User-installed CAs may be trusted by legacy targetSdk default",
+            "severity": "High",
+            "description": "The app targets an Android API level below 24 and does not appear to define an explicit Network Security Configuration. Apps targeting older API levels may trust user-installed certificate authorities by default, weakening TLS endpoint identity verification.",
+            "severity_score": 7,
+            "confidence_score": 9,
+            "test_priority": "P2",
+            "category": "user_ca_trust_enabled",
+            "location": "AndroidManifest.xml",
+            "evidence": [
+              "targetSdkVersion=23",
+              "targetSdkVersion",
+              "23",
+              "lower than 24",
+              "Android 7.0",
+              "Network Security Configuration default behavior",
+              "user supplied CAs",
+              "user-installed certificate authorities"
+            ],
+            "related_components": [],
+            "related_deep_links": [],
+            "cwe": "CWE-295",
+            "owasp_masvs": "MSTG-NETWORK-2",
+            "source": "our_scanner"
+          }
+        }
+      ],
       "unmatched_expected": [
-        {
-          "id": "GT-0021-1",
-          "category": "low_target_sdk_network_security",
-          "must_detect": true,
-          "severity": "medium",
-          "description": "The app targets Android API level 23, which is lower than 24. Apps targeting below Android 7.0 do not benefit from the newer default Network Security Configuration behavior that avoids trusting user-supplied CAs by default.",
-          "acceptable_scanner_categories": [
-            "low_target_sdk",
-            "target_sdk_too_low",
-            "insecure_platform_version",
-            "network_security_config_bypass",
-            "manifest_sdk",
-            "android_manifest",
-            "insecure_network_config"
-          ],
-          "evidence_keywords": [
-            "targetSdkVersion",
-            "targetSdk",
-            "23",
-            "API level 23",
-            "lower than 24",
-            "Android 7.0",
-            "Network Security Configuration",
-            "user supplied CAs",
-            "apktool.yml"
-          ],
-          "source": "README.md Implementation and Static Analysis"
-        },
-        {
-          "id": "GT-0021-2",
-          "category": "user_ca_trust_enabled",
-          "must_detect": true,
-          "severity": "high",
-          "description": "The app may trust user-provided certificate authorities through insecure Network Security Configuration trust anchors, allowing malicious user-installed CAs to intercept TLS traffic.",
-          "acceptable_scanner_categories": [
-            "user_ca_trust_enabled",
-            "custom_trust_anchors",
-            "network_security_config",
-            "insecure_network_config",
-            "trust_user_ca",
-            "certificate_validation_bypass",
-            "insecure_tls"
-          ],
-          "evidence_keywords": [
-            "network-security-config",
-            "trust-anchors",
-            "certificates",
-            "src=\"user\"",
-            "user CAs",
-            "user supplied CAs",
-            "custom trust anchor",
-            "domain-config",
-            "base-config"
-          ],
-          "source": "README.md Static Analysis"
-        },
         {
           "id": "GT-0021-3",
           "category": "webview_ssl_error_bypass",
@@ -2156,22 +2449,99 @@
       "test_id": "MASTG-TEST-0022",
       "title": "Testing Custom Certificate Stores and Certificate Pinning",
       "expected_count": 2,
-      "raw_finding_count": 0,
-      "scoped_finding_count": 0,
-      "tp": 0,
+      "raw_finding_count": 2,
+      "scoped_finding_count": 1,
+      "tp": 1,
       "fp": 0,
-      "fn": 2,
-      "precision": null,
-      "recall": 0.0,
-      "f1": null,
-      "top5_precision": null,
-      "high_confidence_finding_count": 0,
-      "high_confidence_precision": null,
-      "high_priority_finding_count": 0,
-      "high_priority_precision": null,
+      "fn": 1,
+      "precision": 1.0,
+      "recall": 0.5,
+      "f1": 0.6666666666666666,
+      "top5_precision": 1.0,
+      "high_confidence_finding_count": 1,
+      "high_confidence_precision": 1.0,
+      "high_priority_finding_count": 1,
+      "high_priority_precision": 1.0,
       "severity_score_mae": null,
       "confidence_score_mae": null,
-      "matches": [],
+      "matches": [
+        {
+          "gt_id": "GT-0022-2",
+          "gt_category": "certificate_pinning_configuration",
+          "finding_id": "VULN_CERTIFICATE_PINNING_CONFIGURATION",
+          "finding_category": "certificate_pinning_configuration",
+          "finding_title": "Certificate pinning configured in Network Security Configuration",
+          "finding_severity": "Low",
+          "finding_severity_score": 3,
+          "finding_confidence_score": 10,
+          "match_info": {
+            "match_type": "medium",
+            "category": true,
+            "component": false,
+            "location": false,
+            "authority": false,
+            "deeplink": false,
+            "keyword_hits": 9,
+            "keyword_total": 9
+          },
+          "ground_truth": {
+            "id": "GT-0022-2",
+            "category": "certificate_pinning_configuration",
+            "must_detect": true,
+            "severity": "info",
+            "description": "The app implements certificate pinning through Network Security Configuration. The scanner should identify the presence of pinning-related configuration such as pin-set entries and extract relevant evidence for review.",
+            "acceptable_scanner_categories": [
+              "certificate_pinning",
+              "ssl_pinning",
+              "pin_set",
+              "network_security_config",
+              "custom_certificate_store",
+              "certificate_pin",
+              "tls_pinning"
+            ],
+            "evidence_keywords": [
+              "network_security_config.xml",
+              "network-security-config",
+              "pin-set",
+              "pin",
+              "digest",
+              "SHA-256",
+              "expiration",
+              "certificate pinning",
+              "SSL Pinning"
+            ],
+            "source": "README.md Network Security Configuration"
+          },
+          "finding": {
+            "pattern_id": "VULN_CERTIFICATE_PINNING_CONFIGURATION",
+            "title": "Certificate pinning configured in Network Security Configuration",
+            "severity": "Low",
+            "description": "The app defines certificate pinning through Network Security Configuration. This is reported as review evidence for the benchmark, not necessarily as an insecure condition.",
+            "severity_score": 3,
+            "confidence_score": 10,
+            "test_priority": "P2",
+            "category": "certificate_pinning_configuration",
+            "location": "res/xml/network_security_config.xml",
+            "evidence": [
+              "network_security_config.xml or compiled XML path: res/8G.xml",
+              "network-security-config",
+              "pin-set",
+              "pin",
+              "digest",
+              "SHA-256",
+              "expiration",
+              "example.com",
+              "certificate pinning",
+              "SSL Pinning"
+            ],
+            "related_components": [],
+            "related_deep_links": [],
+            "cwe": null,
+            "owasp_masvs": "MSTG-NETWORK-4",
+            "source": "our_scanner"
+          }
+        }
+      ],
       "unmatched_expected": [
         {
           "id": "GT-0022-1",
@@ -2199,34 +2569,6 @@
             "Toast"
           ],
           "source": "README.md Implementation and Static Analysis"
-        },
-        {
-          "id": "GT-0022-2",
-          "category": "certificate_pinning_configuration",
-          "must_detect": true,
-          "severity": "info",
-          "description": "The app implements certificate pinning through Network Security Configuration. The scanner should identify the presence of pinning-related configuration such as pin-set entries and extract relevant evidence for review.",
-          "acceptable_scanner_categories": [
-            "certificate_pinning",
-            "ssl_pinning",
-            "pin_set",
-            "network_security_config",
-            "custom_certificate_store",
-            "certificate_pin",
-            "tls_pinning"
-          ],
-          "evidence_keywords": [
-            "network_security_config.xml",
-            "network-security-config",
-            "pin-set",
-            "pin",
-            "digest",
-            "SHA-256",
-            "expiration",
-            "certificate pinning",
-            "SSL Pinning"
-          ],
-          "source": "README.md Network Security Configuration"
         }
       ],
       "unmatched_findings": []
